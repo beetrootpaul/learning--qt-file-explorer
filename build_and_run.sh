@@ -1,6 +1,7 @@
 set -e
 set -x
 
-cmake .
-cmake --build .
-./learning__qt_file_explorer
+cmake -B ./build
+cmake --build ./build
+
+./build/learning__qt_file_explorer

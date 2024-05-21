@@ -16,7 +16,7 @@ find_package(Qt6 COMPONENTS
         Widgets
         REQUIRED)
 
-add_executable(learning__qt_file_explorer main.cpp)
+add_executable(learning__qt_file_explorer src/main.cpp)
 target_link_libraries(learning__qt_file_explorer
         Qt::Core
         Qt::Gui

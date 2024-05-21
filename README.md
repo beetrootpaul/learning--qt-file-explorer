@@ -12,5 +12,3 @@ The set of commands to build and run this project (on macOS):
 ./cleanup.sh
 ./build_and_run.sh
 ```
-
-NOTE: The CLion runs the project in a different manner than the commands above and seems to have issues because of two ways of doing it (`Cannot generate into …/learning--qt-file-explorer It was created with incompatible generator 'Unix Makefiles'`). With a lack of my know-how in the area, I decided to use the command line approach only.
