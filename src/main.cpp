@@ -1,97 +1,78 @@
 #include <iostream>
+#include <sstream>
+
 #include <QApplication>
+#include <QDir>
 #include <QPushButton>
 #include <QStandardPaths>
-#include <QDir>
+
+void examine(const std::string &label, const QString &path) {
+    auto normalizedPath = QDir::toNativeSeparators(path);
+
+    std::cout << std::endl;
+
+    std::cout << "### " << label << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "path: " << normalizedPath.toStdString() << std::endl;
+
+    std::cout << std::endl;
+
+    QDir dir(normalizedPath);
+    std::cout << "does dir exist? " << (dir.exists() ? "yes" : "!!! NO !!!") << std::endl;
+
+    std::cout << std::endl;
+
+    // NOTE: This one does print only if e.g. IDE got permissions to access those folders,
+    //       granted by the user.
+    std::cout << "entries: " << std::endl;
+    dir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDot);
+    for (const auto &fileInfo: dir.entryInfoList()) {
+        std::cout << "- " << fileInfo.fileName().toStdString();
+        if (fileInfo.isDir()) {
+            std::cout << QDir::separator().toLatin1();
+        }
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+}
+
+void examine(const std::string &label, QStringList paths) {
+    unsigned i = 1;
+    for (const auto &path: paths) {
+        std::stringstream ss;
+        ss << "(" << i << "/" << paths.count() << ") " << label;
+        examine(ss.str(), path);
+        i += 1;
+    }
+}
+
 
 int main(int argc, char *argv[]) {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
-    auto homePath = QDir::toNativeSeparators(QDir::homePath());
+    examine("HOME",
+            QDir::homePath());
 
-    std::cout << "home: '" << homePath.toStdString() << "'" << std::endl;
+    examine("minecraft server",
+            QDir::homePath().append("/minecraft_server_forge_1_20_1"));
 
+    examine("invalid path",
+            QDir::homePath().append("/does-not-exist"));
 
-    QDir homeDir(homePath);
-    std::cout << "path = " << homePath.toStdString() << std::endl;
-    std::cout << "does exist ??? " << homeDir.exists() << std::endl;
+    examine("Developer",
+            QDir::homePath().append("/Developer"));
 
+    examine("downloads",
+            QStandardPaths::standardLocations(QStandardPaths::DownloadLocation));
 
-    auto ap = QDir::toNativeSeparators(QDir::homePath().append("/minecraft_server_forge_1_20_1"));
-    std::cout << "path = " << ap.toStdString() << std::endl;
-    QDir ad(ap);
-    std::cout << "does exist ??? " << ad.exists() << std::endl;
+    examine("documents",
+            QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation));
 
-    auto bp = QDir::toNativeSeparators(QDir::homePath().append("/minecraft_server_forge_1_20_"));
-    std::cout << "path = " << bp.toStdString() << std::endl;
-    QDir bd(bp);
-    std::cout << "does exist ??? " << bd.exists() << std::endl;
-
-    for (const auto &stdLoc: QStandardPaths::standardLocations(QStandardPaths::DownloadLocation)) {
-        std::cout << "STD DOWNLOADS LOCATION = " << stdLoc.toStdString() << std::endl;
-    }
-
-    auto downloadsPath = QDir::toNativeSeparators(QDir::homePath().append("/Downloads"));
-    std::cout << "path = " << downloadsPath.toStdString() << std::endl;
-    QDir downloadsDir(downloadsPath);
-    std::cout << "does exist ??? " << downloadsDir.exists() << std::endl;
-
-    auto developerPath = QDir::toNativeSeparators(QDir::homePath().append("/Developer"));
-    std::cout << "path = " << developerPath.toStdString() << std::endl;
-    QDir developerDir(developerPath);
-    std::cout << "does exist ??? " << developerDir.exists() << std::endl;
-
-
-    homeDir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    std::cout << std::endl << "home dir:" << std::endl;
-    for (const auto &fileInfo: homeDir.entryInfoList()) {
-        if (fileInfo.isDir()) {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << "/" << std::endl;
-        } else {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << std::endl;
-        }
-    }
-
-    ad.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    std::cout << std::endl << "a dir:" << std::endl;
-    for (const auto &fileInfo: ad.entryInfoList()) {
-        if (fileInfo.isDir()) {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << "/" << std::endl;
-        } else {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << std::endl;
-        }
-    }
-
-    bd.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    std::cout << std::endl << "b dir:" << std::endl;
-    for (const auto &fileInfo: bd.entryInfoList()) {
-        if (fileInfo.isDir()) {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << "/" << std::endl;
-        } else {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << std::endl;
-        }
-    }
-
-    downloadsDir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    std::cout << std::endl << "DOWNLOADS dir:" << std::endl;
-    for (const auto &fileInfo: downloadsDir.entryInfoList()) {
-        if (fileInfo.isDir()) {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << "/" << std::endl;
-        } else {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << std::endl;
-        }
-    }
-
-    developerDir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);
-    std::cout << std::endl << "DEVELOPER dir:" << std::endl;
-    for (const auto &fileInfo: developerDir.entryInfoList()) {
-        if (fileInfo.isDir()) {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << "/" << std::endl;
-        } else {
-            std::cout << "- ./" << fileInfo.fileName().toStdString() << std::endl;
-        }
-    }
-
+    examine("app local data",
+            QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation));
 
     QPushButton button("(see the standard output)", nullptr);
     button.resize(200, 100);
