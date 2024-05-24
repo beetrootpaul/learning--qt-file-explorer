@@ -3,13 +3,18 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QDockWidget>
 #include <QFileSystemModel>
+#include <QListView>
+#include <QMainWindow>
 #include <QPushButton>
 #include <QStandardPaths>
+#include <QToolBar>
 #include <QTreeView>
 
 // TODO: extract to a separate file
 void examine(const std::string &label, const QString &path) {
+
     auto normalizedPath = QDir::toNativeSeparators(path);
 
     std::cout << std::endl;
@@ -85,14 +90,34 @@ int main(int argc, char *argv[]) {
         throw;
     }
 
-    // TODO: make this work and address IDE warning
-    QDir downloadDir(downloadLocations.first());
-    QFileSystemModel *model = new QFileSystemModel;
-    model->setRootPath(downloadLocations.first());
-    QTreeView *tree = new QTreeView();
+    auto path = downloadLocations.first();
+
+    auto model = new QFileSystemModel();
+    model->setRootPath(path);
+    auto tree = new QTreeView();
     tree->setModel(model);
-    tree->resize(600, 400);
-    tree->show();
+    tree->setRootIndex(model->index(path));
+    auto list = new QListView();
+    list->setModel(model);
+    list->setRootIndex(model->index(path));
+
+    auto button = new QPushButton("btn1");
+
+    auto toolbar = new QToolBar();
+    toolbar->setFloatable(false);
+    toolbar->setMovable(false);
+    toolbar->addWidget(button);
+
+    QMainWindow mainWindow = QMainWindow();
+    mainWindow.resize(800, 600);
+    mainWindow.setCentralWidget(tree);
+//    mainWindow.setCentralWidget(list);
+    
+    // TODO: and what?
+    mainWindow.addToolBar(toolbar);
+    // TODO: how to do translations for both PL and EN?
+    mainWindow.setWindowTitle(QApplication::translate("window", "Qt File Explorer"));
+    mainWindow.show();
 
     return QApplication::exec();
 }
