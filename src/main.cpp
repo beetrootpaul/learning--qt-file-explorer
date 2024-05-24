@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
-    auto homePath = QDir::homePath();
+    auto homePath = QDir::toNativeSeparators(QDir::homePath());
 
     std::cout << "home: '" << homePath.toStdString() << "'" << std::endl;
 
@@ -17,12 +17,12 @@ int main(int argc, char *argv[]) {
     std::cout << "does exist ??? " << homeDir.exists() << std::endl;
 
 
-    auto ap = QDir::homePath().append("/minecraft_server_forge_1_20_1");
+    auto ap = QDir::toNativeSeparators(QDir::homePath().append("/minecraft_server_forge_1_20_1"));
     std::cout << "path = " << ap.toStdString() << std::endl;
     QDir ad(ap);
     std::cout << "does exist ??? " << ad.exists() << std::endl;
 
-    auto bp = QDir::homePath().append("/minecraft_server_forge_1_20_");
+    auto bp = QDir::toNativeSeparators(QDir::homePath().append("/minecraft_server_forge_1_20_"));
     std::cout << "path = " << bp.toStdString() << std::endl;
     QDir bd(bp);
     std::cout << "does exist ??? " << bd.exists() << std::endl;
@@ -31,13 +31,12 @@ int main(int argc, char *argv[]) {
         std::cout << "STD DOWNLOADS LOCATION = " << stdLoc.toStdString() << std::endl;
     }
 
-    auto downloadsPath = QDir::homePath().append("/Downloads");
+    auto downloadsPath = QDir::toNativeSeparators(QDir::homePath().append("/Downloads"));
     std::cout << "path = " << downloadsPath.toStdString() << std::endl;
     QDir downloadsDir(downloadsPath);
     std::cout << "does exist ??? " << downloadsDir.exists() << std::endl;
 
-    // TODO: HOW TO "/" in an idiomatic way?
-    auto developerPath = QDir::homePath().append("/Developer");
+    auto developerPath = QDir::toNativeSeparators(QDir::homePath().append("/Developer"));
     std::cout << "path = " << developerPath.toStdString() << std::endl;
     QDir developerDir(developerPath);
     std::cout << "does exist ??? " << developerDir.exists() << std::endl;
