@@ -3,9 +3,12 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QFileSystemModel>
 #include <QPushButton>
 #include <QStandardPaths>
+#include <QTreeView>
 
+// TODO: extract to a separate file
 void examine(const std::string &label, const QString &path) {
     auto normalizedPath = QDir::toNativeSeparators(path);
 
@@ -39,6 +42,7 @@ void examine(const std::string &label, const QString &path) {
     std::cout << std::endl;
 }
 
+// TODO: extract to a separate file
 void examine(const std::string &label, QStringList paths) {
     unsigned i = 1;
     for (const auto &path: paths) {
@@ -74,8 +78,21 @@ int main(int argc, char *argv[]) {
     examine("app local data",
             QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation));
 
-    QPushButton button("(see the standard output)", nullptr);
-    button.resize(200, 100);
-    button.show();
+
+    auto downloadLocations = QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
+    if (downloadLocations.count() < 1) {
+        // TODO: make it nicer
+        throw;
+    }
+
+    // TODO: make this work and address IDE warning
+    QDir downloadDir(downloadLocations.first());
+    QFileSystemModel *model = new QFileSystemModel;
+    model->setRootPath(downloadLocations.first());
+    QTreeView *tree = new QTreeView();
+    tree->setModel(model);
+    tree->resize(600, 400);
+    tree->show();
+
     return QApplication::exec();
 }
