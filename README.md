@@ -8,7 +8,14 @@
 - I had CMake 3.29.3 installed with `brew install cmake`.
 
 The set of commands to build and run this project (on macOS):
+
 ```sh
 ./cleanup.sh
 ./build_and_run.sh
 ```
+
+## Notes
+
+- I took a look at [official Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) and applied
+  *some*
+  of those on this codebase here.
