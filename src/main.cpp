@@ -5,7 +5,6 @@
 #include <QDir>
 #include <QDockWidget>
 #include <QFileSystemModel>
-#include <QListView>
 #include <QMainWindow>
 #include <QPushButton>
 #include <QStandardPaths>
@@ -44,7 +43,13 @@ int main(int argc, char *argv[]) {
 
     auto directoryPicker = new directory_picker::DirectoryPickerWidget();
 
-    mainWindow.setCentralWidget(directoryPicker->getWidget());
+    mainWindow.setCentralWidget(directoryPicker);
+
+    auto downloadLocations =
+            QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
+    if (downloadLocations.count() > 0) {
+        directoryPicker->setCurrentPath(downloadLocations.first());
+    }
 
     // TODO: and what?
     mainWindow.addToolBar(toolbar);

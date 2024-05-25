@@ -1,21 +1,20 @@
 #ifndef LEARNING__QT_FILE_EXPLORER_DIRECTORYPICKERWIDGET_H
 #define LEARNING__QT_FILE_EXPLORER_DIRECTORYPICKERWIDGET_H
 
-#import <QWidget>
+#import <QTreeView>
 
 namespace directory_picker {
 
-    class DirectoryPickerWidget : public QWidget {
+    class DirectoryPickerWidget : public QTreeView {
 
     public:
         DirectoryPickerWidget();
 
-        // TODO: make use of DirectoryPickerWidget being QWidget instead
-        QWidget *getWidget();
+        void setCurrentPath(QString &path);
 
     private:
-        QWidget *widget;
-
+        QString DEFAULT_PATH = QDir::homePath();
+        QFileSystemModel *model;
     };
 
 }
