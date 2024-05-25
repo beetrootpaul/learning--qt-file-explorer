@@ -18,7 +18,9 @@ find_package(Qt6 COMPONENTS
 
 add_executable(learning__qt_file_explorer src/main.cpp
         src/directory_picker/DirectoryPickerWidget.cpp
-        src/directory_picker/DirectoryPickerWidget.h)
+        src/directory_picker/DirectoryPickerWidget.h
+        src/helpers.h
+        src/helpers.cpp)
 target_link_libraries(learning__qt_file_explorer
         Qt::Core
         Qt::Gui
