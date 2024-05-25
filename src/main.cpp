@@ -10,7 +10,8 @@
 #include <QPushButton>
 #include <QStandardPaths>
 #include <QToolBar>
-#include <QTreeView>
+
+#include "directory_picker/DirectoryPickerWidget.h"
 
 // TODO: extract to a separate file
 void examine(const std::string &label, const QString &path) {
@@ -83,24 +84,6 @@ int main(int argc, char *argv[]) {
     examine("app local data",
             QStandardPaths::standardLocations(QStandardPaths::AppLocalDataLocation));
 
-
-    auto downloadLocations = QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
-    if (downloadLocations.count() < 1) {
-        // TODO: make it nicer
-        throw;
-    }
-
-    auto path = downloadLocations.first();
-
-    auto model = new QFileSystemModel();
-    model->setRootPath(path);
-    auto tree = new QTreeView();
-    tree->setModel(model);
-    tree->setRootIndex(model->index(path));
-    auto list = new QListView();
-    list->setModel(model);
-    list->setRootIndex(model->index(path));
-
     auto button = new QPushButton("btn1");
 
     auto toolbar = new QToolBar();
@@ -110,9 +93,11 @@ int main(int argc, char *argv[]) {
 
     QMainWindow mainWindow = QMainWindow();
     mainWindow.resize(800, 600);
-    mainWindow.setCentralWidget(tree);
-//    mainWindow.setCentralWidget(list);
+
+    auto directoryPicker = new directory_picker::DirectoryPickerWidget();
     
+    mainWindow.setCentralWidget(directoryPicker->getWidget());
+
     // TODO: and what?
     mainWindow.addToolBar(toolbar);
     // TODO: how to do translations for both PL and EN?
