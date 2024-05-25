@@ -1,8 +1,17 @@
-#ifndef LEARNING__QT_FILE_EXPLORER_HELPERS_H
-#define LEARNING__QT_FILE_EXPLORER_HELPERS_H
+#ifndef QT_FILE_EXPLORER_SRC_HELPERS_H
+#define QT_FILE_EXPLORER_SRC_HELPERS_H
 
-void examine(const std::string &label, const QStringList &paths);
+#include <sstream>
 
-void examine(const std::string &label, const QString &path);
+#include <QString>
+#include <QStringList>
 
-#endif //LEARNING__QT_FILE_EXPLORER_HELPERS_H
+namespace qt_file_explorer {
+
+void examine(const std::string& label, const QStringList& paths);
+
+void examine(const std::string& label, const QString& path);
+
+} // namespace qt_file_explorer
+
+#endif //QT_FILE_EXPLORER_SRC_HELPERS_H
