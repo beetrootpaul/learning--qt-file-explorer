@@ -16,6 +16,4 @@ namespace directory_picker {
         QTreeView::setRootIndex(model->index(path));
     }
 
-    \
-
 }
