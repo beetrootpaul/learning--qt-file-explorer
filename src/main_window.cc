@@ -18,8 +18,13 @@ MainWindow::MainWindow() {
   file_explorer_ = new FileExplorer();
   setCentralWidget(file_explorer_);
 
-  // TODO: shortcut
-  // TODO: tab order
+  // TODO: tabbing order
+
+  // TODO: implement it
+  // TODO: shortcut. The `&D` does not work, apparently
+  auto* quickOpenDownloadsButton = new QPushButton("&Quick open: Downloads");
+
+  // TODO: shortcut. The `&R` does not work, apparently
   auto* resetLayoutButton = new QPushButton("&Reset layout");
   QObject::connect(resetLayoutButton, &QPushButton::clicked, [=]() {
     QSettings settings;
@@ -32,9 +37,25 @@ MainWindow::MainWindow() {
     file_explorer_->restorePersistedState();
   });
 
+  // TODO: implement it
+  // TODO: extract?
+  // TODO: shortcut. The `&S` does not work, apparently
+  auto* toggleDirListingViewType = new QPushButton(
+      (!model_ || model_->currentDirListingViewType() ==
+                  model::DirListingViewType::List)
+      ? "&Switch to icons" : "&Switch to list");
+  QObject::connect(toggleDirListingViewType, &QPushButton::clicked, [=]() {
+    model_->setDirListingViewType(model_->currentDirListingViewType() ==
+                                  model::DirListingViewType::List
+                                  ? model::DirListingViewType::Icons
+                                  : model::DirListingViewType::List);
+  });
+
   auto* toolbar = new QToolBar();
   toolbar->setObjectName("main_toolbar");
+  toolbar->addWidget(quickOpenDownloadsButton);
   toolbar->addWidget(resetLayoutButton);
+  toolbar->addWidget(toggleDirListingViewType);
 
   toolbar->setMovable(false);
   toolbar->setFloatable(false);
@@ -56,6 +77,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::setModel(model::Model* model) {
+  model_ = model;
   file_explorer_->setModel(model);
 }
 

@@ -18,6 +18,7 @@ public:
   void setModel(model::Model* model);
 
 private:
+  model::Model* model_;
   FileExplorer* file_explorer_;
 
   void savePersistedState();
