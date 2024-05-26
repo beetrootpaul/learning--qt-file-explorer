@@ -14,6 +14,8 @@
 namespace qt_file_explorer::widgets {
 
 void MainWindow::init(const std::shared_ptr<app_state::AppState>& appState) {
+  appState_ = appState;
+
   setWindowTitle("Qt File Explorer");
 
   splitter_ = new QSplitter();
@@ -81,10 +83,12 @@ void MainWindow::init(const std::shared_ptr<app_state::AppState>& appState) {
 
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar_);
 
+  appState->loadPersistedState();
   loadPersistedState();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
+  appState_->savePersistedState();
   savePersistedState();
 
   // TODO: is this the proper way, with guessing the proper superclass?

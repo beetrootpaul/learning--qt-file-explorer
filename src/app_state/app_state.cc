@@ -1,5 +1,8 @@
 #include "app_state.h"
 
+#include <iostream>
+
+#include <QSettings>
 #include <QStandardPaths>
 
 #include "dir_listing_view_type.h"
@@ -36,6 +39,32 @@ void AppState::toggleDirListingViewType() {
       currentDirListingViewType_ == DirListingViewType::List
       ? DirListingViewType::Icons : DirListingViewType::List;
   emit changed();
+}
+
+void AppState::savePersistedState() {
+  QSettings settings;
+
+  // TODO: extract keys
+  settings.setValue("v3/state/path", currentPath_);
+  settings.setValue("v3/state/view_type", (uint) currentDirListingViewType_);
+}
+
+void AppState::loadPersistedState() {
+  QSettings settings;
+
+  const auto path = settings.value("v3/state/path").toString();
+  if (!path.isEmpty()) {
+    currentPath_ = path;
+  } else {
+    currentPath_ = homePath_;
+  }
+
+  if (settings.contains("v3/state/view_type")) {
+    currentDirListingViewType_ = (DirListingViewType) settings.value(
+        "v3/state/view_type").toUInt();
+  } else {
+    currentDirListingViewType_ = DirListingViewType::List;
+  }
 }
 
 QString AppState::downloadsPath() {
