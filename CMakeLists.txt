@@ -17,8 +17,6 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 add_executable(learning__qt_file_explorer src/main.cc
-        src/helpers.cc
-        src/helpers.h
         src/model/dir_listing_view_type.h
         src/model/model.cc
         src/model/model.h

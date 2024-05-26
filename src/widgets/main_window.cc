@@ -24,6 +24,9 @@ MainWindow::MainWindow() {
   // TODO: implement it
   // TODO: shortcut. The `&D` does not work, apparently
   auto* quickOpenDownloadsButton = new QPushButton("&Quick open: Downloads");
+  QObject::connect(quickOpenDownloadsButton, &QPushButton::clicked, [=]() {
+    model_->switchPathToDownloads();
+  });
 
   // TODO: shortcut. The `&R` does not work, apparently
   auto* resetLayoutButton = new QPushButton("&Reset layout");
