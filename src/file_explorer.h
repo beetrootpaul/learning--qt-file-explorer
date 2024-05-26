@@ -17,6 +17,7 @@ public:
   void closeEvent(QCloseEvent* event) override;
 
   void setModel(model::Model* model);
+  void restorePersistedState();
 
 private:
   // TODO: Do I need to delete them in the window's destructor?
@@ -24,7 +25,6 @@ private:
   DirectoryListingWidget* directory_listing_;
 
   void savePersistedState();
-  void restorePersistedState();
 };
 
 } // namespace qt_file_explorer::widgets

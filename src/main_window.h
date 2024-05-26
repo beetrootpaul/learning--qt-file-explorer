@@ -21,7 +21,7 @@ private:
   FileExplorer* file_explorer_;
 
   void savePersistedState();
-  void restorePersistedState();
+  void restorePersistedState(bool layoutOnly = false);
 
 };
 

@@ -14,7 +14,9 @@ FileExplorer::FileExplorer() {
 
   setOrientation(Qt::Orientation::Horizontal);
   addWidget(directory_picker_);
+  setStretchFactor(0, 1);
   addWidget(directory_listing_);
+  setStretchFactor(1, 2);
 
   restorePersistedState();
 }
@@ -42,16 +44,28 @@ void FileExplorer::restorePersistedState() {
 
   const auto state = settings.value("layout/file_explorer/state",
                                     QByteArray()).toByteArray();
-  if (state.isEmpty()) {
-    std::cout << "H E R E" << std::endl;
-    auto policy = directory_picker_->sizePolicy();
-    policy.setHorizontalStretch(1);
-    directory_picker_->setSizePolicy(policy);
-    policy = directory_listing_->sizePolicy();
-    policy.setHorizontalStretch(2);
-    directory_listing_->setSizePolicy(policy);
-  } else {
+  if (!state.isEmpty()) {
     restoreState(state);
+  } else {
+    int stretch_total = 0;
+    for (int i = 0; i < count(); ++i) {
+      stretch_total += widget(i)->sizePolicy().horizontalStretch();
+    }
+
+    auto desired_sizes = QList<int>(count());
+    int desired_widths_accumulated = 0;
+    for (int i = 0; i < count(); ++i) {
+      float ratio =
+          (static_cast<float>(widget(i)->sizePolicy().horizontalStretch())) /
+          (static_cast<float>(stretch_total));
+      int desired_width = i < (count() - 1)
+                          ? static_cast<int>(std::floor(
+              (static_cast<float>(width()) * ratio)))
+                          : width() - desired_widths_accumulated;
+      desired_widths_accumulated += desired_width;
+      desired_sizes[i] = desired_width;
+    }
+    setSizes(desired_sizes);
   }
 }
 

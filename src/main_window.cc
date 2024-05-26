@@ -16,14 +16,30 @@ MainWindow::MainWindow() {
   file_explorer_ = new FileExplorer();
   setCentralWidget(file_explorer_);
 
-  auto* toolbar = new QToolBar("t 1111");
-  toolbar->setObjectName("t1");
-  toolbar->addWidget(new QPushButton("asdadsad"));
+  // TODO: shortcut
+  // TODO: tab order
+  auto* resetLayoutButton = new QPushButton("&Reset layout");
+  QObject::connect(resetLayoutButton, &QPushButton::clicked, [=]() {
+    QSettings settings;
+    settings.remove("layout");
+    // TODO: misleading naming
+    restorePersistedState(/*layoutOnly=*/true);
+    // TODO: this does not work
+    // TODO: conceptually if I had many widgets to reset, nested deeply, I would have keep a reference to each of them :-/
+    file_explorer_->restorePersistedState();
+  });
+
+  auto* toolbar = new QToolBar();
+  toolbar->setObjectName("main_toolbar");
+  toolbar->addWidget(resetLayoutButton);
+
+  toolbar->setMovable(false);
+  toolbar->setFloatable(false);
+
+  // Remove context menu in order to remove the ability to close this toolbar
+  toolbar->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
+
   addToolBar(toolbar);
-  auto* toolbar2 = new QToolBar("tttt 2");
-  toolbar2->setObjectName("t2");
-  toolbar2->addWidget(new QPushButton("222222"));
-  addToolBar(toolbar2);
 
   restorePersistedState();
 }
@@ -43,40 +59,36 @@ void MainWindow::setModel(model::Model* model) {
 void MainWindow::savePersistedState() {
   QSettings settings;
   // TODO: extract key constants
-  settings.setValue("layout/main_window/size", size());
-  settings.setValue("layout/main_window/pos", pos());
+  settings.setValue("window/main_window/size", size());
+  settings.setValue("window/main_window/pos", pos());
   settings.setValue("layout/main_window/state", saveState());
 }
 
-void MainWindow::restorePersistedState() {
+// TODO: not nice design with this layoutOnly flag :-/
+void MainWindow::restorePersistedState(bool layoutOnly) {
   QSettings settings;
 
-  const auto size = settings.value("layout/main_window/size").toSize();
-  if (size.isEmpty()) {
-    std::cout << "! empty size !" << std::endl;
-    resize(800, 600);
-  } else {
-    std::cout << "~ restore size ~" << std::endl;
-    resize(size);
-  }
+  if (!layoutOnly) {
+    const auto size = settings.value("window/main_window/size").toSize();
+    if (!size.isEmpty()) {
+      resize(size);
+    } else {
+      resize(800, 600);
+    }
 
-  const auto pos = settings.value("layout/main_window/pos").toPoint();
-  if (pos.isNull()) {
-    std::cout << "! empty pos !" << std::endl;
-    // TODO: make it centered
-    move(10, 10);
-  } else {
-    std::cout << "~ restore pos ~" << std::endl;
-    // TODO: make it always visible even if screen size decreases
-    move(pos);
+    const auto pos = settings.value("window/main_window/pos").toPoint();
+    if (!pos.isNull()) {
+      // TODO: make it always visible even if screen size decreases
+      move(pos);
+    } else {
+      // TODO: make it centered
+      move(10, 10);
+    }
   }
 
   const auto state = settings.value("layout/main_window/state",
                                     QByteArray()).toByteArray();
-  if (state.isEmpty()) {
-    std::cout << "! empty state !" << std::endl;
-  } else {
-    std::cout << "~ restore state ~" << std::endl;
+  if (!state.isEmpty()) {
     restoreState(state);
   }
 }
