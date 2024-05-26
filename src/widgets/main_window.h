@@ -17,12 +17,14 @@ public:
 
   void closeEvent(QCloseEvent* event) override;
 
-private:
-  QToolBar* toolbar_;
-  QSplitter* splitter_;
-
   void savePersistedState() override;
   void loadPersistedState() override;
+
+private:
+  std::shared_ptr<app_state::AppState> appState_;
+
+  QToolBar* toolbar_;
+  QSplitter* splitter_;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();

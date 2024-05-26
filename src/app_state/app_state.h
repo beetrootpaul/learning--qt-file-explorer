@@ -5,11 +5,12 @@
 #include <QObject>
 #include <QString>
 
+#include "../with_persisted_state.h"
 #include "dir_listing_view_type.h"
 
 namespace qt_file_explorer::app_state {
 
-class AppState : public QObject {
+class AppState : public QObject, public WithPersistedState {
 
 Q_OBJECT
 
@@ -22,6 +23,9 @@ public:
 
   DirListingViewType currentDirListingViewType();
   void toggleDirListingViewType();
+
+  void savePersistedState() override;
+  void loadPersistedState() override;
 
 signals:
   void changed();
