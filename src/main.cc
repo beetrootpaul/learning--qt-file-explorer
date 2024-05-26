@@ -20,6 +20,10 @@ using namespace qt_file_explorer;
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
 
+  QCoreApplication::setOrganizationName("Beetroot Paul");
+  QCoreApplication::setOrganizationDomain("beetrootpaul.com");
+  QCoreApplication::setApplicationName("QtFileExplorer");
+
   helpers::examine("HOME",
                    QDir::homePath());
   helpers::examine("minecraft server",
