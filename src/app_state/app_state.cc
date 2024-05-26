@@ -10,8 +10,14 @@
 namespace qt_file_explorer::app_state {
 
 AppState::AppState() {
+  qDebug() << "+" << this;
+
   currentPath_ = homePath_;
   currentDirListingViewType_ = DirListingViewType::List;
+}
+
+AppState::~AppState() {
+  qDebug() << "~" << this;
 }
 
 // TODO: persist this between app runs

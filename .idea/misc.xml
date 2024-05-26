@@ -4,6 +4,8 @@
   <component name="CidrRootsConfiguration">
     <excludeRoots>
       <file path="$PROJECT_DIR$/build" />
+      <file path="$PROJECT_DIR$/build_debug" />
+      <file path="$PROJECT_DIR$/build_release" />
     </excludeRoots>
   </component>
 </project>

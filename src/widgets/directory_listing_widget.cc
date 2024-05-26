@@ -6,14 +6,21 @@
 
 namespace qt_file_explorer::widgets {
 
-void
-DirectoryListingWidget::init(
-    const std::shared_ptr<app_state::AppState>& appState) {
+DirectoryListingWidget::DirectoryListingWidget() {
+  qDebug() << "+" << this;
+}
+
+DirectoryListingWidget::~DirectoryListingWidget() {
+  qDebug() << "~" << this;
+}
+
+void DirectoryListingWidget::init(
+    app_state::AppState* appState) {
   auto* model = new QFileSystemModel();
   model->setFilter(QDir::Files);
   setModel(model);
 
-  connect(appState.get(), &app_state::AppState::changed, [=]() {
+  connect(appState, &app_state::AppState::changed, [=]() {
     auto path = appState->currentPath();
     // TODO: should I set an entire drive here?
     model->setRootPath(path);

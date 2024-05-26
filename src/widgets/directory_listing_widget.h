@@ -14,7 +14,10 @@ class DirectoryListingWidget : public QListView {
 Q_OBJECT
 
 public:
-  void init(const std::shared_ptr<app_state::AppState>& appState);
+  DirectoryListingWidget();
+  ~DirectoryListingWidget();
+
+  void init(app_state::AppState* appState);
 
 };
 

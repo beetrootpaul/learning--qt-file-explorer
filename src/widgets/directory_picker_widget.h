@@ -13,7 +13,10 @@ class DirectoryPickerWidget : public QListView {
 Q_OBJECT
 
 public:
-  void init(const std::shared_ptr<app_state::AppState>& appState);
+  DirectoryPickerWidget();
+  ~DirectoryPickerWidget();
+
+  void init(app_state::AppState* appState);
 
 };
 

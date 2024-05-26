@@ -13,10 +13,18 @@
 
 namespace qt_file_explorer::widgets {
 
-void MainWindow::init(const std::shared_ptr<app_state::AppState>& appState) {
-  appState_ = appState;
+MainWindow::MainWindow() {
+  qDebug() << "+" << this;
+}
 
+MainWindow::~MainWindow() {
+  qDebug() << "~" << this;
+}
+
+void MainWindow::init(app_state::AppState* appState) {
   setWindowTitle("Qt File Explorer");
+
+  appState_ = appState;
 
   splitter_ = new QSplitter();
   setCentralWidget(splitter_);
@@ -60,7 +68,8 @@ void MainWindow::init(const std::shared_ptr<app_state::AppState>& appState) {
   connect(toggleDirListingViewTypeButton, &QPushButton::clicked, [=]() {
     appState->toggleDirListingViewType();
   });
-  connect(appState.get(), &app_state::AppState::changed, [=]() {
+  // TODO: try to change lambdas into methods and check if QtSharedPointer or something like that would work OK for AppState
+  connect(appState, &app_state::AppState::changed, [=]() {
     toggleDirListingViewTypeButton->setText(
         appState->currentDirListingViewType() ==
         app_state::DirListingViewType::List ? "&Switch to icons"
@@ -69,6 +78,7 @@ void MainWindow::init(const std::shared_ptr<app_state::AppState>& appState) {
   });
 
   toolbar_ = new QToolBar();
+  // Object name is required for state serialization
   toolbar_->setObjectName("main_toolbar");
   toolbar_->addWidget(quickOpenHomeButton);
   toolbar_->addWidget(quickOpenDownloadsButton);

@@ -16,6 +16,7 @@ Q_OBJECT
 
 public:
   AppState();
+  ~AppState();
 
   QString currentPath();
   void switchPathToHome();

@@ -15,7 +15,10 @@ class MainWindow : public QMainWindow, public WithPersistedState {
 Q_OBJECT
 
 public:
-  void init(const std::shared_ptr<app_state::AppState>& appState);
+  MainWindow();
+  ~MainWindow();
+
+  void init(app_state::AppState* appState);
 
   void closeEvent(QCloseEvent* event) override;
 
@@ -23,7 +26,7 @@ public:
   void loadPersistedState() override;
 
 private:
-  std::shared_ptr<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
   QToolBar* toolbar_;
   QSplitter* splitter_;

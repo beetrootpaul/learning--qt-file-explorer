@@ -7,13 +7,22 @@
 
 namespace qt_file_explorer::widgets {
 
+DirectoryPickerWidget::DirectoryPickerWidget() {
+  qDebug() << "+" << this;
+}
+
+DirectoryPickerWidget::~DirectoryPickerWidget() {
+  qDebug() << "~" << this;
+}
+
 void DirectoryPickerWidget::init(
-    const std::shared_ptr<app_state::AppState>& appState) {
+    app_state::AppState* appState) {
+
   auto* model = new QFileSystemModel();
   model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
   setModel(model);
 
-  connect(appState.get(), &app_state::AppState::changed, [=]() {
+  connect(appState, &app_state::AppState::changed, [=]() {
     auto path = appState->currentPath();
     // TODO: should I set an entire drive here?
     model->setRootPath(path);
