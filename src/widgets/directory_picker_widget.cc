@@ -4,24 +4,20 @@
 
 #include <QDir>
 #include <QFileSystemModel>
-#include <QStandardPaths>
 
 namespace qt_file_explorer::widgets {
 
-// TODO: model_ not initialized in constructor :-(
-DirectoryPickerWidget::DirectoryPickerWidget() {
-  file_system_model_ = new QFileSystemModel();
-  file_system_model_->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-  QTreeView::setModel(file_system_model_);
-}
+void DirectoryPickerWidget::init(
+    const std::shared_ptr<app_state::AppState>& appState) {
+  auto* model = new QFileSystemModel();
+  model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  setModel(model);
 
-void DirectoryPickerWidget::setModel(model::Model* model) {
-  model_ = model;
-
-  QObject::connect(model_, &model::Model::changed, [=]() {
-    const QString& path = model_->currentPath();
-    file_system_model_->setRootPath(path);
-    QTreeView::setRootIndex(file_system_model_->index(path));
+  connect(appState.get(), &app_state::AppState::changed, [=]() {
+    auto path = appState->currentPath();
+    // TODO: should I set an entire drive here?
+    model->setRootPath(path);
+    setRootIndex(model->index(path));
   });
 }
 

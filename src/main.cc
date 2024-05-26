@@ -3,10 +3,10 @@
 #include <QApplication>
 #include <QHBoxLayout>
 
+#include "app_state/app_state.h"
 #include "widgets/main_window.h"
-#include "model/model.h"
 
-// TODO: group some files into dirs
+// TODO: non-DEBUG build?
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
@@ -15,16 +15,16 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setOrganizationDomain("beetrootpaul.com");
   QCoreApplication::setApplicationName("QtFileExplorer");
 
-  auto main_window = qt_file_explorer::widgets::MainWindow();
+  auto appState = std::make_shared<qt_file_explorer::app_state::AppState>();
 
-  auto* model = new qt_file_explorer::model::Model();
-  main_window.setModel(model);
+  auto mainWindow = qt_file_explorer::widgets::MainWindow();
+  mainWindow.init(appState);
 
   // Trigger slots listening to this signal. Thanks to that we do
   // not have to add initialization code and can rely on slots only.
-  model->changed();
+  appState->changed();
 
-  main_window.show();
+  mainWindow.show();
 
-  return QApplication::exec();
+  return app.exec();
 }

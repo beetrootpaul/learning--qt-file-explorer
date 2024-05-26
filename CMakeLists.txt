@@ -17,17 +17,16 @@ find_package(Qt6 COMPONENTS
         REQUIRED)
 
 add_executable(learning__qt_file_explorer src/main.cc
-        src/model/dir_listing_view_type.h
-        src/model/model.cc
-        src/model/model.h
+        src/app_state/app_state.cc
+        src/app_state/app_state.h
+        src/app_state/dir_listing_view_type.h
         src/widgets/directory_listing_widget.cc
         src/widgets/directory_listing_widget.h
         src/widgets/directory_picker_widget.cc
         src/widgets/directory_picker_widget.h
-        src/widgets/file_explorer.cc
-        src/widgets/file_explorer.h
         src/widgets/main_window.cc
         src/widgets/main_window.h
+        src/with_persisted_state.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core
