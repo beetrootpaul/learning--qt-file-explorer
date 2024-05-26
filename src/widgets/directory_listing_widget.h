@@ -4,17 +4,19 @@
 #import <QFileSystemModel>
 #import <QListView>
 
+#include "../model/model.h"
+
 namespace qt_file_explorer::widgets {
 
 class DirectoryListingWidget : public QListView {
 
 public:
   DirectoryListingWidget();
-  void setCurrentPath(const QString& path);
+  void setModel(model::Model* model);
 
 private:
-  const QString default_path_ = QDir::homePath();
-  QFileSystemModel* model_;
+  model::Model* model_;
+  QFileSystemModel* file_system_model_;
 
 };
 

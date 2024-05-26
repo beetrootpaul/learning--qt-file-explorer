@@ -23,14 +23,15 @@ MainWindow::MainWindow() {
 
   // TODO: implement it
   // TODO: shortcut. The `&D` does not work, apparently
-  auto* quickOpenDownloadsButton = new QPushButton("&Quick open: Downloads");
-  QObject::connect(quickOpenDownloadsButton, &QPushButton::clicked, [=]() {
+  // TODO: reuse button labels
+  auto* quick_open_downloads_button = new QPushButton("&Quick open: Downloads");
+  QObject::connect(quick_open_downloads_button, &QPushButton::clicked, [=]() {
     model_->switchPathToDownloads();
   });
 
   // TODO: shortcut. The `&R` does not work, apparently
-  auto* resetLayoutButton = new QPushButton("&Reset layout");
-  QObject::connect(resetLayoutButton, &QPushButton::clicked, [=]() {
+  auto* reset_layout_button = new QPushButton("&Reset layout");
+  QObject::connect(reset_layout_button, &QPushButton::clicked, [=]() {
     QSettings settings;
     settings.remove("layout");
     settings.remove("window");
@@ -44,22 +45,18 @@ MainWindow::MainWindow() {
   // TODO: implement it
   // TODO: extract?
   // TODO: shortcut. The `&S` does not work, apparently
-  auto* toggleDirListingViewType = new QPushButton(
-      (!model_ || model_->currentDirListingViewType() ==
-                  model::DirListingViewType::List)
-      ? "&Switch to icons" : "&Switch to list");
-  QObject::connect(toggleDirListingViewType, &QPushButton::clicked, [=]() {
-    model_->setDirListingViewType(model_->currentDirListingViewType() ==
-                                  model::DirListingViewType::List
-                                  ? model::DirListingViewType::Icons
-                                  : model::DirListingViewType::List);
+  toggle_dir_listing_view_type_ = new QPushButton("(placeholder)");
+  QObject::connect(toggle_dir_listing_view_type_, &QPushButton::clicked, [=]() {
+    model_->setDirListingViewType(
+        model_->currentDirListingViewType() == model::DirListingViewType::List
+        ? model::DirListingViewType::Icons : model::DirListingViewType::List);
   });
 
   auto* toolbar = new QToolBar();
   toolbar->setObjectName("main_toolbar");
-  toolbar->addWidget(quickOpenDownloadsButton);
-  toolbar->addWidget(resetLayoutButton);
-  toolbar->addWidget(toggleDirListingViewType);
+  toolbar->addWidget(quick_open_downloads_button);
+  toolbar->addWidget(reset_layout_button);
+  toolbar->addWidget(toggle_dir_listing_view_type_);
 
   toolbar->setMovable(false);
   toolbar->setFloatable(false);
@@ -83,6 +80,13 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 void MainWindow::setModel(model::Model* model) {
   model_ = model;
   file_explorer_->setModel(model);
+
+  QObject::connect(model_, &model::Model::changed, [=]() {
+    toggle_dir_listing_view_type_->setText(
+        model_->currentDirListingViewType() ==
+        model::DirListingViewType::List
+        ? "&Switch to icons" : "&Switch to list");
+  });
 }
 
 void MainWindow::savePersistedState() {

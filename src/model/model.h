@@ -2,13 +2,16 @@
 #define QT_FILE_EXPLORER_SRC_MODEL_H
 
 #include <QDir>
+#include <QObject>
 #include <QString>
 
 #include "dir_listing_view_type.h"
 
 namespace qt_file_explorer::model {
 
-class Model {
+class Model : public QObject {
+
+Q_OBJECT
 
 public:
   Model();
@@ -18,6 +21,9 @@ public:
 
   DirListingViewType currentDirListingViewType();
   void setDirListingViewType(DirListingViewType viewType);
+
+signals:
+  void changed();
 
 private:
   const QString fallback_path_ = QDir::homePath();

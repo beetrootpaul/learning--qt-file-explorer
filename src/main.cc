@@ -16,7 +16,14 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setApplicationName("QtFileExplorer");
 
   auto main_window = qt_file_explorer::widgets::MainWindow();
-  main_window.setModel(new qt_file_explorer::model::Model());
+
+  auto* model = new qt_file_explorer::model::Model();
+  main_window.setModel(model);
+
+  // Trigger slots listening to this signal. Thanks to that we do
+  // not have to add initialization code and can rely on slots only.
+  model->changed();
+
   main_window.show();
 
   return QApplication::exec();

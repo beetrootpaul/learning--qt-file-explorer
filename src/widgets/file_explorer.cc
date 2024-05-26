@@ -4,8 +4,6 @@
 
 #include <QSettings>
 
-#include "../model/model.h"
-
 namespace qt_file_explorer::widgets {
 
 FileExplorer::FileExplorer() {
@@ -29,8 +27,8 @@ void FileExplorer::closeEvent(QCloseEvent* event) {
 }
 
 void FileExplorer::setModel(model::Model* model) {
-  directory_picker_->setCurrentPath(model->currentPath());
-  directory_listing_->setCurrentPath(model->currentPath());
+  directory_picker_->setModel(model);
+  directory_listing_->setModel(model);
 }
 
 void FileExplorer::savePersistedState() {

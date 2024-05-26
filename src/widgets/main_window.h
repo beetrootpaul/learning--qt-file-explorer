@@ -2,6 +2,7 @@
 #define QT_FILE_EXPLORER_SRC_MAIN_WINDOW_H
 
 #include <QMainWindow>
+#include <QPushButton>
 
 #include "file_explorer.h"
 #include "../model/model.h"
@@ -20,6 +21,7 @@ public:
 private:
   model::Model* model_;
   FileExplorer* file_explorer_;
+  QPushButton* toggle_dir_listing_view_type_;
 
   void savePersistedState();
   void restorePersistedState(bool layoutOnly = false);

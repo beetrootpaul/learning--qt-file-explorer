@@ -17,14 +17,17 @@ QString Model::currentPath() {
 
 void Model::switchPathToDownloads() {
   current_path_ = downloadsPath();
+  emit changed();
 }
 
 DirListingViewType Model::currentDirListingViewType() {
   return dir_listing_view_type_;
 }
 
+// TODO: persist this between app runs
 void Model::setDirListingViewType(DirListingViewType viewType) {
   dir_listing_view_type_ = viewType;
+  emit changed();
 }
 
 QString Model::downloadsPath() {
