@@ -2,63 +2,46 @@
 
 #include <QApplication>
 #include <QDir>
-#include <QDockWidget>
-#include <QMainWindow>
-#include <QPushButton>
+#include <QHBoxLayout>
 #include <QStandardPaths>
-#include <QToolBar>
 
 #include "helpers.h"
-#include "directory_picker/directory_picker_widget.h"
+#include "main_window.h"
+#include "model.h"
 
-// TODO: extract most to a new class QtFileExplorer
+// TODO: group some files into dirs
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
 
-  qt_file_explorer::examine("HOME",
-                            QDir::homePath());
-  qt_file_explorer::examine("minecraft server",
-                            QDir::homePath().append(
-                                "/minecraft_server_forge_1_20_1"));
-  qt_file_explorer::examine("invalid path",
-                            QDir::homePath().append("/does-not-exist"));
-  qt_file_explorer::examine("Developer",
-                            QDir::homePath().append("/Developer"));
-  qt_file_explorer::examine("downloads",
-                            QStandardPaths::standardLocations(
-                                QStandardPaths::DownloadLocation));
-  qt_file_explorer::examine("documents",
-                            QStandardPaths::standardLocations(
-                                QStandardPaths::DocumentsLocation));
-  qt_file_explorer::examine("app local data",
-                            QStandardPaths::standardLocations(
-                                QStandardPaths::AppLocalDataLocation));
+  QCoreApplication::setOrganizationName("Beetroot Paul");
+  QCoreApplication::setOrganizationDomain("beetrootpaul.com");
+  QCoreApplication::setApplicationName("QtFileExplorer");
 
-  auto* button = new QPushButton("btn1");
+  qt_file_explorer::helpers::examine("HOME",
+                                     QDir::homePath());
+  qt_file_explorer::helpers::examine("minecraft server",
+                                     QDir::homePath().append(
+                                         "/minecraft_server_forge_1_20_1"));
+  qt_file_explorer::helpers::examine("invalid path",
+                                     QDir::homePath().append(
+                                         "/does-not-exist"));
+  qt_file_explorer::helpers::examine("Developer",
+                                     QDir::homePath().append("/Developer"));
+  qt_file_explorer::helpers::examine("downloads",
+                                     QStandardPaths::standardLocations(
+                                         QStandardPaths::DownloadLocation));
+  qt_file_explorer::helpers::examine("documents",
+                                     QStandardPaths::standardLocations(
+                                         QStandardPaths::DocumentsLocation));
+  qt_file_explorer::helpers::examine("app local data",
+                                     QStandardPaths::standardLocations(
+                                         QStandardPaths::AppLocalDataLocation));
 
-  auto* toolbar = new QToolBar();
-  toolbar->setFloatable(false);
-  toolbar->setMovable(false);
-  toolbar->addWidget(button);
+  auto main_window = qt_file_explorer::widgets::MainWindow();
 
-  auto main_window = QMainWindow();
-  main_window.resize(800, 600);
+  main_window.setModel(new qt_file_explorer::model::Model());
 
-  auto* directory_picker = new qt_file_explorer::DirectoryPickerWidget();
-
-  main_window.setCentralWidget(directory_picker);
-
-  QStringList download_locations =
-      QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
-  if (download_locations.count() > 0) {
-    directory_picker->setCurrentPath(download_locations.first());
-  }
-
-  main_window.addToolBar(toolbar);
-
-  main_window.setWindowTitle(
-      QApplication::translate("window", "Qt File Explorer"));
   main_window.show();
 
   return QApplication::exec();

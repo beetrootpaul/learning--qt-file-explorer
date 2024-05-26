@@ -5,7 +5,7 @@
 
 #include <QDir>
 
-namespace qt_file_explorer {
+namespace qt_file_explorer::helpers {
 
 void examine(const std::string& label, const QStringList& paths) {
   int i = 1;
@@ -51,4 +51,5 @@ void examine(const std::string& label, const QString& path) {
   std::cout << std::endl;
 }
 
-} // namespace qt_file_explorer
+} // namespace qt_file_explorer::helpers
+
