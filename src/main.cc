@@ -42,30 +42,6 @@ int main(int argc, char* argv[]) {
 
   main_window.setModel(new qt_file_explorer::model::Model());
 
-//  QSettings settings;
-
-//  settings.remove("layout");
-
-//  std::cout << "???: " << settings.contains("layout/splitter_state")
-//            << std::endl;
-
-//  if (settings.contains("layout/splitter_state")) {
-//    auto result = splitter->restoreState(
-//        settings.value("layout/splitter_state").toByteArray());
-//    std::cout << "SRestore result: " << result << std::endl;
-//  } else {
-//    splitter->setStretchFactor(0, 1);
-//    splitter->setStretchFactor(1, 2);
-//  }
-
-//  QObject::connect(splitter, &QSplitter::splitterMoved,
-//                   [=]() {
-//                     std::cout << "! splitterMoved" << std::endl;
-  // TODO: move it to closeEvent
-//                     QSettings s;
-//                     s.setValue("layout/splitter_state", splitter->saveState());
-//                   });
-
   main_window.show();
 
   return QApplication::exec();

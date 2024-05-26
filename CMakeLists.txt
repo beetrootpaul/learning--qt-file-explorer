@@ -27,6 +27,8 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/directory_listing_widget.h
         src/main_window.cc
         src/main_window.h
+        src/file_explorer.cc
+        src/file_explorer.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core

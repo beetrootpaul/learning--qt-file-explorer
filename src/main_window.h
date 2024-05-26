@@ -3,8 +3,7 @@
 
 #include <QMainWindow>
 
-#include "directory_picker_widget.h"
-#include "directory_listing_widget.h"
+#include "file_explorer.h"
 #include "model.h"
 
 namespace qt_file_explorer::widgets {
@@ -16,15 +15,13 @@ public:
 
   void closeEvent(QCloseEvent* event) override;
 
-  void setModel(qt_file_explorer::model::Model* model);
+  void setModel(model::Model* model);
 
 private:
-  // TODO: Do I need to delete them in the window's destructor?
-  DirectoryPickerWidget* directory_picker_;
-  DirectoryListingWidget* directory_listing_;
+  FileExplorer* file_explorer_;
 
-  void writeSettings();
-  void readSettings();
+  void savePersistedState();
+  void restorePersistedState();
 
 };
 
