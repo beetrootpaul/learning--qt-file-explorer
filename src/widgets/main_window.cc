@@ -2,7 +2,9 @@
 
 #include <iostream>
 
+#include <QApplication>
 #include <QPushButton>
+#include <QScreen>
 #include <QSettings>
 #include <QToolBar>
 
@@ -10,18 +12,29 @@
 
 namespace qt_file_explorer::widgets {
 
+// TODO: should I use constructor for all of this? There is the warning abut model_ not being initialized
 MainWindow::MainWindow() {
   setWindowTitle("Qt File Explorer");
 
   file_explorer_ = new FileExplorer();
   setCentralWidget(file_explorer_);
 
-  // TODO: shortcut
-  // TODO: tab order
-  auto* resetLayoutButton = new QPushButton("&Reset layout");
-  QObject::connect(resetLayoutButton, &QPushButton::clicked, [=]() {
+  // TODO: tabbing order
+
+  // TODO: implement it
+  // TODO: shortcut. The `&D` does not work, apparently
+  // TODO: reuse button labels
+  auto* quick_open_downloads_button = new QPushButton("&Quick open: Downloads");
+  QObject::connect(quick_open_downloads_button, &QPushButton::clicked, [=]() {
+    model_->switchPathToDownloads();
+  });
+
+  // TODO: shortcut. The `&R` does not work, apparently
+  auto* reset_layout_button = new QPushButton("&Reset layout");
+  QObject::connect(reset_layout_button, &QPushButton::clicked, [=]() {
     QSettings settings;
     settings.remove("layout");
+    settings.remove("window");
     // TODO: misleading naming
     restorePersistedState(/*layoutOnly=*/true);
     // TODO: this does not work
@@ -29,9 +42,21 @@ MainWindow::MainWindow() {
     file_explorer_->restorePersistedState();
   });
 
+  // TODO: implement it
+  // TODO: extract?
+  // TODO: shortcut. The `&S` does not work, apparently
+  toggle_dir_listing_view_type_ = new QPushButton("(placeholder)");
+  QObject::connect(toggle_dir_listing_view_type_, &QPushButton::clicked, [=]() {
+    model_->setDirListingViewType(
+        model_->currentDirListingViewType() == model::DirListingViewType::List
+        ? model::DirListingViewType::Icons : model::DirListingViewType::List);
+  });
+
   auto* toolbar = new QToolBar();
   toolbar->setObjectName("main_toolbar");
-  toolbar->addWidget(resetLayoutButton);
+  toolbar->addWidget(quick_open_downloads_button);
+  toolbar->addWidget(reset_layout_button);
+  toolbar->addWidget(toggle_dir_listing_view_type_);
 
   toolbar->setMovable(false);
   toolbar->setFloatable(false);
@@ -53,7 +78,15 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::setModel(model::Model* model) {
+  model_ = model;
   file_explorer_->setModel(model);
+
+  QObject::connect(model_, &model::Model::changed, [=]() {
+    toggle_dir_listing_view_type_->setText(
+        model_->currentDirListingViewType() ==
+        model::DirListingViewType::List
+        ? "&Switch to icons" : "&Switch to list");
+  });
 }
 
 void MainWindow::savePersistedState() {
@@ -71,23 +104,29 @@ void MainWindow::restorePersistedState(bool layoutOnly) {
   if (!layoutOnly) {
     const auto size = settings.value("window/main_window/size").toSize();
     if (!size.isEmpty()) {
+      std::cout << "size is NOT null" << std::endl;
       resize(size);
     } else {
+      std::cout << "size IS null" << std::endl;
       resize(800, 600);
     }
 
     const auto pos = settings.value("window/main_window/pos").toPoint();
     if (!pos.isNull()) {
+      std::cout << "pos is NOT null" << std::endl;
       // TODO: make it always visible even if screen size decreases
       move(pos);
     } else {
-      // TODO: make it centered
-      move(10, 10);
+      std::cout << "pos IS null" << std::endl;
+      int desired_pos_x =
+          (screen()->availableGeometry().width() - width()) / 2;
+      int desired_pos_y =
+          (screen()->availableGeometry().height() - height()) / 2;
+      move(desired_pos_x, desired_pos_y);
     }
   }
 
-  const auto state = settings.value("layout/main_window/state",
-                                    QByteArray()).toByteArray();
+  const auto state = settings.value("layout/main_window/state").toByteArray();
   if (!state.isEmpty()) {
     restoreState(state);
   }

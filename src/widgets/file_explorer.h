@@ -5,7 +5,7 @@
 
 #include "directory_picker_widget.h"
 #include "directory_listing_widget.h"
-#include "model.h"
+#include "../model/model.h"
 
 namespace qt_file_explorer::widgets {
 
