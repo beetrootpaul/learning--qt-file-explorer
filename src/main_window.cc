@@ -2,7 +2,9 @@
 
 #include <iostream>
 
+#include <QApplication>
 #include <QPushButton>
+#include <QScreen>
 #include <QSettings>
 #include <QToolBar>
 
@@ -22,6 +24,7 @@ MainWindow::MainWindow() {
   QObject::connect(resetLayoutButton, &QPushButton::clicked, [=]() {
     QSettings settings;
     settings.remove("layout");
+    settings.remove("window");
     // TODO: misleading naming
     restorePersistedState(/*layoutOnly=*/true);
     // TODO: this does not work
@@ -71,23 +74,29 @@ void MainWindow::restorePersistedState(bool layoutOnly) {
   if (!layoutOnly) {
     const auto size = settings.value("window/main_window/size").toSize();
     if (!size.isEmpty()) {
+      std::cout << "size is NOT null" << std::endl;
       resize(size);
     } else {
+      std::cout << "size IS null" << std::endl;
       resize(800, 600);
     }
 
     const auto pos = settings.value("window/main_window/pos").toPoint();
     if (!pos.isNull()) {
+      std::cout << "pos is NOT null" << std::endl;
       // TODO: make it always visible even if screen size decreases
       move(pos);
     } else {
-      // TODO: make it centered
-      move(10, 10);
+      std::cout << "pos IS null" << std::endl;
+      int desired_pos_x =
+          (screen()->availableGeometry().width() - width()) / 2;
+      int desired_pos_y =
+          (screen()->availableGeometry().height() - height()) / 2;
+      move(desired_pos_x, desired_pos_y);
     }
   }
 
-  const auto state = settings.value("layout/main_window/state",
-                                    QByteArray()).toByteArray();
+  const auto state = settings.value("layout/main_window/state").toByteArray();
   if (!state.isEmpty()) {
     restoreState(state);
   }

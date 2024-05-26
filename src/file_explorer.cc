@@ -35,6 +35,7 @@ void FileExplorer::setModel(model::Model* model) {
 
 void FileExplorer::savePersistedState() {
   QSettings settings;
+  // TODO: add key versioning for easy of development (check->fresh->check)
   // TODO: extract key constants
   settings.setValue("layout/file_explorer/state", saveState());
 }
@@ -42,11 +43,12 @@ void FileExplorer::savePersistedState() {
 void FileExplorer::restorePersistedState() {
   QSettings settings;
 
-  const auto state = settings.value("layout/file_explorer/state",
-                                    QByteArray()).toByteArray();
+  const auto state = settings.value("layout/file_explorer/state").toByteArray();
   if (!state.isEmpty()) {
+    std::cout << "state is NOT null" << std::endl;
     restoreState(state);
   } else {
+    std::cout << "state IS null" << std::endl;
     int stretch_total = 0;
     for (int i = 0; i < count(); ++i) {
       stretch_total += widget(i)->sizePolicy().horizontalStretch();
