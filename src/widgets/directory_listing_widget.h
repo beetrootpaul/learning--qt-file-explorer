@@ -11,6 +11,8 @@ namespace qt_file_explorer::widgets {
 // TODO: change to QTableView, but support icons from QListView as well
 class DirectoryListingWidget : public QListView {
 
+Q_OBJECT
+
 public:
   void init(const std::shared_ptr<app_state::AppState>& appState);
 

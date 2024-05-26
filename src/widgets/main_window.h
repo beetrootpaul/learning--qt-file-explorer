@@ -12,6 +12,8 @@ namespace qt_file_explorer::widgets {
 
 class MainWindow : public QMainWindow, public WithPersistedState {
 
+Q_OBJECT
+
 public:
   void init(const std::shared_ptr<app_state::AppState>& appState);
 

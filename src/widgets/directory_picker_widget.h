@@ -10,6 +10,8 @@ namespace qt_file_explorer::widgets {
 
 class DirectoryPickerWidget : public QListView {
 
+Q_OBJECT
+
 public:
   void init(const std::shared_ptr<app_state::AppState>& appState);
 
