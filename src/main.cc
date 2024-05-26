@@ -3,7 +3,6 @@
 #include <QApplication>
 #include <QDir>
 #include <QHBoxLayout>
-#include <QMainWindow>
 #include <QPushButton>
 #include <QSettings>
 #include <QSplitter>
@@ -13,6 +12,7 @@
 #include "directory_listing_widget.h"
 #include "directory_picker_widget.h"
 #include "helpers.h"
+#include "main_window.h"
 #include "model.h"
 
 using namespace qt_file_explorer;
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
                    QStandardPaths::standardLocations(
                        QStandardPaths::AppLocalDataLocation));
 
-  auto main_window = QMainWindow();
+  auto main_window = MainWindow();
 
   auto* directory_picker = new widgets::DirectoryPickerWidget();
   directory_picker->setCurrentPath(model::Model::currentPath());
@@ -65,26 +65,32 @@ int main(int argc, char* argv[]) {
             << std::endl;
 
   if (settings.contains("layout/splitter_state")) {
-    auto result = splitter->restoreState(
-        settings.value("layout/splitter_state").toByteArray());
-    std::cout << "SRestore result: " << result << std::endl;
+//    auto result = splitter->restoreState(
+//        settings.value("layout/splitter_state").toByteArray());
+//    std::cout << "SRestore result: " << result << std::endl;
   } else {
-    splitter->setStretchFactor(0, 1);
-    splitter->setStretchFactor(1, 2);
+//    splitter->setStretchFactor(0, 1);
+//    splitter->setStretchFactor(1, 2);
   }
 
   QObject::connect(splitter, &QSplitter::splitterMoved,
                    [=]() {
                      std::cout << "! splitterMoved" << std::endl;
-                     QSettings s;
-                     s.setValue("layout/splitter_state", splitter->saveState());
+                     // TODO: move it to closeEvent
+//                     QSettings s;
+//                     s.setValue("layout/splitter_state", splitter->saveState());
                    });
 
   main_window.setCentralWidget(splitter);
-  auto* toolbar = new QToolBar();
+  auto* toolbar = new QToolBar("t 1111");
+  toolbar->setObjectName("t1");
   toolbar->addWidget(new QPushButton("asdadsad"));
   main_window.addToolBar(toolbar);
-  main_window.resize(800, 600);
+  auto* toolbar2 = new QToolBar("tttt 2");
+  toolbar2->setObjectName("t2");
+  toolbar2->addWidget(new QPushButton("222222"));
+  main_window.addToolBar(toolbar2);
+//  main_window.resize(800, 600);
   main_window.setWindowTitle("Qt File Explorer");
   main_window.show();
 
