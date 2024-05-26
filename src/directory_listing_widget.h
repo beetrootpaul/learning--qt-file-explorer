@@ -13,8 +13,8 @@ public:
   void setCurrentPath(const QString& path);
 
 private:
-  const QString default_path = QDir::homePath();
-  QFileSystemModel* model;
+  const QString default_path_ = QDir::homePath();
+  QFileSystemModel* model_;
 
 };
 

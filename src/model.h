@@ -8,7 +8,7 @@ namespace qt_file_explorer::model {
 class Model {
 
 public:
-  static QString currentPath();
+  QString currentPath();
 
 };
 

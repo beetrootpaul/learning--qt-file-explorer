@@ -7,15 +7,15 @@
 namespace qt_file_explorer::widgets {
 
 DirectoryListingWidget::DirectoryListingWidget() {
-  model = new QFileSystemModel();
-  model->setFilter(QDir::Files);
-  QListView::setModel(model);
-  setCurrentPath(default_path);
+  model_ = new QFileSystemModel();
+  model_->setFilter(QDir::Files);
+  QListView::setModel(model_);
+  setCurrentPath(default_path_);
 }
 
 void DirectoryListingWidget::setCurrentPath(const QString& path) {
-  model->setRootPath(path);
-  QListView::setRootIndex(model->index(path));
+  model_->setRootPath(path);
+  QListView::setRootIndex(model_->index(path));
 }
 
 } // namespace qt_file_explorer::widgets

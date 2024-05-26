@@ -3,19 +3,13 @@
 #include <QApplication>
 #include <QDir>
 #include <QHBoxLayout>
-#include <QPushButton>
-#include <QSettings>
-#include <QSplitter>
 #include <QStandardPaths>
-#include <QToolBar>
 
-#include "directory_listing_widget.h"
-#include "directory_picker_widget.h"
 #include "helpers.h"
 #include "main_window.h"
 #include "model.h"
 
-using namespace qt_file_explorer;
+// TODO: group some files into dirs
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
@@ -24,74 +18,54 @@ int main(int argc, char* argv[]) {
   QCoreApplication::setOrganizationDomain("beetrootpaul.com");
   QCoreApplication::setApplicationName("QtFileExplorer");
 
-  helpers::examine("HOME",
-                   QDir::homePath());
-  helpers::examine("minecraft server",
-                   QDir::homePath().append(
-                       "/minecraft_server_forge_1_20_1"));
-  helpers::examine("invalid path",
-                   QDir::homePath().append(
-                       "/does-not-exist"));
-  helpers::examine("Developer",
-                   QDir::homePath().append("/Developer"));
-  helpers::examine("downloads",
-                   QStandardPaths::standardLocations(
-                       QStandardPaths::DownloadLocation));
-  helpers::examine("documents",
-                   QStandardPaths::standardLocations(
-                       QStandardPaths::DocumentsLocation));
-  helpers::examine("app local data",
-                   QStandardPaths::standardLocations(
-                       QStandardPaths::AppLocalDataLocation));
+  qt_file_explorer::helpers::examine("HOME",
+                                     QDir::homePath());
+  qt_file_explorer::helpers::examine("minecraft server",
+                                     QDir::homePath().append(
+                                         "/minecraft_server_forge_1_20_1"));
+  qt_file_explorer::helpers::examine("invalid path",
+                                     QDir::homePath().append(
+                                         "/does-not-exist"));
+  qt_file_explorer::helpers::examine("Developer",
+                                     QDir::homePath().append("/Developer"));
+  qt_file_explorer::helpers::examine("downloads",
+                                     QStandardPaths::standardLocations(
+                                         QStandardPaths::DownloadLocation));
+  qt_file_explorer::helpers::examine("documents",
+                                     QStandardPaths::standardLocations(
+                                         QStandardPaths::DocumentsLocation));
+  qt_file_explorer::helpers::examine("app local data",
+                                     QStandardPaths::standardLocations(
+                                         QStandardPaths::AppLocalDataLocation));
 
-  auto main_window = MainWindow();
+  auto main_window = qt_file_explorer::widgets::MainWindow();
 
-  auto* directory_picker = new widgets::DirectoryPickerWidget();
-  directory_picker->setCurrentPath(model::Model::currentPath());
+  main_window.setModel(new qt_file_explorer::model::Model());
 
-  auto* directory_listing = new widgets::DirectoryListingWidget();
-  directory_listing->setCurrentPath(model::Model::currentPath());
+//  QSettings settings;
 
-  auto* splitter = new QSplitter();
-  splitter->setOrientation(Qt::Orientation::Horizontal);
-  splitter->addWidget(directory_picker);
-  splitter->addWidget(directory_listing);
+//  settings.remove("layout");
 
-  QSettings settings;
+//  std::cout << "???: " << settings.contains("layout/splitter_state")
+//            << std::endl;
 
-  settings.remove("layout");
-
-  std::cout << "???: " << settings.contains("layout/splitter_state")
-            << std::endl;
-
-  if (settings.contains("layout/splitter_state")) {
+//  if (settings.contains("layout/splitter_state")) {
 //    auto result = splitter->restoreState(
 //        settings.value("layout/splitter_state").toByteArray());
 //    std::cout << "SRestore result: " << result << std::endl;
-  } else {
+//  } else {
 //    splitter->setStretchFactor(0, 1);
 //    splitter->setStretchFactor(1, 2);
-  }
+//  }
 
-  QObject::connect(splitter, &QSplitter::splitterMoved,
-                   [=]() {
-                     std::cout << "! splitterMoved" << std::endl;
-                     // TODO: move it to closeEvent
+//  QObject::connect(splitter, &QSplitter::splitterMoved,
+//                   [=]() {
+//                     std::cout << "! splitterMoved" << std::endl;
+  // TODO: move it to closeEvent
 //                     QSettings s;
 //                     s.setValue("layout/splitter_state", splitter->saveState());
-                   });
+//                   });
 
-  main_window.setCentralWidget(splitter);
-  auto* toolbar = new QToolBar("t 1111");
-  toolbar->setObjectName("t1");
-  toolbar->addWidget(new QPushButton("asdadsad"));
-  main_window.addToolBar(toolbar);
-  auto* toolbar2 = new QToolBar("tttt 2");
-  toolbar2->setObjectName("t2");
-  toolbar2->addWidget(new QPushButton("222222"));
-  main_window.addToolBar(toolbar2);
-//  main_window.resize(800, 600);
-  main_window.setWindowTitle("Qt File Explorer");
   main_window.show();
 
   return QApplication::exec();
