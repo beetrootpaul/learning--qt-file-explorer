@@ -1,33 +1,34 @@
-#ifndef QT_FILE_EXPLORER_SRC_MAIN_WINDOW_H
-#define QT_FILE_EXPLORER_SRC_MAIN_WINDOW_H
+#ifndef QT_FILE_EXPLORER_MAIN_WINDOW_H
+#define QT_FILE_EXPLORER_MAIN_WINDOW_H
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QSplitter>
 
-#include "file_explorer.h"
-#include "../model/model.h"
+#include "../app_state/app_state.h"
+#include "../with_persisted_state.h"
 
 namespace qt_file_explorer::widgets {
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow, public WithPersistedState {
 
 public:
-  MainWindow();
+  void init(const std::shared_ptr<app_state::AppState>& appState);
 
   void closeEvent(QCloseEvent* event) override;
 
-  void setModel(model::Model* model);
-
 private:
-  model::Model* model_;
-  FileExplorer* file_explorer_;
-  QPushButton* toggle_dir_listing_view_type_;
+  QToolBar* toolbar_;
+  QSplitter* splitter_;
 
-  void savePersistedState();
-  void restorePersistedState(bool layoutOnly = false);
+  void savePersistedState() override;
+  void loadPersistedState() override;
+
+  void resetMainWindowLayout();
+  void resetSplitterLayout();
 
 };
 
 } // namespace qt_file_explorer::widgets
 
-#endif //QT_FILE_EXPLORER_SRC_MAIN_WINDOW_H
+#endif //QT_FILE_EXPLORER_MAIN_WINDOW_H
