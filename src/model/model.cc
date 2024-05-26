@@ -7,12 +7,17 @@
 namespace qt_file_explorer::model {
 
 Model::Model() {
-  current_path_ = downloadsPath();
+  current_path_ = home_path_;
   dir_listing_view_type_ = DirListingViewType::List;
 }
 
 QString Model::currentPath() {
   return current_path_;
+}
+
+void Model::switchPathToHome() {
+  current_path_ = home_path_;
+  emit changed();
 }
 
 void Model::switchPathToDownloads() {
@@ -33,7 +38,7 @@ void Model::setDirListingViewType(DirListingViewType viewType) {
 QString Model::downloadsPath() {
   auto locations = QStandardPaths::standardLocations(
       QStandardPaths::DownloadLocation);
-  return locations.count() > 0 ? locations.first() : fallback_path_;
+  return locations.count() > 0 ? locations.first() : home_path_;
 }
 
 } // namespace qt_file_explorer::model

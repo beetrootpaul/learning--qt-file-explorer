@@ -17,6 +17,7 @@ public:
   Model();
 
   QString currentPath();
+  void switchPathToHome();
   void switchPathToDownloads();
 
   DirListingViewType currentDirListingViewType();
@@ -26,7 +27,7 @@ signals:
   void changed();
 
 private:
-  const QString fallback_path_ = QDir::homePath();
+  const QString home_path_ = QDir::homePath();
   QString current_path_;
   DirListingViewType dir_listing_view_type_;
 

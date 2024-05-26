@@ -21,10 +21,13 @@ MainWindow::MainWindow() {
 
   // TODO: tabbing order
 
-  // TODO: implement it
+  // TODO: shortcut. The `&H` does not work, apparently
+  auto* quick_open_home_button = new QPushButton("Quick open: &Home");
+  QObject::connect(quick_open_home_button, &QPushButton::clicked, [=]() {
+    model_->switchPathToHome();
+  });
   // TODO: shortcut. The `&D` does not work, apparently
-  // TODO: reuse button labels
-  auto* quick_open_downloads_button = new QPushButton("&Quick open: Downloads");
+  auto* quick_open_downloads_button = new QPushButton("Quick open: &Downloads");
   QObject::connect(quick_open_downloads_button, &QPushButton::clicked, [=]() {
     model_->switchPathToDownloads();
   });
@@ -42,7 +45,6 @@ MainWindow::MainWindow() {
     file_explorer_->restorePersistedState();
   });
 
-  // TODO: implement it
   // TODO: extract?
   // TODO: shortcut. The `&S` does not work, apparently
   toggle_dir_listing_view_type_ = new QPushButton("(placeholder)");
@@ -54,6 +56,7 @@ MainWindow::MainWindow() {
 
   auto* toolbar = new QToolBar();
   toolbar->setObjectName("main_toolbar");
+  toolbar->addWidget(quick_open_home_button);
   toolbar->addWidget(quick_open_downloads_button);
   toolbar->addWidget(reset_layout_button);
   toolbar->addWidget(toggle_dir_listing_view_type_);
