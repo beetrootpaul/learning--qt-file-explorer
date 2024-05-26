@@ -8,6 +8,7 @@
 
 namespace qt_file_explorer::widgets {
 
+// TODO: change to QTableView, but support icons from QListView as well
 class DirectoryListingWidget : public QListView {
 
 public:
