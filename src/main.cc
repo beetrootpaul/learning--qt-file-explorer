@@ -53,22 +53,27 @@ int main(int argc, char* argv[]) {
   splitter->addWidget(directory_picker);
   splitter->addWidget(directory_listing);
 
-  splitter->setStretchFactor(0, 1);
-  splitter->setStretchFactor(1, 2);
-  for (int i = 0; i < splitter->count(); ++i) {
-    auto w = splitter->widget(i);
-    std::cout << "splitter w(" << i << "): "
-              << w->sizePolicy().horizontalStretch() << std::endl;
-  }
-
   QSettings settings;
-  auto result = splitter->restoreState(
-      settings.value("splitterSizes").toByteArray());
-  std::cout << "SRestore result: " << result << std::endl;
+
+  settings.remove("layout");
+
+  std::cout << "???: " << settings.contains("layout/splitter_state")
+            << std::endl;
+
+  if (settings.contains("layout/splitter_state")) {
+    auto result = splitter->restoreState(
+        settings.value("layout/splitter_state").toByteArray());
+    std::cout << "SRestore result: " << result << std::endl;
+  } else {
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 2);
+  }
 
   QObject::connect(splitter, &QSplitter::splitterMoved,
                    [=]() {
                      std::cout << "! splitterMoved" << std::endl;
+                     QSettings s;
+                     s.setValue("layout/splitter_state", splitter->saveState());
                    });
 
   main_window.setCentralWidget(splitter);
