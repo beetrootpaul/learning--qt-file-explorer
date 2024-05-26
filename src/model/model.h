@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#include "model/dir_listing_view_type.h"
+#include "dir_listing_view_type.h"
 
 namespace qt_file_explorer::model {
 
@@ -11,7 +11,7 @@ class Model {
 
 public:
   QString currentPath();
-  
+
   DirListingViewType currentDirListingViewType();
   void setDirListingViewType(DirListingViewType viewType);
 

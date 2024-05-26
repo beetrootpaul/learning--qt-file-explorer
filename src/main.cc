@@ -6,8 +6,8 @@
 #include <QStandardPaths>
 
 #include "helpers.h"
-#include "main_window.h"
-#include "model.h"
+#include "widgets/main_window.h"
+#include "model/model.h"
 
 // TODO: group some files into dirs
 

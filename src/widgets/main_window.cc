@@ -12,6 +12,7 @@
 
 namespace qt_file_explorer::widgets {
 
+// TODO: should I use constructor for all of this? There is the warning abut model_ not being initialized
 MainWindow::MainWindow() {
   setWindowTitle("Qt File Explorer");
 

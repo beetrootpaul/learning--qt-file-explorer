@@ -4,7 +4,7 @@
 
 #include <QSettings>
 
-#include "model.h"
+#include "../model/model.h"
 
 namespace qt_file_explorer::widgets {
 
