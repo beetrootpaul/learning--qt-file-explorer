@@ -5,6 +5,7 @@
 #include <QHBoxLayout>
 #include <QMainWindow>
 #include <QPushButton>
+#include <QSettings>
 #include <QSplitter>
 #include <QStandardPaths>
 #include <QToolBar>
@@ -51,6 +52,7 @@ int main(int argc, char* argv[]) {
   splitter->setOrientation(Qt::Orientation::Horizontal);
   splitter->addWidget(directory_picker);
   splitter->addWidget(directory_listing);
+
   splitter->setStretchFactor(0, 1);
   splitter->setStretchFactor(1, 2);
   for (int i = 0; i < splitter->count(); ++i) {
@@ -58,6 +60,16 @@ int main(int argc, char* argv[]) {
     std::cout << "splitter w(" << i << "): "
               << w->sizePolicy().horizontalStretch() << std::endl;
   }
+
+  QSettings settings;
+  auto result = splitter->restoreState(
+      settings.value("splitterSizes").toByteArray());
+  std::cout << "SRestore result: " << result << std::endl;
+
+  QObject::connect(splitter, &QSplitter::splitterMoved,
+                   [=]() {
+                     std::cout << "! splitterMoved" << std::endl;
+                   });
 
   main_window.setCentralWidget(splitter);
   auto* toolbar = new QToolBar();
