@@ -1,8 +1,11 @@
+#include <iostream>
+
 #include <QApplication>
 #include <QDir>
 #include <QHBoxLayout>
 #include <QMainWindow>
 #include <QPushButton>
+#include <QSplitter>
 #include <QStandardPaths>
 #include <QToolBar>
 
@@ -44,12 +47,19 @@ int main(int argc, char* argv[]) {
   auto* directory_listing = new widgets::DirectoryListingWidget();
   directory_listing->setCurrentPath(model::Model::currentPath());
 
-  auto* container = new QWidget();
-  auto* layout = new QHBoxLayout(container);
-  layout->addWidget(directory_picker);
-  layout->addWidget(directory_listing);
+  auto* splitter = new QSplitter();
+  splitter->setOrientation(Qt::Orientation::Horizontal);
+  splitter->addWidget(directory_picker);
+  splitter->addWidget(directory_listing);
+  splitter->setStretchFactor(0, 1);
+  splitter->setStretchFactor(1, 2);
+  for (int i = 0; i < splitter->count(); ++i) {
+    auto w = splitter->widget(i);
+    std::cout << "splitter w(" << i << "): "
+              << w->sizePolicy().horizontalStretch() << std::endl;
+  }
 
-  main_window.setCentralWidget(container);
+  main_window.setCentralWidget(splitter);
   auto* toolbar = new QToolBar();
   toolbar->addWidget(new QPushButton("asdadsad"));
   main_window.addToolBar(toolbar);
