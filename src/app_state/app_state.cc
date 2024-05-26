@@ -1,5 +1,7 @@
 #include "app_state.h"
 
+#include <iostream>
+
 #include <QSettings>
 #include <QStandardPaths>
 
@@ -42,7 +44,9 @@ void AppState::toggleDirListingViewType() {
 void AppState::savePersistedState() {
   QSettings settings;
 
+  // TODO: extract keys
   settings.setValue("v3/state/path", currentPath_);
+  settings.setValue("v3/state/view_type", (uint) currentDirListingViewType_);
 }
 
 void AppState::loadPersistedState() {
@@ -53,6 +57,13 @@ void AppState::loadPersistedState() {
     currentPath_ = path;
   } else {
     currentPath_ = homePath_;
+  }
+
+  if (settings.contains("v3/state/view_type")) {
+    currentDirListingViewType_ = (DirListingViewType) settings.value(
+        "v3/state/view_type").toUInt();
+  } else {
+    currentDirListingViewType_ = DirListingViewType::List;
   }
 }
 
