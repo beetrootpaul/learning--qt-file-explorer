@@ -41,6 +41,12 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
 
   // TODO: tabbing order
 
+  // TODO: shortcut. The `&C` does not work, apparently
+  auto* collapseAllButton = new QPushButton("&Collapse all");
+  connect(collapseAllButton, &QPushButton::clicked, [=]() {
+    directoryPicker->collapseAll();
+  });
+
   // TODO: shortcut. The `&H` does not work, apparently
   auto* quickOpenHomeButton = new QPushButton("Quick open: &Home");
   connect(quickOpenHomeButton, &QPushButton::clicked, [=]() {
@@ -75,6 +81,7 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   mainToolbar_ = new QToolBar();
   // Object name is required for state serialization
   mainToolbar_->setObjectName("main_toolbar");
+  mainToolbar_->addWidget(collapseAllButton);
   mainToolbar_->addWidget(quickOpenHomeButton);
   mainToolbar_->addWidget(quickOpenDownloadsButton);
   mainToolbar_->addWidget(toggleDirListingViewTypeButton_);
