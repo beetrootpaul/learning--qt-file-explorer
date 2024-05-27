@@ -3,6 +3,7 @@
 #include <QSettings>
 #include <QStandardPaths>
 
+#include "../persisted_state/persisted_state_keys.h"
 #include "dir_listing_view_type.h"
 
 namespace qt_file_explorer::app_state {
@@ -52,24 +53,26 @@ void AppState::toggleDirListingViewType() {
 void AppState::savePersistedState() {
   QSettings settings;
 
-  // TODO: extract keys
-  settings.setValue("v3/state/path", currentPath_);
-  settings.setValue("v3/state/view_type", (uint) currentDirListingViewType_);
+  settings.setValue(persisted_state::PersistedStateKeys::statePath,
+                    currentPath_);
+  settings.setValue(persisted_state::PersistedStateKeys::stateViewType,
+                    (uint) currentDirListingViewType_);
 }
 
 void AppState::loadPersistedState() {
   QSettings settings;
 
-  const auto path = settings.value("v3/state/path").toString();
+  const auto path = settings.value(
+      persisted_state::PersistedStateKeys::statePath).toString();
   if (!path.isEmpty()) {
     currentPath_ = path;
   } else {
     currentPath_ = homePath_;
   }
 
-  if (settings.contains("v3/state/view_type")) {
+  if (settings.contains(persisted_state::PersistedStateKeys::stateViewType)) {
     currentDirListingViewType_ = (DirListingViewType) settings.value(
-        "v3/state/view_type").toUInt();
+        persisted_state::PersistedStateKeys::stateViewType).toUInt();
   } else {
     currentDirListingViewType_ = DirListingViewType::List;
   }

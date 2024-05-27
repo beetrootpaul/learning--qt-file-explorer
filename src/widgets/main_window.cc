@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QToolBar>
 
+#include "../persisted_state/persisted_state_keys.h"
 #include "directory_listing_widget.h"
 #include "directory_picker_widget.h"
 
@@ -56,7 +57,7 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   auto* resetLayoutButton = new QPushButton("&Reset layout");
   connect(resetLayoutButton, &QPushButton::clicked, [=]() {
     QSettings settings;
-    settings.remove("v3/layout/");
+    settings.remove(persisted_state::PersistedStateKeys::groupLayout);
     resetMainWindowLayout();
     resetSplitterLayout();
   });
@@ -118,18 +119,20 @@ void MainWindow::slotViewTypeChanged() {
 void MainWindow::savePersistedState() {
   QSettings settings;
 
-  // TODO: extract key constants
-  settings.setValue("v3/window/main_window/size", size());
-  settings.setValue("v3/window/main_window/pos", pos());
-  settings.setValue("v3/layout/main_window/state", saveState());
-  settings.setValue("v3/layout/splitter/state", splitter_->saveState());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowSize,
+                    size());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowPos, pos());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
+                    saveState());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
+                    splitter_->saveState());
 }
 
 void MainWindow::loadPersistedState() {
   QSettings settings;
 
   const auto mainWindowSize = settings.value(
-      "v3/window/main_window/size").toSize();
+      persisted_state::PersistedStateKeys::mainWindowSize).toSize();
   if (!mainWindowSize.isEmpty()) {
     resize(mainWindowSize);
   } else {
@@ -137,7 +140,7 @@ void MainWindow::loadPersistedState() {
   }
 
   const auto mainWindowPos = settings.value(
-      "v3/window/main_window/pos").toPoint();
+      persisted_state::PersistedStateKeys::mainWindowPos).toPoint();
   if (!mainWindowPos.isNull()) {
     move(mainWindowPos);
   } else {
@@ -148,8 +151,9 @@ void MainWindow::loadPersistedState() {
     move(desired_pos_x, desired_pos_y);
   }
 
+  // TODO: how to make rearrangement of toolbars kept across app runs?
   const auto mainWindowState = settings.value(
-      "v3/layout/main_window/state").toByteArray();
+      persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
   if (!mainWindowState.isEmpty()) {
     restoreState(mainWindowState);
   } else {
@@ -157,7 +161,7 @@ void MainWindow::loadPersistedState() {
   }
 
   const auto splitterState = settings.value(
-      "v3/layout/splitter/state").toByteArray();
+      persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
   if (!splitterState.isEmpty()) {
     splitter_->restoreState(splitterState);
   } else {
