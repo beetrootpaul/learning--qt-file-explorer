@@ -2,13 +2,13 @@
 #define QT_FILE_EXPLORER_DIRECTORY_PICKER_WIDGET_H
 
 #import <QFileSystemModel>
-#import <QListView>
+#import <QTreeView>
 
 #include "../app_state/app_state.h"
 
 namespace qt_file_explorer::widgets {
 
-class DirectoryPickerWidget : public QListView {
+class DirectoryPickerWidget : public QTreeView {
 
 Q_OBJECT
 
@@ -19,7 +19,9 @@ public:
   void init(QSharedPointer<app_state::AppState> appState);
 
 public slots:
-  void slotAppStateChanged();
+  void slotPathChanged(bool originatedFromDirPicker);
+  void currentChanged(const QModelIndex& current,
+                      const QModelIndex& previous) override;
 
 private:
   QSharedPointer<app_state::AppState> appState_;

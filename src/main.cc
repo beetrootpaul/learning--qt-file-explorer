@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <QApplication>
 #include <QHBoxLayout>
 
@@ -21,9 +19,10 @@ int main(int argc, char* argv[]) {
   mainWindow.init(
       QSharedPointer<qt_file_explorer::app_state::AppState>(appState));
 
-  // Trigger slots listening to this signal. Thanks to that we do
-  // not have to add initialization code and can rely on slots only.
-  appState->signalChanged();
+  // Trigger slots listening to these signals. Thanks to that we do
+  // not have to add initialization code and can rely on signals instead.
+  appState->signalPathChanged(/*originatedFromDirPicker=*/false);
+  appState->signalViewTypeChanged();
 
   mainWindow.show();
 

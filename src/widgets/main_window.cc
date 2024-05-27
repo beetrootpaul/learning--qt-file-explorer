@@ -1,13 +1,12 @@
 #include "main_window.h"
 
-#include <iostream>
-
 #include <QApplication>
+#include <QCloseEvent>
 #include <QPushButton>
-#include <QScreen>
 #include <QSettings>
 #include <QToolBar>
 
+#include "../persisted_state/persisted_state_keys.h"
 #include "directory_listing_widget.h"
 #include "directory_picker_widget.h"
 
@@ -58,7 +57,7 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   auto* resetLayoutButton = new QPushButton("&Reset layout");
   connect(resetLayoutButton, &QPushButton::clicked, [=]() {
     QSettings settings;
-    settings.remove("v3/layout/");
+    settings.remove(persisted_state::PersistedStateKeys::groupLayout);
     resetMainWindowLayout();
     resetSplitterLayout();
   });
@@ -68,24 +67,36 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   connect(toggleDirListingViewTypeButton_, &QPushButton::clicked, [=]() {
     appState->toggleDirListingViewType();
   });
-  connect(appState.data(), &app_state::AppState::signalChanged, this,
-          &MainWindow::slotAppStateChanged);
+  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
+          &MainWindow::slotViewTypeChanged);
 
-  toolbar_ = new QToolBar();
+  // TODO: extract both toolbars to their classes
+
+  mainToolbar_ = new QToolBar();
   // Object name is required for state serialization
-  toolbar_->setObjectName("main_toolbar");
-  toolbar_->addWidget(quickOpenHomeButton);
-  toolbar_->addWidget(quickOpenDownloadsButton);
-  toolbar_->addWidget(resetLayoutButton);
-  toolbar_->addWidget(toggleDirListingViewTypeButton_);
+  mainToolbar_->setObjectName("main_toolbar");
+  mainToolbar_->addWidget(quickOpenHomeButton);
+  mainToolbar_->addWidget(quickOpenDownloadsButton);
+  mainToolbar_->addWidget(toggleDirListingViewTypeButton_);
+  mainToolbar_->setMovable(true);
+  mainToolbar_->setFloatable(false);
+  // Remove context menu in order to remove the ability to close this mainToolbar_
+  mainToolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
 
-  toolbar_->setMovable(true);
-  toolbar_->setFloatable(false);
+  layoutToolbar_ = new QToolBar();
+  // Object name is required for state serialization
+  layoutToolbar_->setObjectName("layout_toolbar");
+  layoutToolbar_->addWidget(resetLayoutButton);
+  layoutToolbar_->setMovable(true);
+  layoutToolbar_->setFloatable(false);
 
-  // Remove context menu in order to remove the ability to close this toolbar_
-  toolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
+  // Remove context menu in order to remove the ability to close this mainToolbar_
+  mainToolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
+  layoutToolbar_->setContextMenuPolicy(
+      Qt::ContextMenuPolicy::PreventContextMenu);
 
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
 
   appState->loadPersistedState();
   loadPersistedState();
@@ -95,11 +106,10 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   appState_->savePersistedState();
   savePersistedState();
 
-  // TODO: is this the proper way, with guessing the proper superclass?
-  QMainWindow::closeEvent(event);
+  event->accept();
 }
 
-void MainWindow::slotAppStateChanged() {
+void MainWindow::slotViewTypeChanged() {
   toggleDirListingViewTypeButton_->setText(
       appState_->currentDirListingViewType() ==
       app_state::DirListingViewType::List ? "&Switch to icons"
@@ -109,18 +119,20 @@ void MainWindow::slotAppStateChanged() {
 void MainWindow::savePersistedState() {
   QSettings settings;
 
-  // TODO: extract key constants
-  settings.setValue("v3/window/main_window/size", size());
-  settings.setValue("v3/window/main_window/pos", pos());
-  settings.setValue("v3/layout/main_window/state", saveState());
-  settings.setValue("v3/layout/splitter/state", splitter_->saveState());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowSize,
+                    size());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowPos, pos());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
+                    saveState());
+  settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
+                    splitter_->saveState());
 }
 
 void MainWindow::loadPersistedState() {
   QSettings settings;
 
   const auto mainWindowSize = settings.value(
-      "v3/window/main_window/size").toSize();
+      persisted_state::PersistedStateKeys::mainWindowSize).toSize();
   if (!mainWindowSize.isEmpty()) {
     resize(mainWindowSize);
   } else {
@@ -128,7 +140,7 @@ void MainWindow::loadPersistedState() {
   }
 
   const auto mainWindowPos = settings.value(
-      "v3/window/main_window/pos").toPoint();
+      persisted_state::PersistedStateKeys::mainWindowPos).toPoint();
   if (!mainWindowPos.isNull()) {
     move(mainWindowPos);
   } else {
@@ -139,8 +151,9 @@ void MainWindow::loadPersistedState() {
     move(desired_pos_x, desired_pos_y);
   }
 
+  // TODO: how to make rearrangement of toolbars kept across app runs?
   const auto mainWindowState = settings.value(
-      "v3/layout/main_window/state").toByteArray();
+      persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
   if (!mainWindowState.isEmpty()) {
     restoreState(mainWindowState);
   } else {
@@ -148,7 +161,7 @@ void MainWindow::loadPersistedState() {
   }
 
   const auto splitterState = settings.value(
-      "v3/layout/splitter/state").toByteArray();
+      persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
   if (!splitterState.isEmpty()) {
     splitter_->restoreState(splitterState);
   } else {
@@ -157,7 +170,8 @@ void MainWindow::loadPersistedState() {
 }
 
 void MainWindow::resetMainWindowLayout() {
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
 }
 
 // TODO: trigger it also on a double click on the splitter bar

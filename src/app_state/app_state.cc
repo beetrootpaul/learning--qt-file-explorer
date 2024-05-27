@@ -1,10 +1,9 @@
 #include "app_state.h"
 
-#include <iostream>
-
 #include <QSettings>
 #include <QStandardPaths>
 
+#include "../persisted_state/persisted_state_keys.h"
 #include "dir_listing_view_type.h"
 
 namespace qt_file_explorer::app_state {
@@ -26,48 +25,54 @@ QString AppState::currentPath() {
 }
 
 void AppState::switchPathToHome() {
-  currentPath_ = homePath_;
-  emit signalChanged();
+  switchPathTo(homePath_);
 }
 
 void AppState::switchPathToDownloads() {
-  currentPath_ = downloadsPath();
-  emit signalChanged();
+  switchPathTo(downloadsPath());
+}
+
+// TODO: sometimes (quite often) the path switch makes the entire tree go back to root… is it some race condition with a dir being loaded?
+void AppState::switchPathTo(const QString& path, bool originatedFromDirPicker) {
+  qDebug() << "Switching path to:" << path;
+  currentPath_ = path;
+  emit signalPathChanged(originatedFromDirPicker);
 }
 
 DirListingViewType AppState::currentDirListingViewType() {
   return currentDirListingViewType_;
 }
 
-// TODO: persist this between app runs
 void AppState::toggleDirListingViewType() {
   currentDirListingViewType_ =
       currentDirListingViewType_ == DirListingViewType::List
       ? DirListingViewType::Icons : DirListingViewType::List;
-  emit signalChanged();
+  emit signalViewTypeChanged();
 }
 
 void AppState::savePersistedState() {
   QSettings settings;
 
-  // TODO: extract keys
-  settings.setValue("v3/state/path", currentPath_);
-  settings.setValue("v3/state/view_type", (uint) currentDirListingViewType_);
+  settings.setValue(persisted_state::PersistedStateKeys::statePath,
+                    currentPath_);
+  settings.setValue(persisted_state::PersistedStateKeys::stateViewType,
+                    (uint) currentDirListingViewType_);
 }
 
 void AppState::loadPersistedState() {
   QSettings settings;
 
-  const auto path = settings.value("v3/state/path").toString();
+  const auto path = settings.value(
+      persisted_state::PersistedStateKeys::statePath).toString();
   if (!path.isEmpty()) {
     currentPath_ = path;
   } else {
     currentPath_ = homePath_;
   }
 
-  if (settings.contains("v3/state/view_type")) {
+  if (settings.contains(persisted_state::PersistedStateKeys::stateViewType)) {
     currentDirListingViewType_ = (DirListingViewType) settings.value(
-        "v3/state/view_type").toUInt();
+        persisted_state::PersistedStateKeys::stateViewType).toUInt();
   } else {
     currentDirListingViewType_ = DirListingViewType::List;
   }

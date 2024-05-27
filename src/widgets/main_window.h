@@ -6,11 +6,12 @@
 #include <QSplitter>
 
 #include "../app_state/app_state.h"
-#include "../with_persisted_state.h"
+#include "../persisted_state/with_persisted_state.h"
 
 namespace qt_file_explorer::widgets {
 
-class MainWindow : public QMainWindow, public WithPersistedState {
+class MainWindow
+    : public QMainWindow, public persisted_state::WithPersistedState {
 
 Q_OBJECT
 
@@ -26,12 +27,13 @@ public:
   void loadPersistedState() override;
 
 public slots:
-  void slotAppStateChanged();
+  void slotViewTypeChanged();
 
 private:
   QSharedPointer<app_state::AppState> appState_;
 
-  QToolBar* toolbar_;
+  QToolBar* mainToolbar_;
+  QToolBar* layoutToolbar_;
   QSplitter* splitter_;
   QPushButton* toggleDirListingViewTypeButton_;
 
