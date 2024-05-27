@@ -6,26 +6,39 @@
 
 namespace qt_file_explorer::widgets {
 
+DirectoryListingWidget::DirectoryListingWidget() {
+  qDebug() << "+" << this;
+}
+
+DirectoryListingWidget::~DirectoryListingWidget() {
+  qDebug() << "~" << this;
+}
+
 void
-DirectoryListingWidget::init(
-    const std::shared_ptr<app_state::AppState>& appState) {
-  auto* model = new QFileSystemModel();
-  model->setFilter(QDir::Files);
-  setModel(model);
+DirectoryListingWidget::init(QSharedPointer<app_state::AppState> appState) {
+  appState_ = appState;
 
-  connect(appState.get(), &app_state::AppState::changed, [=]() {
-    auto path = appState->currentPath();
-    // TODO: should I set an entire drive here?
-    model->setRootPath(path);
-    setRootIndex(model->index(path));
+  model_ = new QFileSystemModel();
+  model_->setFilter(QDir::Files);
+  setModel(model_);
 
-    setViewMode(appState->currentDirListingViewType() ==
-                app_state::DirListingViewType::List ? ViewMode::ListMode
-                                                    : ViewMode::IconMode);
-    // TODO: set it for IconMode only?
-    //    QListView::setWrapping(true);
-    // TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
-  });
+  connect(appState.data(), &app_state::AppState::signalChanged, this,
+          &DirectoryListingWidget::slotAppStateChanged);
+}
+
+void DirectoryListingWidget::slotAppStateChanged() {
+  auto path = appState_->currentPath();
+  // TODO: should I set an entire drive here?
+  model_->setRootPath(path);
+  setRootIndex(model_->index(path));
+
+  setViewMode(appState_->currentDirListingViewType() ==
+              app_state::DirListingViewType::List ? ViewMode::ListMode
+                                                  : ViewMode::IconMode);
+  // TODO: set it for IconMode only?
+  //    QListView::setWrapping(true);
+
+  // TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
 }
 
 } // namespace qt_file_explorer::widgets

@@ -12,19 +12,28 @@ namespace qt_file_explorer::widgets {
 
 class MainWindow : public QMainWindow, public WithPersistedState {
 
+Q_OBJECT
+
 public:
-  void init(const std::shared_ptr<app_state::AppState>& appState);
+  MainWindow();
+  ~MainWindow();
+
+  void init(QSharedPointer<app_state::AppState> appState);
 
   void closeEvent(QCloseEvent* event) override;
 
   void savePersistedState() override;
   void loadPersistedState() override;
 
+public slots:
+  void slotAppStateChanged();
+
 private:
-  std::shared_ptr<app_state::AppState> appState_;
+  QSharedPointer<app_state::AppState> appState_;
 
   QToolBar* toolbar_;
   QSplitter* splitter_;
+  QPushButton* toggleDirListingViewTypeButton_;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();

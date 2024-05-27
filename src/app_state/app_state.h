@@ -10,12 +10,13 @@
 
 namespace qt_file_explorer::app_state {
 
-class AppState : public QObject, public WithPersistedState {
+class AppState : public QObject, public WithPersistedState, public QSharedData {
 
 Q_OBJECT
 
 public:
   AppState();
+  ~AppState();
 
   QString currentPath();
   void switchPathToHome();
@@ -28,7 +29,7 @@ public:
   void loadPersistedState() override;
 
 signals:
-  void changed();
+  void signalChanged();
 
 private:
   const QString homePath_ = QDir::homePath();

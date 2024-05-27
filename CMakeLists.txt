@@ -34,3 +34,15 @@ target_link_libraries(learning__qt_file_explorer
         Qt::Widgets
 )
 
+# Manually added part:
+#
+# QT_NO_DEBUG_OUTPUT makes `qDebug()` do nothing, which is what we want for the Release build.
+#
+# For more info see:
+# - https://stackoverflow.com/a/13494690/1036577
+# - https://stackoverflow.com/a/64719718/1036577
+target_compile_definitions(learning__qt_file_explorer PRIVATE
+        $<$<CONFIG:Release>:
+        QT_NO_DEBUG_OUTPUT=1
+        >
+)

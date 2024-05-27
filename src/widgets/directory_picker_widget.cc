@@ -7,18 +7,30 @@
 
 namespace qt_file_explorer::widgets {
 
-void DirectoryPickerWidget::init(
-    const std::shared_ptr<app_state::AppState>& appState) {
-  auto* model = new QFileSystemModel();
-  model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-  setModel(model);
+DirectoryPickerWidget::DirectoryPickerWidget() {
+  qDebug() << "+" << this;
+}
 
-  connect(appState.get(), &app_state::AppState::changed, [=]() {
-    auto path = appState->currentPath();
-    // TODO: should I set an entire drive here?
-    model->setRootPath(path);
-    setRootIndex(model->index(path));
-  });
+DirectoryPickerWidget::~DirectoryPickerWidget() {
+  qDebug() << "~" << this;
+}
+
+void DirectoryPickerWidget::init(QSharedPointer<app_state::AppState> appState) {
+  appState_ = appState;
+
+  model_ = new QFileSystemModel();
+  model_->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  setModel(model_);
+
+  connect(appState.data(), &app_state::AppState::signalChanged, this,
+          &DirectoryPickerWidget::slotAppStateChanged);
+}
+
+void DirectoryPickerWidget::slotAppStateChanged() {
+  auto path = appState_->currentPath();
+  // TODO: should I set an entire drive here?
+  model_->setRootPath(path);
+  setRootIndex(model_->index(path));
 }
 
 } // namespace qt_file_explorer::widgets

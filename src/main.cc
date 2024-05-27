@@ -11,18 +11,19 @@
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
 
-  QCoreApplication::setOrganizationName("Beetroot Paul");
-  QCoreApplication::setOrganizationDomain("beetrootpaul.com");
-  QCoreApplication::setApplicationName("QtFileExplorer");
+  QApplication::setOrganizationName("Beetroot Paul");
+  QApplication::setOrganizationDomain("beetrootpaul.com");
+  QApplication::setApplicationName("QtFileExplorer");
 
-  auto appState = std::make_shared<qt_file_explorer::app_state::AppState>();
+  auto* appState = new qt_file_explorer::app_state::AppState();
 
   auto mainWindow = qt_file_explorer::widgets::MainWindow();
-  mainWindow.init(appState);
+  mainWindow.init(
+      QSharedPointer<qt_file_explorer::app_state::AppState>(appState));
 
   // Trigger slots listening to this signal. Thanks to that we do
   // not have to add initialization code and can rely on slots only.
-  appState->changed();
+  appState->signalChanged();
 
   mainWindow.show();
 

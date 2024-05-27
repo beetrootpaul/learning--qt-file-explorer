@@ -7,12 +7,14 @@
 - I was developing it in CLion 2024.1.1.
 - I had CMake 3.29.3 installed with `brew install cmake`.
 
-The set of commands to build and run this project (on macOS):
+The set of commands to build and run this project in Debug mode (on macOS):
 
 ```sh
 ./cleanup.sh
-./build_and_run.sh
+./run_debug.sh
 ```
+
+For Release mode please use `./run_release.sh`.
 
 ## Notes
 
