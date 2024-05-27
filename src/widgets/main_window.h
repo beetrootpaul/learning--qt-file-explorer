@@ -25,11 +25,15 @@ public:
   void savePersistedState() override;
   void loadPersistedState() override;
 
+public slots:
+  void slotAppStateChanged();
+
 private:
   app_state::AppState* appState_;
 
   QToolBar* toolbar_;
   QSplitter* splitter_;
+  QPushButton* toggleDirListingViewTypeButton_;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();

@@ -15,19 +15,22 @@ DirectoryPickerWidget::~DirectoryPickerWidget() {
   qDebug() << "~" << this;
 }
 
-void DirectoryPickerWidget::init(
-    app_state::AppState* appState) {
+void DirectoryPickerWidget::init(app_state::AppState* appState) {
+  appState_ = appState;
 
-  auto* model = new QFileSystemModel();
-  model->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
-  setModel(model);
+  model_ = new QFileSystemModel();
+  model_->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  setModel(model_);
 
-  connect(appState, &app_state::AppState::changed, [=]() {
-    auto path = appState->currentPath();
-    // TODO: should I set an entire drive here?
-    model->setRootPath(path);
-    setRootIndex(model->index(path));
-  });
+  connect(appState, &app_state::AppState::signalChanged, this,
+          &DirectoryPickerWidget::slotAppStateChanged);
+}
+
+void DirectoryPickerWidget::slotAppStateChanged() {
+  auto path = appState_->currentPath();
+  // TODO: should I set an entire drive here?
+  model_->setRootPath(path);
+  setRootIndex(model_->index(path));
 }
 
 } // namespace qt_file_explorer::widgets

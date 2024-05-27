@@ -19,6 +19,13 @@ public:
 
   void init(app_state::AppState* appState);
 
+public slots:
+  void slotAppStateChanged();
+
+private:
+  app_state::AppState* appState_;
+  QFileSystemModel* model_;
+
 };
 
 } // namespace qt_file_explorer::widgets

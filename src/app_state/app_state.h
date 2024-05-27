@@ -29,7 +29,7 @@ public:
   void loadPersistedState() override;
 
 signals:
-  void changed();
+  void signalChanged();
 
 private:
   const QString homePath_ = QDir::homePath();

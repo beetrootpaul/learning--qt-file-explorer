@@ -22,9 +22,9 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::init(app_state::AppState* appState) {
-  setWindowTitle("Qt File Explorer");
-
   appState_ = appState;
+
+  setWindowTitle("Qt File Explorer");
 
   splitter_ = new QSplitter();
   setCentralWidget(splitter_);
@@ -64,18 +64,12 @@ void MainWindow::init(app_state::AppState* appState) {
   });
 
   // TODO: shortcut. The `&S` does not work, apparently
-  auto* toggleDirListingViewTypeButton = new QPushButton("(placeholder)");
-  connect(toggleDirListingViewTypeButton, &QPushButton::clicked, [=]() {
+  toggleDirListingViewTypeButton_ = new QPushButton("(placeholder)");
+  connect(toggleDirListingViewTypeButton_, &QPushButton::clicked, [=]() {
     appState->toggleDirListingViewType();
   });
-  // TODO: try to change lambdas into methods and check if QtSharedPointer or something like that would work OK for AppState
-  connect(appState, &app_state::AppState::changed, [=]() {
-    toggleDirListingViewTypeButton->setText(
-        appState->currentDirListingViewType() ==
-        app_state::DirListingViewType::List ? "&Switch to icons"
-                                            : "&Switch to list"
-    );
-  });
+  connect(appState, &app_state::AppState::signalChanged, this,
+          &MainWindow::slotAppStateChanged);
 
   toolbar_ = new QToolBar();
   // Object name is required for state serialization
@@ -83,7 +77,7 @@ void MainWindow::init(app_state::AppState* appState) {
   toolbar_->addWidget(quickOpenHomeButton);
   toolbar_->addWidget(quickOpenDownloadsButton);
   toolbar_->addWidget(resetLayoutButton);
-  toolbar_->addWidget(toggleDirListingViewTypeButton);
+  toolbar_->addWidget(toggleDirListingViewTypeButton_);
 
   toolbar_->setMovable(true);
   toolbar_->setFloatable(false);
@@ -103,6 +97,13 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 
   // TODO: is this the proper way, with guessing the proper superclass?
   QMainWindow::closeEvent(event);
+}
+
+void MainWindow::slotAppStateChanged() {
+  toggleDirListingViewTypeButton_->setText(
+      appState_->currentDirListingViewType() ==
+      app_state::DirListingViewType::List ? "&Switch to icons"
+                                          : "&Switch to list");
 }
 
 void MainWindow::savePersistedState() {

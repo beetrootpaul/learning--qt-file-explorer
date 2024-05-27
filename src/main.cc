@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
 
   // Trigger slots listening to this signal. Thanks to that we do
   // not have to add initialization code and can rely on slots only.
-  appState.changed();
+  appState.signalChanged();
 
   mainWindow.show();
 

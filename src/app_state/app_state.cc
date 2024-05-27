@@ -27,12 +27,12 @@ QString AppState::currentPath() {
 
 void AppState::switchPathToHome() {
   currentPath_ = homePath_;
-  emit changed();
+  emit signalChanged();
 }
 
 void AppState::switchPathToDownloads() {
   currentPath_ = downloadsPath();
-  emit changed();
+  emit signalChanged();
 }
 
 DirListingViewType AppState::currentDirListingViewType() {
@@ -44,7 +44,7 @@ void AppState::toggleDirListingViewType() {
   currentDirListingViewType_ =
       currentDirListingViewType_ == DirListingViewType::List
       ? DirListingViewType::Icons : DirListingViewType::List;
-  emit changed();
+  emit signalChanged();
 }
 
 void AppState::savePersistedState() {
