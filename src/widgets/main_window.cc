@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QPushButton>
 #include <QScreen>
 #include <QSettings>
@@ -95,8 +96,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   appState_->savePersistedState();
   savePersistedState();
 
-  // TODO: is this the proper way, with guessing the proper superclass?
-  QMainWindow::closeEvent(event);
+  event->accept();
 }
 
 void MainWindow::slotAppStateChanged() {
