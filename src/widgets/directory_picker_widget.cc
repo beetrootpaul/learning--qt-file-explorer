@@ -52,8 +52,6 @@ void DirectoryPickerWidget::slotPathChanged(bool originatedFromDirPicker) {
   if (originatedFromDirPicker) return;
 
   auto path = appState_->currentPath();
-  // TODO: move this to quick actions only? What about path switch originating from listing, but should not collapse?
-  collapseAll();
 
   scrollTo(model_->index(path),
            QAbstractItemView::ScrollHint::PositionAtCenter);

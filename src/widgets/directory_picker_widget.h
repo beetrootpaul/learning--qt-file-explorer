@@ -18,14 +18,14 @@ public:
 
   void init(QSharedPointer<app_state::AppState> appState);
 
-public slots:
-  void slotPathChanged(bool originatedFromDirPicker);
-  void currentChanged(const QModelIndex& current,
-                      const QModelIndex& previous) override;
-
 private:
   QSharedPointer<app_state::AppState> appState_;
   QFileSystemModel* model_;
+
+private slots:
+  void slotPathChanged(bool originatedFromDirPicker);
+  void currentChanged(const QModelIndex& current,
+                      const QModelIndex& previous) override;
 
 };
 

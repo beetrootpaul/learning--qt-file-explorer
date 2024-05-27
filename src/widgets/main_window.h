@@ -26,9 +26,6 @@ public:
   void savePersistedState() override;
   void loadPersistedState() override;
 
-public slots:
-  void slotViewTypeChanged();
-
 private:
   QSharedPointer<app_state::AppState> appState_;
 
@@ -39,6 +36,9 @@ private:
 
   void resetMainWindowLayout();
   void resetSplitterLayout();
+
+private slots:
+  void slotViewTypeChanged();
 
 };
 
