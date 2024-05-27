@@ -15,14 +15,14 @@ DirectoryPickerWidget::~DirectoryPickerWidget() {
   qDebug() << "~" << this;
 }
 
-void DirectoryPickerWidget::init(app_state::AppState* appState) {
+void DirectoryPickerWidget::init(QSharedPointer<app_state::AppState> appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();
   model_->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
   setModel(model_);
 
-  connect(appState, &app_state::AppState::signalChanged, this,
+  connect(appState.data(), &app_state::AppState::signalChanged, this,
           &DirectoryPickerWidget::slotAppStateChanged);
 }
 

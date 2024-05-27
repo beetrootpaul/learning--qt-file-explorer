@@ -14,14 +14,15 @@ DirectoryListingWidget::~DirectoryListingWidget() {
   qDebug() << "~" << this;
 }
 
-void DirectoryListingWidget::init(app_state::AppState* appState) {
+void
+DirectoryListingWidget::init(QSharedPointer<app_state::AppState> appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();
   model_->setFilter(QDir::Files);
   setModel(model_);
 
-  connect(appState, &app_state::AppState::signalChanged, this,
+  connect(appState.data(), &app_state::AppState::signalChanged, this,
           &DirectoryListingWidget::slotAppStateChanged);
 }
 
@@ -36,7 +37,7 @@ void DirectoryListingWidget::slotAppStateChanged() {
                                                   : ViewMode::IconMode);
   // TODO: set it for IconMode only?
   //    QListView::setWrapping(true);
-  
+
   // TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
 }
 

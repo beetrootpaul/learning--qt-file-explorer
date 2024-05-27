@@ -17,13 +17,13 @@ public:
   DirectoryListingWidget();
   ~DirectoryListingWidget();
 
-  void init(app_state::AppState* appState);
+  void init(QSharedPointer<app_state::AppState> appState);
 
 public slots:
   void slotAppStateChanged();
 
 private:
-  app_state::AppState* appState_;
+  QSharedPointer<app_state::AppState> appState_;
   QFileSystemModel* model_;
 
 };

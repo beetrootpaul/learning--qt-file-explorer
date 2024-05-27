@@ -18,7 +18,7 @@ public:
   MainWindow();
   ~MainWindow();
 
-  void init(app_state::AppState* appState);
+  void init(QSharedPointer<app_state::AppState> appState);
 
   void closeEvent(QCloseEvent* event) override;
 
@@ -29,7 +29,7 @@ public slots:
   void slotAppStateChanged();
 
 private:
-  app_state::AppState* appState_;
+  QSharedPointer<app_state::AppState> appState_;
 
   QToolBar* toolbar_;
   QSplitter* splitter_;

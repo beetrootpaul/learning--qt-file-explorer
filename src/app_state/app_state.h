@@ -10,7 +10,7 @@
 
 namespace qt_file_explorer::app_state {
 
-class AppState : public QObject, public WithPersistedState {
+class AppState : public QObject, public WithPersistedState, public QSharedData {
 
 Q_OBJECT
 

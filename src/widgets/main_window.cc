@@ -21,7 +21,7 @@ MainWindow::~MainWindow() {
   qDebug() << "~" << this;
 }
 
-void MainWindow::init(app_state::AppState* appState) {
+void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   appState_ = appState;
 
   setWindowTitle("Qt File Explorer");
@@ -68,7 +68,7 @@ void MainWindow::init(app_state::AppState* appState) {
   connect(toggleDirListingViewTypeButton_, &QPushButton::clicked, [=]() {
     appState->toggleDirListingViewType();
   });
-  connect(appState, &app_state::AppState::signalChanged, this,
+  connect(appState.data(), &app_state::AppState::signalChanged, this,
           &MainWindow::slotAppStateChanged);
 
   toolbar_ = new QToolBar();
