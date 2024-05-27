@@ -1,11 +1,8 @@
 #include "main_window.h"
 
-#include <iostream>
-
 #include <QApplication>
 #include <QCloseEvent>
 #include <QPushButton>
-#include <QScreen>
 #include <QSettings>
 #include <QToolBar>
 
@@ -72,21 +69,31 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   connect(appState.data(), &app_state::AppState::signalChanged, this,
           &MainWindow::slotAppStateChanged);
 
-  toolbar_ = new QToolBar();
+  mainToolbar_ = new QToolBar();
   // Object name is required for state serialization
-  toolbar_->setObjectName("main_toolbar");
-  toolbar_->addWidget(quickOpenHomeButton);
-  toolbar_->addWidget(quickOpenDownloadsButton);
-  toolbar_->addWidget(resetLayoutButton);
-  toolbar_->addWidget(toggleDirListingViewTypeButton_);
+  mainToolbar_->setObjectName("main_toolbar");
+  mainToolbar_->addWidget(quickOpenHomeButton);
+  mainToolbar_->addWidget(quickOpenDownloadsButton);
+  mainToolbar_->addWidget(toggleDirListingViewTypeButton_);
+  mainToolbar_->setMovable(true);
+  mainToolbar_->setFloatable(false);
+  // Remove context menu in order to remove the ability to close this mainToolbar_
+  mainToolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
 
-  toolbar_->setMovable(true);
-  toolbar_->setFloatable(false);
+  layoutToolbar_ = new QToolBar();
+  // Object name is required for state serialization
+  layoutToolbar_->setObjectName("layout_toolbar");
+  layoutToolbar_->addWidget(resetLayoutButton);
+  layoutToolbar_->setMovable(true);
+  layoutToolbar_->setFloatable(false);
 
-  // Remove context menu in order to remove the ability to close this toolbar_
-  toolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
+  // Remove context menu in order to remove the ability to close this mainToolbar_
+  mainToolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
+  layoutToolbar_->setContextMenuPolicy(
+      Qt::ContextMenuPolicy::PreventContextMenu);
 
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
 
   appState->loadPersistedState();
   loadPersistedState();
@@ -157,7 +164,8 @@ void MainWindow::loadPersistedState() {
 }
 
 void MainWindow::resetMainWindowLayout() {
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
 }
 
 // TODO: trigger it also on a double click on the splitter bar

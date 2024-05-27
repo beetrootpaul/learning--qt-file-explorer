@@ -31,7 +31,8 @@ public slots:
 private:
   QSharedPointer<app_state::AppState> appState_;
 
-  QToolBar* toolbar_;
+  QToolBar* mainToolbar_;
+  QToolBar* layoutToolbar_;
   QSplitter* splitter_;
   QPushButton* toggleDirListingViewTypeButton_;
 

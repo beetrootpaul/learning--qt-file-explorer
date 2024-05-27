@@ -1,7 +1,5 @@
 #include "directory_picker_widget.h"
 
-#include <iostream>
-
 #include <QDir>
 #include <QFileSystemModel>
 

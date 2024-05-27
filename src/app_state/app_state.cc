@@ -1,7 +1,5 @@
 #include "app_state.h"
 
-#include <iostream>
-
 #include <QSettings>
 #include <QStandardPaths>
 
