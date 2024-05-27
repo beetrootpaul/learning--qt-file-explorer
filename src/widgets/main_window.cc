@@ -66,8 +66,10 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   connect(toggleDirListingViewTypeButton_, &QPushButton::clicked, [=]() {
     appState->toggleDirListingViewType();
   });
-  connect(appState.data(), &app_state::AppState::signalChanged, this,
-          &MainWindow::slotAppStateChanged);
+  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
+          &MainWindow::slotViewTypeChanged);
+
+  // TODO: extract both toolbars to their classes
 
   mainToolbar_ = new QToolBar();
   // Object name is required for state serialization
@@ -106,7 +108,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   event->accept();
 }
 
-void MainWindow::slotAppStateChanged() {
+void MainWindow::slotViewTypeChanged() {
   toggleDirListingViewTypeButton_->setText(
       appState_->currentDirListingViewType() ==
       app_state::DirListingViewType::List ? "&Switch to icons"

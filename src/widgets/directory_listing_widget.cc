@@ -14,24 +14,31 @@ DirectoryListingWidget::~DirectoryListingWidget() {
   qDebug() << "~" << this;
 }
 
+// TODO: handle double-click of files and dirs
+
 void
-DirectoryListingWidget::init(QSharedPointer<app_state::AppState> appState) {
+DirectoryListingWidget::init(
+    const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();
-  model_->setFilter(QDir::Files);
+  model_->setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
   setModel(model_);
 
-  connect(appState.data(), &app_state::AppState::signalChanged, this,
-          &DirectoryListingWidget::slotAppStateChanged);
+  connect(appState.data(), &app_state::AppState::signalPathChanged, this,
+          &DirectoryListingWidget::slotPathChanged);
+  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
+          &DirectoryListingWidget::slotViewTypeChanged);
 }
 
-void DirectoryListingWidget::slotAppStateChanged() {
+void DirectoryListingWidget::slotPathChanged() {
   auto path = appState_->currentPath();
   // TODO: should I set an entire drive here?
   model_->setRootPath(path);
   setRootIndex(model_->index(path));
+}
 
+void DirectoryListingWidget::slotViewTypeChanged() {
   setViewMode(appState_->currentDirListingViewType() ==
               app_state::DirListingViewType::List ? ViewMode::ListMode
                                                   : ViewMode::IconMode);

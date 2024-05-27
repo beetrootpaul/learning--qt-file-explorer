@@ -26,7 +26,7 @@ public:
   void loadPersistedState() override;
 
 public slots:
-  void slotAppStateChanged();
+  void slotViewTypeChanged();
 
 private:
   QSharedPointer<app_state::AppState> appState_;

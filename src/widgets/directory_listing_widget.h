@@ -17,10 +17,11 @@ public:
   DirectoryListingWidget();
   ~DirectoryListingWidget();
 
-  void init(QSharedPointer<app_state::AppState> appState);
+  void init(const QSharedPointer<app_state::AppState>& appState);
 
 public slots:
-  void slotAppStateChanged();
+  void slotPathChanged();
+  void slotViewTypeChanged();
 
 private:
   QSharedPointer<app_state::AppState> appState_;

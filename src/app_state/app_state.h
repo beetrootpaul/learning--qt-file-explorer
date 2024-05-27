@@ -21,6 +21,7 @@ public:
   QString currentPath();
   void switchPathToHome();
   void switchPathToDownloads();
+  void switchPathTo(const QString& path, bool originatedFromDirPicker = false);
 
   DirListingViewType currentDirListingViewType();
   void toggleDirListingViewType();
@@ -29,7 +30,8 @@ public:
   void loadPersistedState() override;
 
 signals:
-  void signalChanged();
+  void signalPathChanged(bool originatedFromDirPicker);
+  void signalViewTypeChanged();
 
 private:
   const QString homePath_ = QDir::homePath();

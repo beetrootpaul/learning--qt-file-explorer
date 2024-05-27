@@ -24,25 +24,29 @@ QString AppState::currentPath() {
 }
 
 void AppState::switchPathToHome() {
-  currentPath_ = homePath_;
-  emit signalChanged();
+  switchPathTo(homePath_);
 }
 
 void AppState::switchPathToDownloads() {
-  currentPath_ = downloadsPath();
-  emit signalChanged();
+  switchPathTo(downloadsPath());
+}
+
+// TODO: sometimes (quite often) the path switch makes the entire tree go back to root… is it some race condition with a dir being loaded?
+void AppState::switchPathTo(const QString& path, bool originatedFromDirPicker) {
+  qDebug() << "Switching path to:" << path;
+  currentPath_ = path;
+  emit signalPathChanged(originatedFromDirPicker);
 }
 
 DirListingViewType AppState::currentDirListingViewType() {
   return currentDirListingViewType_;
 }
 
-// TODO: persist this between app runs
 void AppState::toggleDirListingViewType() {
   currentDirListingViewType_ =
       currentDirListingViewType_ == DirListingViewType::List
       ? DirListingViewType::Icons : DirListingViewType::List;
-  emit signalChanged();
+  emit signalViewTypeChanged();
 }
 
 void AppState::savePersistedState() {
