@@ -5,12 +5,15 @@
 #include <QObject>
 #include <QString>
 
-#include "../with_persisted_state.h"
+#include "../persisted_state/with_persisted_state.h"
 #include "dir_listing_view_type.h"
 
 namespace qt_file_explorer::app_state {
 
-class AppState : public QObject, public WithPersistedState, public QSharedData {
+class AppState
+    : public QObject,
+      public persisted_state::WithPersistedState,
+      public QSharedData {
 
 Q_OBJECT
 
