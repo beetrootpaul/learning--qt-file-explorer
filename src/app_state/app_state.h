@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QObject>
 #include <QString>
+#include <QUndoStack>
 
 #include "../persisted_state/with_persisted_state.h"
 #include "dir_listing_view_type.h"
@@ -25,6 +26,11 @@ public:
   void switchPathToHome();
   void switchPathToDownloads();
   void switchPathTo(const QString& path, bool originatedFromDirPicker = false);
+  void undoSwitchPath();
+  void redoSwitchPath();
+
+  // "internal" method, meant to be used by QUndoCommand instances to directly change AppState
+  void setPath(const QString& path, bool originatedFromDirPicker = false);
 
   DirListingViewType currentDirListingViewType();
   void toggleDirListingViewType();
@@ -38,8 +44,11 @@ signals:
 
 private:
   const QString homePath_ = QDir::homePath();
+
   QString currentPath_ = homePath_;
   DirListingViewType currentDirListingViewType_ = DirListingViewType::List;
+
+  QUndoStack undoStack_ = QUndoStack();
 
   QString downloadsPath();
 

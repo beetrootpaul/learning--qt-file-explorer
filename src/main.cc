@@ -4,8 +4,6 @@
 #include "app_state/app_state.h"
 #include "widgets/main_window.h"
 
-// TODO: non-DEBUG build?
-
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
 

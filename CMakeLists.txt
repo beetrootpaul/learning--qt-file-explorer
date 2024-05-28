@@ -20,6 +20,7 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/app_state.cc
         src/app_state/app_state.h
         src/app_state/dir_listing_view_type.h
+        src/app_state/switch_path_command.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
         src/widgets/directory_listing_widget.cc

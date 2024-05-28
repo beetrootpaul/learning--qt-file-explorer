@@ -90,7 +90,7 @@ void MainWindow::loadPersistedState() {
   if (!mainWindowSize.isEmpty()) {
     resize(mainWindowSize);
   } else {
-    resize(800, 600);
+    resize(1200, 800);
   }
 
   const auto mainWindowPos = settings.value(

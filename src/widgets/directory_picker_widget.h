@@ -24,8 +24,6 @@ private:
 
 private slots:
   void slotPathChanged(bool originatedFromDirPicker);
-  void currentChanged(const QModelIndex& current,
-                      const QModelIndex& previous) override;
 
 };
 
