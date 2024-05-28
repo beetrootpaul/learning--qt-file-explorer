@@ -1,6 +1,7 @@
 #include "directory_listing_icons_widget.h"
 
 #include <QFileSystemModel>
+#include <QLayout>
 #include <QListView>
 #include <QStandardPaths>
 
@@ -33,16 +34,21 @@ DirectoryListingIconsWidget::init(
   setModel(model_.get());
 
   setViewMode(ViewMode::IconMode);
+  setWrapping(true);
+  setWordWrap(false);
+  setGridSize(QSize(72, 56));
+  setResizeMode(QListView::Adjust);
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
           &DirectoryListingIconsWidget::slotPathChanged);
 
-  connect(this, &QListView::doubleClicked, [=](const QModelIndex& index) {
-    const QFileInfo& fileInfo = model_->fileInfo(index);
-    if (fileInfo.isDir()) {
-      appState_->switchPathTo(fileInfo.filePath());
-    }
-  });
+  connect(this, &DirectoryListingIconsWidget::doubleClicked,
+          [=](const QModelIndex& index) {
+            const QFileInfo& fileInfo = model_->fileInfo(index);
+            if (fileInfo.isDir()) {
+              appState_->switchPathTo(fileInfo.filePath());
+            }
+          });
 }
 
 void DirectoryListingIconsWidget::slotPathChanged() {
