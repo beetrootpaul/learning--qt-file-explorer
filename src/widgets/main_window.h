@@ -35,8 +35,10 @@ private:
 
   MainToolbar* mainToolbar_ = nullptr;
   LayoutToolbar* layoutToolbar_ = nullptr;
+  
   QSplitter* splitter_ = nullptr;
-  // TODO: should I manually destruct the one which is not visible at the given moment, because it is not in the Qt managed tree?
+
+  QSharedPointer<DirectoryListingSharedModel> directoryListingSharedModel_;
   DirectoryListingListWidget* directoryListingList_;
   DirectoryListingIconsWidget* directoryListingIcons_;
 

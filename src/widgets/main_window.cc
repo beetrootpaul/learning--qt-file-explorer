@@ -43,10 +43,14 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   auto* directoryPicker = new DirectoryPickerWidget();
   directoryPicker->init(appState);
 
+  // TODO: keep selection between view types
+
+  directoryListingSharedModel_ = QSharedPointer<DirectoryListingSharedModel>(
+      new DirectoryListingSharedModel());
   directoryListingList_ = new DirectoryListingListWidget();
-  directoryListingList_->init(appState);
+  directoryListingList_->init(directoryListingSharedModel_, appState);
   directoryListingIcons_ = new DirectoryListingIconsWidget();
-  directoryListingIcons_->init(appState);
+  directoryListingIcons_->init(directoryListingSharedModel_, appState);
   connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 

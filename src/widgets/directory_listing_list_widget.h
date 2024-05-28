@@ -5,6 +5,7 @@
 #import <QTreeView>
 
 #include "../app_state/app_state.h"
+#include "directory_listing_shared_model.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -17,11 +18,12 @@ public:
   DirectoryListingListWidget();
   ~DirectoryListingListWidget();
 
-  void init(const QSharedPointer<app_state::AppState>& appState);
+  void init(const QSharedPointer<DirectoryListingSharedModel>& model_,
+            const QSharedPointer<app_state::AppState>& appState);
 
 private:
   QSharedPointer<app_state::AppState> appState_;
-  QFileSystemModel* model_ = nullptr;
+  QSharedPointer<DirectoryListingSharedModel> model_;
 
 private slots:
   void slotPathChanged();

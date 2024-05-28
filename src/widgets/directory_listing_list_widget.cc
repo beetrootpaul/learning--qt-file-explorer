@@ -19,16 +19,16 @@ DirectoryListingListWidget::~DirectoryListingListWidget() {
 
 void
 DirectoryListingListWidget::init(
+    const QSharedPointer<DirectoryListingSharedModel>& model,
     const QSharedPointer<app_state::AppState>& appState) {
+  model_ = model;
   appState_ = appState;
+
+  setModel(model_.get());
 
   // Make this tree look like a regular flat list
   setRootIsDecorated(false);
   setItemsExpandable(false);
-
-  model_ = new QFileSystemModel();
-  model_->setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
-  setModel(model_);
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
           &DirectoryListingListWidget::slotPathChanged);

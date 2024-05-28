@@ -12,6 +12,8 @@ DirectoryPickerWidget::DirectoryPickerWidget() {
 
 DirectoryPickerWidget::~DirectoryPickerWidget() {
   qDebug() << "~" << this;
+
+  delete model_;
 }
 
 // TODO: persist column widths

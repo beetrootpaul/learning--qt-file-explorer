@@ -5,10 +5,10 @@
 #import <QListView>
 
 #include "../app_state/app_state.h"
+#include "directory_listing_shared_model.h"
 
 namespace qt_file_explorer::widgets {
 
-// TODO: share the model with the list variant, so the selection keeps unchanged? or other benefits?
 class DirectoryListingIconsWidget : public QListView {
 
 Q_OBJECT
@@ -17,11 +17,12 @@ public:
   DirectoryListingIconsWidget();
   ~DirectoryListingIconsWidget();
 
-  void init(const QSharedPointer<app_state::AppState>& appState);
+  void init(const QSharedPointer<DirectoryListingSharedModel>& model_,
+            const QSharedPointer<app_state::AppState>& appState);
 
 private:
   QSharedPointer<app_state::AppState> appState_;
-  QFileSystemModel* model_ = nullptr;
+  QSharedPointer<DirectoryListingSharedModel> model_;
 
 private slots:
   void slotPathChanged();

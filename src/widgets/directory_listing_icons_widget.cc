@@ -25,14 +25,14 @@ DirectoryListingIconsWidget::~DirectoryListingIconsWidget() {
 
 void
 DirectoryListingIconsWidget::init(
+    const QSharedPointer<DirectoryListingSharedModel>& model,
     const QSharedPointer<app_state::AppState>& appState) {
+  model_ = model;
   appState_ = appState;
 
-  setViewMode(ViewMode::IconMode);
+  setModel(model_.get());
 
-  model_ = new QFileSystemModel();
-  model_->setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
-  setModel(model_);
+  setViewMode(ViewMode::IconMode);
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
           &DirectoryListingIconsWidget::slotPathChanged);
