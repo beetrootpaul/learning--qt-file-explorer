@@ -16,6 +16,8 @@ DirectoryListingWidget::~DirectoryListingWidget() {
 
 // TODO: handle double-click of files and dirs
 
+// TODO: persist current dir across runs
+
 void
 DirectoryListingWidget::init(
     const QSharedPointer<app_state::AppState>& appState) {
@@ -29,6 +31,13 @@ DirectoryListingWidget::init(
           &DirectoryListingWidget::slotPathChanged);
   connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
           &DirectoryListingWidget::slotViewTypeChanged);
+
+  connect(this, &QListView::doubleClicked, [=](const QModelIndex& index) {
+    const QFileInfo& fileInfo = model_->fileInfo(index);
+    if (fileInfo.isDir()) {
+      appState_->switchPathTo(fileInfo.filePath());
+    }
+  });
 }
 
 void DirectoryListingWidget::slotPathChanged() {

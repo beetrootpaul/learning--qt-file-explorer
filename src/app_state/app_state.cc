@@ -5,14 +5,12 @@
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "dir_listing_view_type.h"
+#include "switch_path_command.h"
 
 namespace qt_file_explorer::app_state {
 
 AppState::AppState() {
   qDebug() << "+" << this;
-
-  currentPath_ = homePath_;
-  currentDirListingViewType_ = DirListingViewType::List;
 }
 
 AppState::~AppState() {
@@ -32,8 +30,23 @@ void AppState::switchPathToDownloads() {
   switchPathTo(downloadsPath());
 }
 
-// TODO: sometimes (quite often) the path switch makes the entire tree go back to root… is it some race condition with a dir being loaded?
 void AppState::switchPathTo(const QString& path, bool originatedFromDirPicker) {
+  undoStack_.push(
+      new SwitchPathCommand(this, currentPath_, path, originatedFromDirPicker));
+  qDebug() << "[undoStack#count]" << undoStack_.count();
+}
+
+void AppState::undoSwitchPath() {
+  undoStack_.undo();
+  qDebug() << "[undoStack#count]" << undoStack_.count();
+}
+
+void AppState::redoSwitchPath() {
+  undoStack_.redo();
+  qDebug() << "[undoStack#count]" << undoStack_.count();
+}
+
+void AppState::setPath(const QString& path, bool originatedFromDirPicker) {
   qDebug() << "Switching path to:" << path;
   currentPath_ = path;
   emit signalPathChanged(originatedFromDirPicker);

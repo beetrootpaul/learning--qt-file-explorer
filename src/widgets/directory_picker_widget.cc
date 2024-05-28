@@ -16,7 +16,8 @@ DirectoryPickerWidget::~DirectoryPickerWidget() {
 
 // TODO: persist column widths
 
-void DirectoryPickerWidget::init(QSharedPointer<app_state::AppState> appState) {
+void DirectoryPickerWidget::init(
+    const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();
@@ -39,6 +40,13 @@ void DirectoryPickerWidget::init(QSharedPointer<app_state::AppState> appState) {
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
           &DirectoryPickerWidget::slotPathChanged);
+  connect(this, &QTreeView::clicked, [=](const QModelIndex& index) {
+    const QFileInfo& fileInfo = model_->fileInfo(index);
+    if (fileInfo.isDir()) {
+      appState_->switchPathTo(fileInfo.filePath(), /*originatedFromDirPicker=*/
+                              true);
+    }
+  });
 
   // TODO: do I need to do anything about this signal?
   //  connect(model_, &QFileSystemModel::directoryLoaded, [=]() {
@@ -46,28 +54,21 @@ void DirectoryPickerWidget::init(QSharedPointer<app_state::AppState> appState) {
   //  });
 }
 
-// TODO: learn about directoryLoaded signal and if we should wait for it with a selection
-
 void DirectoryPickerWidget::slotPathChanged(bool originatedFromDirPicker) {
+  // We can either change the dir by clicking it in this QTreeView or with other mean
+  // outside the QTreeView. If the change originate from QTreeView, we do not need
+  // (nor want) to expand it and select the desired dir, since it is already done,
+  // manually, by the user. Especially, we want to avoid a situation where the tree
+  // is scrolled to put the selected dir at center, because it is highly confusing
+  // for someone who just clicked somewhere in the tree.
   if (originatedFromDirPicker) return;
 
   auto path = appState_->currentPath();
-  // TODO: move this to quick actions only? What about path switch originating from listing, but should not collapse?
-  collapseAll();
 
   scrollTo(model_->index(path),
            QAbstractItemView::ScrollHint::PositionAtCenter);
   selectionModel()->select(model_->index(path),
                            QItemSelectionModel::SelectionFlag::ClearAndSelect);
-}
-
-// This slot will be called every time user selects a folder *by hand*.
-// In other words, this won't happen for selections made through path
-// switching initiated programmatically, outside the QTreeView.
-void DirectoryPickerWidget::currentChanged(const QModelIndex& current,
-                                           const QModelIndex& previous) {
-  auto newPath = model_->filePath(current);
-  appState_->switchPathTo(newPath, /*originatedFromDirPicker=*/true);
 }
 
 } // namespace qt_file_explorer::widgets

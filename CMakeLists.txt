@@ -20,14 +20,21 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/app_state.cc
         src/app_state/app_state.h
         src/app_state/dir_listing_view_type.h
+        src/app_state/switch_path_command.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
         src/widgets/directory_listing_widget.cc
         src/widgets/directory_listing_widget.h
         src/widgets/directory_picker_widget.cc
         src/widgets/directory_picker_widget.h
+        src/widgets/layout_toolbar.cc
+        src/widgets/layout_toolbar.h
+        src/widgets/main_toolbar.cc
+        src/widgets/main_toolbar.h
         src/widgets/main_window.cc
         src/widgets/main_window.h
+        src/widgets/toolbar_commons.cc
+        src/widgets/toolbar_commons.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core
