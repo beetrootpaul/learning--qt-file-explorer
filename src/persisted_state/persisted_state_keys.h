@@ -10,24 +10,24 @@ public:
   // we get an app in a fresh state, with nothing persisted yet. Alternatively,
   // we can do `settings.remove(PersistedStateKeys.prefix)` and achieve
   // a similar result.
-  inline static const std::string prefix = "v15/";
+  inline static const std::string prefix = "v19/";
 
   inline static const std::string groupState = prefix + "state/";
   inline static const std::string groupLayout = prefix + "layout/";
   inline static const std::string groupWindow = prefix + "window/";
 
-  inline static const std::string statePath =
-      groupWindow + "state/path";
-  inline static const std::string stateViewType =
-      groupWindow + "state/view_type";
+  inline static const std::string browsedDir =
+      groupWindow + "browsed_dir";
+  inline static const std::string viewType =
+      groupWindow + "view_type";
   inline static const std::string mainWindowSize =
-      groupWindow + "main_window/size";
+      groupWindow + "main_window_size";
   inline static const std::string mainWindowPos =
-      groupWindow + "main_window/pos";
+      groupWindow + "main_window_pos";
   inline static const std::string mainWindowState =
-      groupLayout + "main_window/state";
+      groupLayout + "main_window_state";
   inline static const std::string splitterState =
-      groupLayout + "splitter/state";
+      groupLayout + "splitter_state";
 };
 
 } // namespace qt_file_explorer::persisted_state

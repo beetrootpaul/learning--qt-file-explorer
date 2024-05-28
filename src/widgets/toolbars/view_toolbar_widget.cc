@@ -15,8 +15,23 @@ ViewToolbarWidget::~ViewToolbarWidget() {
   qDebug() << "~" << this;
 }
 
-void ViewToolbarWidget::init() {
+void
+ViewToolbarWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   applyCommonToolbarConfiguration(this, "view_toolbar");
+
+  // TODO: shortcut
+  auto* togglePreviewButton = new QPushButton("(placeholder)");
+  connect(togglePreviewButton, &QPushButton::clicked, [=]() {
+    appState->togglePreviewVisible();
+  });
+  // TODO: persist whether preview was shown or not
+  connect(appState.data(), &app_state::AppState::signalPreviewVisibleChanged,
+          [=]() {
+            togglePreviewButton->setText(
+                appState->isPreviewVisible() ? "Hide preview"
+                                             : "Show preview");
+          });
+  addWidget(togglePreviewButton);
 
   // TODO: shortcut. The `&R` does not work, apparently
   auto* resetLayoutButton = new QPushButton("&Reset layout");

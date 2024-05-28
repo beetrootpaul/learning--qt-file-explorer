@@ -17,7 +17,7 @@ public:
   ViewToolbarWidget();
   ~ViewToolbarWidget();
 
-  void init();
+  void init(const QSharedPointer<app_state::AppState>& appState);
 
 signals:
   void signalResetLayoutClicked();

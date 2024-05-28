@@ -19,8 +19,9 @@ int main(int argc, char* argv[]) {
 
   // Trigger slots listening to these signals. Thanks to that we do
   // not have to add initialization code and can rely on signals instead.
-  appState->signalPathChanged(/*originatedFromDirPicker=*/false);
+  appState->signalBrowsedDirChanged(/*originatedFromDirPicker=*/false);
   appState->signalViewTypeChanged();
+  appState->signalPreviewVisibleChanged();
 
   mainWindow.show();
 

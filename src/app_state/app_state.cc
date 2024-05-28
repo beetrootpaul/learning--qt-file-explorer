@@ -5,7 +5,7 @@
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "dir_listing_view_type.h"
-#include "switch_path_command.h"
+#include "switch_dir_command.h"
 
 namespace qt_file_explorer::app_state {
 
@@ -18,38 +18,41 @@ AppState::~AppState() {
 }
 
 // TODO: persist this between app runs
-QString AppState::currentPath() {
-  return currentPath_;
+QString AppState::browsedDir() {
+  return browsedDir_;
 }
 
-void AppState::switchPathToHome() {
-  switchPathTo(homePath_);
+void AppState::switchBrowsedDirToHome() {
+  switchBrowsedDirTo(homeDir_);
 }
 
-void AppState::switchPathToDownloads() {
-  switchPathTo(downloadsPath());
+void AppState::switchBrowsedDirToDownloads() {
+  switchBrowsedDirTo(downloadsDir());
 }
 
-void AppState::switchPathTo(const QString& path, bool originatedFromDirPicker) {
+void
+AppState::switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker) {
+  // TODO: Are we sure about this early return?
+  if (dir.trimmed().isEmpty()) return;
   undoStack_.push(
-      new SwitchPathCommand(this, currentPath_, path, originatedFromDirPicker));
+      new SwitchDirCommand(this, browsedDir_, dir, originatedFromDirPicker));
   qDebug() << "[undoStack#count]" << undoStack_.count();
 }
 
-void AppState::undoSwitchPath() {
+void AppState::undoSwitchBrowsedDir() {
   undoStack_.undo();
   qDebug() << "[undoStack#count]" << undoStack_.count();
 }
 
-void AppState::redoSwitchPath() {
+void AppState::redoSwitchBrowsedDir() {
   undoStack_.redo();
   qDebug() << "[undoStack#count]" << undoStack_.count();
 }
 
-void AppState::setPath(const QString& path, bool originatedFromDirPicker) {
-  qDebug() << "Switching path to:" << path;
-  currentPath_ = path;
-  emit signalPathChanged(originatedFromDirPicker);
+void AppState::setBrowsedDir(const QString& dir, bool originatedFromDirPicker) {
+  qDebug() << "Switching browsed dir to:" << dir;
+  browsedDir_ = dir;
+  emit signalBrowsedDirChanged(originatedFromDirPicker);
 }
 
 DirListingViewType AppState::currentDirListingViewType() {
@@ -63,38 +66,59 @@ void AppState::toggleDirListingViewType() {
   emit signalViewTypeChanged();
 }
 
+QString AppState::selectedPath() {
+  return selectedPath_;
+}
+
+void AppState::switchSelectedPathTo(const QString& path) {
+  // TODO: Are we sure about this early return? Especially with no selection being represented by ""…
+  if (path.trimmed().isEmpty()) return;
+  qDebug() << "Switching selected path to:" << path;
+  selectedPath_ = path;
+  emit signalSelectedPathChanged();
+}
+
+bool AppState::isPreviewVisible() {
+  return isPreviewVisible_;
+}
+
+void AppState::togglePreviewVisible() {
+  isPreviewVisible_ = !isPreviewVisible_;
+  emit signalPreviewVisibleChanged();
+}
+
 void AppState::savePersistedState() {
   QSettings settings;
 
-  settings.setValue(persisted_state::PersistedStateKeys::statePath,
-                    currentPath_);
-  settings.setValue(persisted_state::PersistedStateKeys::stateViewType,
+  settings.setValue(persisted_state::PersistedStateKeys::browsedDir,
+                    browsedDir_);
+  settings.setValue(persisted_state::PersistedStateKeys::viewType,
                     (uint) currentDirListingViewType_);
 }
 
 void AppState::loadPersistedState() {
   QSettings settings;
 
-  const auto path = settings.value(
-      persisted_state::PersistedStateKeys::statePath).toString();
-  if (!path.isEmpty()) {
-    currentPath_ = path;
+  const auto dir = settings.value(
+      persisted_state::PersistedStateKeys::browsedDir).toString();
+  if (!dir.isEmpty()) {
+    browsedDir_ = dir;
   } else {
-    currentPath_ = homePath_;
+    browsedDir_ = homeDir_;
   }
 
-  if (settings.contains(persisted_state::PersistedStateKeys::stateViewType)) {
+  if (settings.contains(persisted_state::PersistedStateKeys::viewType)) {
     currentDirListingViewType_ = (DirListingViewType) settings.value(
-        persisted_state::PersistedStateKeys::stateViewType).toUInt();
+        persisted_state::PersistedStateKeys::viewType).toUInt();
   } else {
     currentDirListingViewType_ = DirListingViewType::List;
   }
 }
 
-QString AppState::downloadsPath() {
+QString AppState::downloadsDir() {
   auto locations = QStandardPaths::standardLocations(
       QStandardPaths::DownloadLocation);
-  return locations.count() > 0 ? locations.first() : homePath_;
+  return locations.count() > 0 ? locations.first() : homeDir_;
 }
 
 } // namespace qt_file_explorer::app_state

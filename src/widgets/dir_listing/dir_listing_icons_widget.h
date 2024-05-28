@@ -1,8 +1,8 @@
 #ifndef QT_FILE_EXPLORER_DIR_LISTING_DIR_LISTING_ICONS_WIDGET_H
 #define QT_FILE_EXPLORER_DIR_LISTING_DIR_LISTING_ICONS_WIDGET_H
 
-#import <QFileSystemModel>
-#import <QListView>
+#include <QFileSystemModel>
+#include <QListView>
 
 #include "../../app_state/app_state.h"
 #include "dir_listing_shared_model.h"
@@ -25,7 +25,7 @@ private:
   QSharedPointer<DirListingSharedModel> model_;
 
 private slots:
-  void slotPathChanged();
+  void slotBrowsedDirChanged();
 
 };
 

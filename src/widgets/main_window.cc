@@ -2,13 +2,22 @@
 
 #include <QApplication>
 #include <QCloseEvent>
+#include <QDockWidget>
+#include <QImage>
+#include <QImageReader>
+#include <QLabel>
+#include <QMessageBox>
+#include <QPainter>
+#include <QPixmap>
 #include <QSettings>
-#include <QToolBar>
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "dir_picker/dir_picker_widget.h"
+#include "preview/image_preview_widget.h"
 
 namespace qt_file_explorer::widgets {
+
+// TODO: check the whole `tr(…)` stuff and menus from e.g. https://doc.qt.io/qt-6.2/qtwidgets-widgets-imageviewer-example.html
 
 MainWindow::MainWindow() {
   qDebug() << "+" << this;
@@ -52,6 +61,28 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
+  // TODO: cleanup
+  auto* ipw = new ImagePreviewWidget();
+  ipw->init(appState);
+  ipw->setBaseSize(200, 100);
+
+  // TODO: cleanup
+  auto* dw = new QDockWidget("doooooock?");
+  dw->setWidget(ipw);
+  // TODO needed?
+  //  imageLabel->setBackgroundRole(QPalette::Base);
+  //  imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+  // TODO: extract slotXyz out of it
+  connect(appState.data(), &app_state::AppState::signalPreviewVisibleChanged,
+          [=]() {
+            if (appState->isPreviewVisible()) {
+              dw->show();
+            } else {
+              dw->hide();
+            }
+          });
+  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dw);
+
   splitter_->setOrientation(Qt::Orientation::Horizontal);
   splitter_->addWidget(dirPicker);
   splitter_->setStretchFactor(0, 1);
@@ -72,7 +103,7 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
 
   viewToolbar_ = new ViewToolbarWidget();
-  viewToolbar_->init();
+  viewToolbar_->init(appState);
   connect(viewToolbar_, &ViewToolbarWidget::signalResetLayoutClicked,
           [=]() {
             QSettings settings;
@@ -113,6 +144,7 @@ void MainWindow::loadPersistedState() {
   if (!mainWindowSize.isEmpty()) {
     resize(mainWindowSize);
   } else {
+    // TODO: consider this: QGuiApplication::primaryScreen()->availableSize() * 3 / 5
     resize(1200, 800);
   }
 

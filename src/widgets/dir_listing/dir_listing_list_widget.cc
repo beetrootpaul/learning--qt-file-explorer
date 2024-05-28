@@ -30,22 +30,27 @@ DirListingListWidget::init(
   setRootIsDecorated(false);
   setItemsExpandable(false);
 
-  connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirListingListWidget::slotPathChanged);
+  connect(appState.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+          &DirListingListWidget::slotBrowsedDirChanged);
 
   connect(this, &QTreeView::doubleClicked, [=](const QModelIndex& index) {
     const QFileInfo& fileInfo = model_->fileInfo(index);
     if (fileInfo.isDir()) {
-      appState_->switchPathTo(fileInfo.filePath());
+      appState_->switchBrowsedDirTo(fileInfo.filePath());
     }
   });
 }
 
-void DirListingListWidget::slotPathChanged() {
-  auto path = appState_->currentPath();
+void DirListingListWidget::currentChanged(const QModelIndex& current,
+                                          const QModelIndex& previous) {
+  appState_->switchSelectedPathTo(model_->filePath(current));
+}
+
+void DirListingListWidget::slotBrowsedDirChanged() {
+  auto dir = appState_->browsedDir();
   // TODO: should I set an entire drive here?
-  model_->setRootPath(path);
-  setRootIndex(model_->index(path));
+  model_->setRootPath(dir);
+  setRootIndex(model_->index(dir));
 }
 
 } // namespace qt_file_explorer::widgets
