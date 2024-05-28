@@ -159,7 +159,7 @@ void MainWindow::resetSplitterLayout() {
     int totalWidth = splitter_->width();
     int desiredWidth = std::floor(static_cast<float>(totalWidth) * ratio);
     if (i == splitter_->count() - 1) {
-      desiredWidth = width() - desiredWidthsAccumulated;
+      desiredWidth = totalWidth - desiredWidthsAccumulated;
     }
     desiredWidthsAccumulated += desiredWidth;
     desiredSizes[i] = desiredWidth;

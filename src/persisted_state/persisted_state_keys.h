@@ -10,7 +10,7 @@ public:
   // we get an app in a fresh state, with nothing persisted yet. Alternatively,
   // we can do `settings.remove(PersistedStateKeys.prefix)` and achieve
   // a similar result.
-  inline static const std::string prefix = "v13/";
+  inline static const std::string prefix = "v15/";
 
   inline static const std::string groupState = prefix + "state/";
   inline static const std::string groupLayout = prefix + "layout/";
