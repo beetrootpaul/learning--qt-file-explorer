@@ -7,8 +7,6 @@
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "directory_picker_widget.h"
-#include "layout_toolbar.h"
-#include "main_toolbar.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -60,22 +58,29 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   splitter_->addWidget(directoryListingList_);
   splitter_->setStretchFactor(1, 2);
 
-  mainToolbar_ = new MainToolbar();
-  mainToolbar_->init(appState);
-  connect(mainToolbar_, &MainToolbar::signalCollapseAllLicked, [=]() {
-    directoryPicker->collapseAll();
-  });
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
+  historyToolbar_ = new HistoryToolbarWidget();
+  historyToolbar_->init(appState);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
 
-  layoutToolbar_ = new LayoutToolbar();
-  layoutToolbar_->init();
-  connect(layoutToolbar_, &LayoutToolbar::signalResetLayoutClicked, [=]() {
-    QSettings settings;
-    settings.remove(persisted_state::PersistedStateKeys::groupLayout);
-    resetMainWindowLayout();
-    resetSplitterLayout();
-  });
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
+  navigationToolbar_ = new NavigationToolbarWidget();
+  navigationToolbar_->init(appState);
+  connect(navigationToolbar_,
+          &NavigationToolbarWidget::signalCollapseAllLicked,
+          [=]() {
+            directoryPicker->collapseAll();
+          });
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
+
+  viewToolbar_ = new ViewToolbarWidget();
+  viewToolbar_->init();
+  connect(viewToolbar_, &ViewToolbarWidget::signalResetLayoutClicked,
+          [=]() {
+            QSettings settings;
+            settings.remove(persisted_state::PersistedStateKeys::groupLayout);
+            resetMainWindowLayout();
+            resetSplitterLayout();
+          });
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
 
   appState->loadPersistedState();
   loadPersistedState();
@@ -142,8 +147,9 @@ void MainWindow::loadPersistedState() {
 }
 
 void MainWindow::resetMainWindowLayout() {
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
 }
 
 // TODO: trigger it also on a double click on the splitter bar

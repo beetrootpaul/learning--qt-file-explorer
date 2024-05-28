@@ -9,8 +9,9 @@
 #include "../persisted_state/with_persisted_state.h"
 #include "directory_listing_icons_widget.h"
 #include "directory_listing_list_widget.h"
-#include "layout_toolbar.h"
-#include "main_toolbar.h"
+#include "toolbars/view_toolbar_widget.h"
+#include "toolbars/navigation_toolbar_widget.h"
+#include "toolbars/history_toolbar_widget.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -33,9 +34,10 @@ public:
 private:
   QSharedPointer<app_state::AppState> appState_;
 
-  MainToolbar* mainToolbar_ = nullptr;
-  LayoutToolbar* layoutToolbar_ = nullptr;
-  
+  HistoryToolbarWidget* historyToolbar_ = nullptr;
+  NavigationToolbarWidget* navigationToolbar_ = nullptr;
+  ViewToolbarWidget* viewToolbar_ = nullptr;
+
   QSplitter* splitter_ = nullptr;
 
   QSharedPointer<DirectoryListingSharedModel> directoryListingSharedModel_;
