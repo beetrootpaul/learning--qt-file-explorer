@@ -96,7 +96,7 @@ void MainWindow::savePersistedState() {
   settings.setValue(persisted_state::PersistedStateKeys::mainWindowPos, pos());
   settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
                     saveState());
-  settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
+  settings.setValue(persisted_state::PersistedStateKeys::splitterState,
                     splitter_->saveState());
 }
 
@@ -133,7 +133,7 @@ void MainWindow::loadPersistedState() {
   }
 
   const auto splitterState = settings.value(
-      persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
+      persisted_state::PersistedStateKeys::splitterState).toByteArray();
   if (!splitterState.isEmpty()) {
     splitter_->restoreState(splitterState);
   } else {
