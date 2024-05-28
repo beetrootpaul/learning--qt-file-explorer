@@ -31,9 +31,9 @@ public:
 private:
   QSharedPointer<app_state::AppState> appState_;
 
-  MainToolbar* mainToolbar_;
-  LayoutToolbar* layoutToolbar_;
-  QSplitter* splitter_;
+  MainToolbar* mainToolbar_ = nullptr;
+  LayoutToolbar* layoutToolbar_ = nullptr;
+  QSplitter* splitter_ = nullptr;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();

@@ -20,7 +20,7 @@ public:
 
 private:
   QSharedPointer<app_state::AppState> appState_;
-  QFileSystemModel* model_;
+  QFileSystemModel* model_ = nullptr;
 
 private slots:
   void slotPathChanged(bool originatedFromDirPicker);

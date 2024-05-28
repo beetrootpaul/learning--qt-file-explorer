@@ -38,8 +38,8 @@ signals:
 
 private:
   const QString homePath_ = QDir::homePath();
-  QString currentPath_;
-  DirListingViewType currentDirListingViewType_;
+  QString currentPath_ = homePath_;
+  DirListingViewType currentDirListingViewType_ = DirListingViewType::List;
 
   QString downloadsPath();
 
