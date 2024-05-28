@@ -1,4 +1,4 @@
-#include "directory_listing_widget.h"
+#include "directory_listing_icons_widget.h"
 
 #include <QFileSystemModel>
 #include <QListView>
@@ -6,11 +6,16 @@
 
 namespace qt_file_explorer::widgets {
 
-DirectoryListingWidget::DirectoryListingWidget() {
+// TODO: set it for IconMode only?
+//    QListView::setWrapping(true);
+
+// TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
+
+DirectoryListingIconsWidget::DirectoryListingIconsWidget() {
   qDebug() << "+" << this;
 }
 
-DirectoryListingWidget::~DirectoryListingWidget() {
+DirectoryListingIconsWidget::~DirectoryListingIconsWidget() {
   qDebug() << "~" << this;
 }
 
@@ -19,18 +24,18 @@ DirectoryListingWidget::~DirectoryListingWidget() {
 // TODO: persist current dir across runs
 
 void
-DirectoryListingWidget::init(
+DirectoryListingIconsWidget::init(
     const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
+
+  setViewMode(ViewMode::IconMode);
 
   model_ = new QFileSystemModel();
   model_->setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
   setModel(model_);
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirectoryListingWidget::slotPathChanged);
-  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
-          &DirectoryListingWidget::slotViewTypeChanged);
+          &DirectoryListingIconsWidget::slotPathChanged);
 
   connect(this, &QListView::doubleClicked, [=](const QModelIndex& index) {
     const QFileInfo& fileInfo = model_->fileInfo(index);
@@ -40,21 +45,11 @@ DirectoryListingWidget::init(
   });
 }
 
-void DirectoryListingWidget::slotPathChanged() {
+void DirectoryListingIconsWidget::slotPathChanged() {
   auto path = appState_->currentPath();
   // TODO: should I set an entire drive here?
   model_->setRootPath(path);
   setRootIndex(model_->index(path));
-}
-
-void DirectoryListingWidget::slotViewTypeChanged() {
-  setViewMode(appState_->currentDirListingViewType() ==
-              app_state::DirListingViewType::List ? ViewMode::ListMode
-                                                  : ViewMode::IconMode);
-  // TODO: set it for IconMode only?
-  //    QListView::setWrapping(true);
-
-  // TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
 }
 
 } // namespace qt_file_explorer::widgets

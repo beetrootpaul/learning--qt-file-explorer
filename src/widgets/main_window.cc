@@ -6,7 +6,6 @@
 #include <QToolBar>
 
 #include "../persisted_state/persisted_state_keys.h"
-#include "directory_listing_widget.h"
 #include "directory_picker_widget.h"
 #include "layout_toolbar.h"
 #include "main_toolbar.h"
@@ -19,6 +18,16 @@ MainWindow::MainWindow() {
 
 MainWindow::~MainWindow() {
   qDebug() << "~" << this;
+
+  // We keep only one listing type visible at the time. The other one is not
+  // attached to a widget tree managed by Qt. Therefore we have to delete
+  // that other one manually.
+  if (splitter_->widget(1) != directoryListingList_) {
+    delete directoryListingList_;
+  }
+  if (splitter_->widget(1) != directoryListingIcons_) {
+    delete directoryListingIcons_;
+  }
 }
 
 // TODO: tabbing order
@@ -33,13 +42,18 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
 
   auto* directoryPicker = new DirectoryPickerWidget();
   directoryPicker->init(appState);
-  auto* directoryListing = new DirectoryListingWidget();
-  directoryListing->init(appState);
+
+  directoryListingList_ = new DirectoryListingListWidget();
+  directoryListingList_->init(appState);
+  directoryListingIcons_ = new DirectoryListingIconsWidget();
+  directoryListingIcons_->init(appState);
+  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
+          &MainWindow::slotViewTypeChanged);
 
   splitter_->setOrientation(Qt::Orientation::Horizontal);
   splitter_->addWidget(directoryPicker);
   splitter_->setStretchFactor(0, 1);
-  splitter_->addWidget(directoryListing);
+  splitter_->addWidget(directoryListingList_);
   splitter_->setStretchFactor(1, 2);
 
   mainToolbar_ = new MainToolbar();
@@ -151,6 +165,25 @@ void MainWindow::resetSplitterLayout() {
     desiredSizes[i] = desiredWidth;
   }
   splitter_->setSizes(desiredSizes);
+}
+
+void MainWindow::slotViewTypeChanged() {
+  if (appState_->currentDirListingViewType() ==
+      app_state::DirListingViewType::List) {
+    if (splitter_->widget(1) != directoryListingList_) {
+      splitter_->replaceWidget(1, directoryListingList_);
+      // Stretch factor is bound to a specific sub-widget, therefore
+      // we have to make sure it is applied on this one as well.
+      splitter_->setStretchFactor(1, 2);
+    }
+  } else {
+    if (splitter_->widget(1) != directoryListingIcons_) {
+      splitter_->replaceWidget(1, directoryListingIcons_);
+      // Stretch factor is bound to a specific sub-widget, therefore
+      // we have to make sure it is applied on this one as well.
+      splitter_->setStretchFactor(1, 2);
+    }
+  };
 }
 
 } // namespace qt_file_explorer::widgets
