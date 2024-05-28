@@ -16,7 +16,7 @@ public:
   DirectoryPickerWidget();
   ~DirectoryPickerWidget();
 
-  void init(QSharedPointer<app_state::AppState> appState);
+  void init(const QSharedPointer<app_state::AppState>& appState);
 
 private:
   QSharedPointer<app_state::AppState> appState_;

@@ -7,6 +7,8 @@
 
 #include "../app_state/app_state.h"
 #include "../persisted_state/with_persisted_state.h"
+#include "layout_toolbar.h"
+#include "main_toolbar.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -19,7 +21,7 @@ public:
   MainWindow();
   ~MainWindow();
 
-  void init(QSharedPointer<app_state::AppState> appState);
+  void init(const QSharedPointer<app_state::AppState>& appState);
 
   void closeEvent(QCloseEvent* event) override;
 
@@ -29,16 +31,12 @@ public:
 private:
   QSharedPointer<app_state::AppState> appState_;
 
-  QToolBar* mainToolbar_;
-  QToolBar* layoutToolbar_;
+  MainToolbar* mainToolbar_;
+  LayoutToolbar* layoutToolbar_;
   QSplitter* splitter_;
-  QPushButton* toggleDirListingViewTypeButton_;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();
-
-private slots:
-  void slotViewTypeChanged();
 
 };
 

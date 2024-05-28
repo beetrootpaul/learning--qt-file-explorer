@@ -26,8 +26,14 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/widgets/directory_listing_widget.h
         src/widgets/directory_picker_widget.cc
         src/widgets/directory_picker_widget.h
+        src/widgets/layout_toolbar.cc
+        src/widgets/layout_toolbar.h
+        src/widgets/main_toolbar.cc
+        src/widgets/main_toolbar.h
         src/widgets/main_window.cc
         src/widgets/main_window.h
+        src/widgets/toolbar_commons.cc
+        src/widgets/toolbar_commons.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core

@@ -16,7 +16,8 @@ DirectoryPickerWidget::~DirectoryPickerWidget() {
 
 // TODO: persist column widths
 
-void DirectoryPickerWidget::init(QSharedPointer<app_state::AppState> appState) {
+void DirectoryPickerWidget::init(
+    const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();

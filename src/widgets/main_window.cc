@@ -2,13 +2,14 @@
 
 #include <QApplication>
 #include <QCloseEvent>
-#include <QPushButton>
 #include <QSettings>
 #include <QToolBar>
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "directory_listing_widget.h"
 #include "directory_picker_widget.h"
+#include "layout_toolbar.h"
+#include "main_toolbar.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -20,7 +21,9 @@ MainWindow::~MainWindow() {
   qDebug() << "~" << this;
 }
 
-void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
+// TODO: tabbing order
+
+void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
   setWindowTitle("Qt File Explorer");
@@ -39,70 +42,21 @@ void MainWindow::init(QSharedPointer<app_state::AppState> appState) {
   splitter_->addWidget(directoryListing);
   splitter_->setStretchFactor(1, 2);
 
-  // TODO: tabbing order
-
-  // TODO: shortcut. The `&C` does not work, apparently
-  auto* collapseAllButton = new QPushButton("&Collapse all");
-  connect(collapseAllButton, &QPushButton::clicked, [=]() {
+  mainToolbar_ = new MainToolbar();
+  mainToolbar_->init(appState);
+  connect(mainToolbar_, &MainToolbar::signalCollapseAllLicked, [=]() {
     directoryPicker->collapseAll();
   });
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
 
-  // TODO: shortcut. The `&H` does not work, apparently
-  auto* quickOpenHomeButton = new QPushButton("Quick open: &Home");
-  connect(quickOpenHomeButton, &QPushButton::clicked, [=]() {
-    appState->switchPathToHome();
-  });
-
-  // TODO: shortcut. The `&D` does not work, apparently
-  auto* quickOpenDownloadsButton = new QPushButton("Quick open: &Downloads");
-  connect(quickOpenDownloadsButton, &QPushButton::clicked, [=]() {
-    appState->switchPathToDownloads();
-  });
-
-  // TODO: shortcut. The `&R` does not work, apparently
-  auto* resetLayoutButton = new QPushButton("&Reset layout");
-  connect(resetLayoutButton, &QPushButton::clicked, [=]() {
+  layoutToolbar_ = new LayoutToolbar();
+  layoutToolbar_->init();
+  connect(layoutToolbar_, &LayoutToolbar::signalResetLayoutClicked, [=]() {
     QSettings settings;
     settings.remove(persisted_state::PersistedStateKeys::groupLayout);
     resetMainWindowLayout();
     resetSplitterLayout();
   });
-
-  // TODO: shortcut. The `&S` does not work, apparently
-  toggleDirListingViewTypeButton_ = new QPushButton("(placeholder)");
-  connect(toggleDirListingViewTypeButton_, &QPushButton::clicked, [=]() {
-    appState->toggleDirListingViewType();
-  });
-  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
-          &MainWindow::slotViewTypeChanged);
-
-  // TODO: extract both toolbars to their classes
-
-  mainToolbar_ = new QToolBar();
-  // Object name is required for state serialization
-  mainToolbar_->setObjectName("main_toolbar");
-  mainToolbar_->addWidget(collapseAllButton);
-  mainToolbar_->addWidget(quickOpenHomeButton);
-  mainToolbar_->addWidget(quickOpenDownloadsButton);
-  mainToolbar_->addWidget(toggleDirListingViewTypeButton_);
-  mainToolbar_->setMovable(true);
-  mainToolbar_->setFloatable(false);
-  // Remove context menu in order to remove the ability to close this mainToolbar_
-  mainToolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
-
-  layoutToolbar_ = new QToolBar();
-  // Object name is required for state serialization
-  layoutToolbar_->setObjectName("layout_toolbar");
-  layoutToolbar_->addWidget(resetLayoutButton);
-  layoutToolbar_->setMovable(true);
-  layoutToolbar_->setFloatable(false);
-
-  // Remove context menu in order to remove the ability to close this mainToolbar_
-  mainToolbar_->setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
-  layoutToolbar_->setContextMenuPolicy(
-      Qt::ContextMenuPolicy::PreventContextMenu);
-
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
 
   appState->loadPersistedState();
@@ -114,13 +68,6 @@ void MainWindow::closeEvent(QCloseEvent* event) {
   savePersistedState();
 
   event->accept();
-}
-
-void MainWindow::slotViewTypeChanged() {
-  toggleDirListingViewTypeButton_->setText(
-      appState_->currentDirListingViewType() ==
-      app_state::DirListingViewType::List ? "&Switch to icons"
-                                          : "&Switch to list");
 }
 
 void MainWindow::savePersistedState() {
