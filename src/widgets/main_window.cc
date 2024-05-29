@@ -5,15 +5,13 @@
 #include <QDockWidget>
 #include <QImage>
 #include <QImageReader>
-#include <QLabel>
-#include <QMessageBox>
 #include <QPainter>
-#include <QPixmap>
 #include <QSettings>
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "dir_picker/dir_picker_widget.h"
 #include "preview/image_preview_widget.h"
+#include "preview/preview_dock_widget.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -29,8 +27,8 @@ MainWindow::~MainWindow() {
   // We keep only one listing type visible at the time. The other one is not
   // attached to a widget tree managed by Qt. Therefore we have to delete
   // that other one manually.
-  if (splitter_->widget(1) != dirListingList__) {
-    delete dirListingList__;
+  if (splitter_->widget(1) != dirListingList_) {
+    delete dirListingList_;
   }
   if (splitter_->widget(1) != dirListingIcons_) {
     delete dirListingIcons_;
@@ -51,43 +49,28 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   dirPicker->init(appState);
 
   // TODO: keep selection between view types
-
   dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
       new DirListingSharedModel());
-  dirListingList__ = new DirListingListWidget();
-  dirListingList__->init(dirListingSharedModel_, appState);
+  dirListingList_ = new DirListingListWidget();
+  dirListingList_->init(dirListingSharedModel_, appState);
   dirListingIcons_ = new DirListingIconsWidget();
   dirListingIcons_->init(dirListingSharedModel_, appState);
   connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
-  // TODO: cleanup
-  auto* ipw = new ImagePreviewWidget();
-  ipw->init(appState);
-  ipw->setBaseSize(200, 100);
-
-  // TODO: cleanup
-  auto* dw = new QDockWidget("doooooock?");
-  dw->setWidget(ipw);
-  // TODO needed?
-  //  imageLabel->setBackgroundRole(QPalette::Base);
-  //  imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-  // TODO: extract slotXyz out of it
-  connect(appState.data(), &app_state::AppState::signalPreviewVisibleChanged,
-          [=]() {
-            if (appState->isPreviewVisible()) {
-              dw->show();
-            } else {
-              dw->hide();
-            }
-          });
-  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dw);
-
   splitter_->setOrientation(Qt::Orientation::Horizontal);
   splitter_->addWidget(dirPicker);
   splitter_->setStretchFactor(0, 1);
-  splitter_->addWidget(dirListingList__);
+  splitter_->addWidget(dirListingList_);
   splitter_->setStretchFactor(1, 2);
+
+  // TODO: initial size of the preview/dock
+
+  previewDock_ = new PreviewDockWidget();
+  previewDock_->init(appState);
+  connect(appState.data(), &app_state::AppState::signalPreviewVisibleChanged,
+          this, &MainWindow::slotPreviewVisibleChanged);
+  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 
   historyToolbar_ = new HistoryToolbarWidget();
   historyToolbar_->init(appState);
@@ -179,13 +162,22 @@ void MainWindow::loadPersistedState() {
 }
 
 void MainWindow::resetMainWindowLayout() {
+  qDebug() << "MainWindow::resetMainWindowLayout";
+
   addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
+
+  // TODO: make the show/hide button adapt to dock being closed
+
+  previewDock_->setFloating(false);
+  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 }
 
 // TODO: trigger it also on a double click on the splitter bar
 void MainWindow::resetSplitterLayout() {
+  qDebug() << "MainWindow::resetSplitterLayout";
+
   int stretchTotal = 0;
   for (int i = 0; i < splitter_->count(); ++i) {
     stretchTotal += splitter_->widget(i)->sizePolicy().horizontalStretch();
@@ -212,20 +204,30 @@ void MainWindow::resetSplitterLayout() {
 void MainWindow::slotViewTypeChanged() {
   if (appState_->currentDirListingViewType() ==
       app_state::DirListingViewType::List) {
-    if (splitter_->widget(1) != dirListingList__) {
-      splitter_->replaceWidget(1, dirListingList__);
+    if (splitter_->widget(1) != dirListingList_) {
+      splitter_->replaceWidget(1, dirListingList_);
       // Stretch factor is bound to a specific sub-widget, therefore
-      // we have to make sure it is applied on this one as well.
+      // we have to make sure it is applied on this one as well,
+      // if it was not set on this particular widget yet.
       splitter_->setStretchFactor(1, 2);
     }
   } else {
     if (splitter_->widget(1) != dirListingIcons_) {
       splitter_->replaceWidget(1, dirListingIcons_);
       // Stretch factor is bound to a specific sub-widget, therefore
-      // we have to make sure it is applied on this one as well.
+      // we have to make sure it is applied on this one as well,
+      // if it was not set on this particular widget yet.
       splitter_->setStretchFactor(1, 2);
     }
   };
+}
+
+void MainWindow::slotPreviewVisibleChanged() {
+  if (appState_->isPreviewVisible()) {
+    previewDock_->show();
+  } else {
+    previewDock_->hide();
+  }
 }
 
 } // namespace qt_file_explorer::widgets

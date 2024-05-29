@@ -34,6 +34,8 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/widgets/main_window.h
         src/widgets/preview/image_preview_widget.cc
         src/widgets/preview/image_preview_widget.h
+        src/widgets/preview/preview_dock_widget.cc
+        src/widgets/preview/preview_dock_widget.h
         src/widgets/toolbars/history_toolbar_widget.cc
         src/widgets/toolbars/history_toolbar_widget.h
         src/widgets/toolbars/navigation_toolbar_widget.cc

@@ -21,6 +21,10 @@ ImagePreviewWidget::~ImagePreviewWidget() {
 
 void
 ImagePreviewWidget::init(const QSharedPointer<app_state::AppState>& appState) {
+  // TODO needed?
+  //  imageLabel->setBackgroundRole(QPalette::Base);
+  //  imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+
   connect(appState.data(), &app_state::AppState::signalSelectedPathChanged,
           [=]() {
             QPixmap pxm(appState->selectedPath());
@@ -36,6 +40,9 @@ void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
     return;
   }
 
+  // TODO: "QPixmap::operator=: Cannot assign to pixmap during painting"
+  return;
+
   int imageWidth = srcPixmap_.width();
   int imageHeight = srcPixmap_.height();
   float labelWidth = this->width();
@@ -45,6 +52,7 @@ void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
   bool shouldScale = (imageWidth > labelWidth) || (imageHeight > labelHeight);
   float newWidth = shouldScale ? imageWidth * ratio : imageWidth;
   float newHeight = shouldScale ? imageHeight * ratio : imageHeight;
+  // TODO: "QPixmap::operator=: Cannot assign to pixmap during painting"
   QPixmap newPixmap = srcPixmap_.scaledToWidth(newWidth,
                                                Qt::TransformationMode::SmoothTransformation);
   qDebug() << newPixmap.width() << newPixmap.height();

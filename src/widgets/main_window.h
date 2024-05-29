@@ -9,6 +9,7 @@
 #include "../persisted_state/with_persisted_state.h"
 #include "dir_listing/dir_listing_icons_widget.h"
 #include "dir_listing/dir_listing_list_widget.h"
+#include "preview/preview_dock_widget.h"
 #include "toolbars/view_toolbar_widget.h"
 #include "toolbars/navigation_toolbar_widget.h"
 #include "toolbars/history_toolbar_widget.h"
@@ -41,14 +42,16 @@ private:
   QSplitter* splitter_ = nullptr;
 
   QSharedPointer<DirListingSharedModel> dirListingSharedModel_;
-  DirListingListWidget* dirListingList__;
+  DirListingListWidget* dirListingList_;
   DirListingIconsWidget* dirListingIcons_;
+  PreviewDockWidget* previewDock_;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();
 
 private slots:
   void slotViewTypeChanged();
+  void slotPreviewVisibleChanged();
 
 };
 
