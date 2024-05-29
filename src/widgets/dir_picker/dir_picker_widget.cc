@@ -23,7 +23,7 @@ void DirPickerWidget::init(
   appState_ = appState;
 
   model_ = new QFileSystemModel();
-  model_->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  model_->setFilter(QDir::Filter::Dirs | QDir::Filter::NoDotAndDotDot);
   setModel(model_);
 
   // Hide all columns but the first one ("Name")

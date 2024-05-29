@@ -11,7 +11,7 @@ public:
   DirListingSharedModel() {
     setObjectName("DirListingSharedModel");
     qDebug() << "+" << this;
-    setFilter(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot);
+    setFilter(QDir::Filter::AllEntries | QDir::Filter::NoDotAndDotDot);
   }
 
   ~DirListingSharedModel() {
