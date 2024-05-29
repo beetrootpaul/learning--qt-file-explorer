@@ -37,24 +37,29 @@ void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
 
   if (pixmap_.isNull()) return;
 
-//  int imageWidth = srcPixmap_.width();
-//  int imageHeight = srcPixmap_.height();
-//  float labelWidth = this->width();
-//  float labelHeight = this->height();
-//  qDebug() << labelWidth << labelHeight;
-//  float ratio = std::min(labelWidth / imageWidth, labelHeight / imageHeight);
-//  bool shouldScale = (imageWidth > labelWidth) || (imageHeight > labelHeight);
-//  float newWidth = shouldScale ? imageWidth * ratio : imageWidth;
-//  float newHeight = shouldScale ? imageHeight * ratio : imageHeight;
-//  // TODO: "QPixmap::operator=: Cannot assign to pixmap during painting"
-//  QPixmap newPixmap = srcPixmap_.scaledToWidth(newWidth,
-//                                               Qt::TransformationMode::SmoothTransformation);
-//  qDebug() << newPixmap.width() << newPixmap.height();
-//  int x = std::abs(newWidth - labelWidth) / 2;
-//  int y = std::abs(newHeight - labelHeight) / 2;
-//  qDebug() << x << y;
-//  QPainter painter(this);
-//  painter.drawPixmap(x, y, newPixmap);
+  auto imageSize = pixmap_.size();
+  auto previewSize = size();
+
+  // Detect how much to resize the image to fit within the preview area.
+  float ratio = std::min(static_cast<float>(previewSize.width()) /
+                         static_cast<float>(imageSize.width()),
+                         static_cast<float>(previewSize.height()) /
+                         static_cast<float>(imageSize.height()));
+
+  // Prevent image upscaling.
+  ratio = std::min(ratio, 1.0f);
+
+  auto adjustedImageSize = imageSize * ratio;
+
+  QPixmap adjustedPixmap = pixmap_.scaledToWidth(adjustedImageSize.width(),
+                                                 Qt::TransformationMode::SmoothTransformation);
+
+  // Find a drawing positing that would make the image centered within the preview area.
+  auto offset = QPoint((previewSize.width() - adjustedImageSize.width()) / 2,
+                       (previewSize.height() - adjustedImageSize.height()) / 2);
+
+  QPainter painter(this);
+  painter.drawPixmap(offset, adjustedPixmap);
 }
 
 } // namespace qt_file_explorer
