@@ -128,6 +128,7 @@ void MainWindow::loadPersistedState() {
     resize(mainWindowSize);
   } else {
     // TODO: consider this: QGuiApplication::primaryScreen()->availableSize() * 3 / 5
+    // TODO: also, consider it be like max(screen * 3/5 , hardcoded_max)
     resize(1200, 800);
   }
 
@@ -136,11 +137,8 @@ void MainWindow::loadPersistedState() {
   if (!mainWindowPos.isNull()) {
     move(mainWindowPos);
   } else {
-    int desired_pos_x =
-        (screen()->availableGeometry().width() - width()) / 2;
-    int desired_pos_y =
-        (screen()->availableGeometry().height() - height()) / 2;
-    move(desired_pos_x, desired_pos_y);
+    move((screen()->availableGeometry().width() - width()) / 2,
+         (screen()->availableGeometry().height() - height()) / 2);
   }
 
   // TODO: how to make rearrangement of toolbars kept across app runs?

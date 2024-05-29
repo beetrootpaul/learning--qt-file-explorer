@@ -1,11 +1,12 @@
 #include "image_preview_widget.h"
 
+#include <QFileInfo>
 #include <QGuiApplication>
 #include <QImageReader>
 #include <QMessageBox>
 #include <QPainter>
 
-namespace qt_file_explorer {
+namespace qt_file_explorer::widgets {
 
 // TODO: threading for bigger images? Can be checked by experiencing a bit of a freeze when quickly changing selection over a huge file, with arrow keys
 
@@ -19,17 +20,29 @@ ImagePreviewWidget::~ImagePreviewWidget() {
   qDebug() << "~" << this;
 }
 
-void
-ImagePreviewWidget::init(const QSharedPointer<app_state::AppState>& appState) {
-  appState_ = appState;
+void ImagePreviewWidget::init() {}
 
-  connect(appState_.data(), &app_state::AppState::signalSelectedPathChanged,
-          this, &ImagePreviewWidget::slotUpdateImage);
+bool ImagePreviewWidget::canPreview(const QString& path) {
+  QFileInfo fileInfo(path);
+  const auto& extension = fileInfo.suffix().toLower();
+
+  // We are checking against `supportedImageFormats()`, because according
+  // to docs this corresponds to what `QPixmap` can render later on.
+  return QImageReader::supportedImageFormats().contains(extension);
 }
 
-void ImagePreviewWidget::slotUpdateImage() {
-  pixmap_ = QPixmap(appState_->selectedPath());
+void ImagePreviewWidget::preview(QString path) {
+  pixmap_ = QPixmap(path);
   repaint();
+}
+
+void ImagePreviewWidget::clear() {
+  pixmap_ = QPixmap();
+  repaint();
+}
+
+QWidget* ImagePreviewWidget::asQWidget() {
+  return this;
 }
 
 void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
@@ -62,4 +75,4 @@ void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
   painter.drawPixmap(offset, adjustedPixmap);
 }
 
-} // namespace qt_file_explorer
+} // namespace qt_file_explorer::widgets
