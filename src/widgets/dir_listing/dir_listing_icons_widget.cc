@@ -36,7 +36,7 @@ DirListingIconsWidget::init(
   setGridSize(QSize(72, 56));
   setResizeMode(QListView::Adjust);
 
-  connect(appState.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingIconsWidget::slotBrowsedDirChanged);
 
   connect(this, &DirListingIconsWidget::doubleClicked,

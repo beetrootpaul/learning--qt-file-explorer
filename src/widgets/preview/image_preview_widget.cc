@@ -21,46 +21,40 @@ ImagePreviewWidget::~ImagePreviewWidget() {
 
 void
 ImagePreviewWidget::init(const QSharedPointer<app_state::AppState>& appState) {
-  // TODO needed?
-  //  imageLabel->setBackgroundRole(QPalette::Base);
-  //  imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+  appState_ = appState;
 
-  connect(appState.data(), &app_state::AppState::signalSelectedPathChanged,
-          [=]() {
-            QPixmap pxm(appState->selectedPath());
-            srcPixmap_ = pxm;
-            repaint();
-          });
+  connect(appState_.data(), &app_state::AppState::signalSelectedPathChanged,
+          this, &ImagePreviewWidget::slotUpdateImage);
+}
+
+void ImagePreviewWidget::slotUpdateImage() {
+  pixmap_ = QPixmap(appState_->selectedPath());
+  repaint();
 }
 
 void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
   QLabel::paintEvent(event);
 
-  if (srcPixmap_.isNull()) {
-    return;
-  }
+  if (pixmap_.isNull()) return;
 
-  // TODO: "QPixmap::operator=: Cannot assign to pixmap during painting"
-  return;
-
-  int imageWidth = srcPixmap_.width();
-  int imageHeight = srcPixmap_.height();
-  float labelWidth = this->width();
-  float labelHeight = this->height();
-  qDebug() << labelWidth << labelHeight;
-  float ratio = std::min(labelWidth / imageWidth, labelHeight / imageHeight);
-  bool shouldScale = (imageWidth > labelWidth) || (imageHeight > labelHeight);
-  float newWidth = shouldScale ? imageWidth * ratio : imageWidth;
-  float newHeight = shouldScale ? imageHeight * ratio : imageHeight;
-  // TODO: "QPixmap::operator=: Cannot assign to pixmap during painting"
-  QPixmap newPixmap = srcPixmap_.scaledToWidth(newWidth,
-                                               Qt::TransformationMode::SmoothTransformation);
-  qDebug() << newPixmap.width() << newPixmap.height();
-  int x = std::abs(newWidth - labelWidth) / 2;
-  int y = std::abs(newHeight - labelHeight) / 2;
-  qDebug() << x << y;
-  QPainter painter(this);
-  painter.drawPixmap(x, y, newPixmap);
+//  int imageWidth = srcPixmap_.width();
+//  int imageHeight = srcPixmap_.height();
+//  float labelWidth = this->width();
+//  float labelHeight = this->height();
+//  qDebug() << labelWidth << labelHeight;
+//  float ratio = std::min(labelWidth / imageWidth, labelHeight / imageHeight);
+//  bool shouldScale = (imageWidth > labelWidth) || (imageHeight > labelHeight);
+//  float newWidth = shouldScale ? imageWidth * ratio : imageWidth;
+//  float newHeight = shouldScale ? imageHeight * ratio : imageHeight;
+//  // TODO: "QPixmap::operator=: Cannot assign to pixmap during painting"
+//  QPixmap newPixmap = srcPixmap_.scaledToWidth(newWidth,
+//                                               Qt::TransformationMode::SmoothTransformation);
+//  qDebug() << newPixmap.width() << newPixmap.height();
+//  int x = std::abs(newWidth - labelWidth) / 2;
+//  int y = std::abs(newHeight - labelHeight) / 2;
+//  qDebug() << x << y;
+//  QPainter painter(this);
+//  painter.drawPixmap(x, y, newPixmap);
 }
 
 } // namespace qt_file_explorer

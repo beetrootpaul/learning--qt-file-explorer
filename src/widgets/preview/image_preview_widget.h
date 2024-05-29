@@ -19,10 +19,15 @@ public:
   void init(const QSharedPointer<app_state::AppState>& appState);
 
 private:
-  QPixmap srcPixmap_;
+  QSharedPointer<app_state::AppState> appState_;
+  QPixmap pixmap_;
+
   QPixmap currPixmap_;
 
   void paintEvent(QPaintEvent* event) override;
+
+private slots:
+  void slotUpdateImage();
 
 };
 

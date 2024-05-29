@@ -40,7 +40,7 @@ void DirPickerWidget::init(
   model_->setRootPath(root);
   setRootIndex(model_->index(root));
 
-  connect(appState.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
           &DirPickerWidget::slotBrowsedDirChanged);
   connect(this, &QTreeView::clicked, [=](const QModelIndex& index) {
     const QFileInfo& fileInfo = model_->fileInfo(index);

@@ -10,7 +10,7 @@ public:
   // we get an app in a fresh state, with nothing persisted yet. Alternatively,
   // we can do `settings.remove(PersistedStateKeys.prefix)` and achieve
   // a similar result.
-  inline static const std::string prefix = "v21/";
+  inline static const std::string prefix = "v22/";
 
   // Groups allow us to reset many values at once, e.g. everything
   // that should reset on "Reset layout" action.
@@ -22,8 +22,6 @@ public:
       groupLayout + "main_window_state";
   inline static const std::string splitterState =
       groupLayout + "splitter_state";
-  inline static const std::string previewDockSize =
-      groupLayout + "preview_dock_size";
 
   inline static const std::string groupState = prefix + "state/";
   inline static const std::string browsedDir =

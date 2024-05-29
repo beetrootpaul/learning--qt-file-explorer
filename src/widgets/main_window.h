@@ -48,7 +48,6 @@ private:
 
   void resetMainWindowLayout();
   void resetSplitterLayout();
-  void resetPreviewDockLayout();
 
 private slots:
   void slotViewTypeChanged();

@@ -28,7 +28,7 @@ DirListingListWidget::init(
   setRootIsDecorated(false);
   setItemsExpandable(false);
 
-  connect(appState.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingListWidget::slotBrowsedDirChanged);
 
   connect(this, &QTreeView::doubleClicked, [=](const QModelIndex& index) {

@@ -46,16 +46,16 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   setCentralWidget(splitter_);
 
   auto* dirPicker = new DirPickerWidget();
-  dirPicker->init(appState);
+  dirPicker->init(appState_);
 
   // TODO: keep selection between view types
   dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
       new DirListingSharedModel());
   dirListingList_ = new DirListingListWidget();
-  dirListingList_->init(dirListingSharedModel_, appState);
+  dirListingList_->init(dirListingSharedModel_, appState_);
   dirListingIcons_ = new DirListingIconsWidget();
-  dirListingIcons_->init(dirListingSharedModel_, appState);
-  connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
+  dirListingIcons_->init(dirListingSharedModel_, appState_);
+  connect(appState_.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
   splitter_->setOrientation(Qt::Orientation::Horizontal);
@@ -67,17 +67,17 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   // TODO: initial size of the preview/dock
 
   previewDock_ = new PreviewDockWidget();
-  previewDock_->init(appState);
-  connect(appState.data(), &app_state::AppState::signalPreviewVisibleChanged,
+  previewDock_->init(appState_);
+  connect(appState_.data(), &app_state::AppState::signalPreviewVisibleChanged,
           this, &MainWindow::slotPreviewVisibleChanged);
   addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 
   historyToolbar_ = new HistoryToolbarWidget();
-  historyToolbar_->init(appState);
+  historyToolbar_->init(appState_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
 
   navigationToolbar_ = new NavigationToolbarWidget();
-  navigationToolbar_->init(appState);
+  navigationToolbar_->init(appState_);
   connect(navigationToolbar_,
           &NavigationToolbarWidget::signalCollapseAllLicked,
           [=]() {
@@ -86,18 +86,17 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
 
   viewToolbar_ = new ViewToolbarWidget();
-  viewToolbar_->init(appState);
+  viewToolbar_->init(appState_);
   connect(viewToolbar_, &ViewToolbarWidget::signalResetLayoutClicked,
           [=]() {
             QSettings settings;
             settings.remove(persisted_state::PersistedStateKeys::groupLayout);
             resetMainWindowLayout();
             resetSplitterLayout();
-            resetPreviewDockLayout();
           });
   addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
 
-  appState->loadPersistedState();
+  appState_->loadPersistedState();
   loadPersistedState();
 }
 
@@ -118,8 +117,6 @@ void MainWindow::savePersistedState() {
                     saveState());
   settings.setValue(persisted_state::PersistedStateKeys::splitterState,
                     splitter_->saveState());
-  settings.setValue(persisted_state::PersistedStateKeys::previewDockSize,
-                    previewDock_->size());
 }
 
 void MainWindow::loadPersistedState() {
@@ -158,17 +155,9 @@ void MainWindow::loadPersistedState() {
   const auto splitterState = settings.value(
       persisted_state::PersistedStateKeys::splitterState).toByteArray();
   if (!splitterState.isEmpty()) {
-    splitter_->restoreState(splitterState);
+//    splitter_->restoreState(splitterState);
   } else {
     resetSplitterLayout();
-  }
-
-  const auto previewDockSize = settings.value(
-      persisted_state::PersistedStateKeys::previewDockSize).toSize();
-  if (!previewDockSize.isEmpty()) {
-    previewDock_->resize(previewDockSize);
-  } else {
-    resetPreviewDockLayout();
   }
 }
 
@@ -178,6 +167,15 @@ void MainWindow::resetMainWindowLayout() {
   addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
+
+  // TODO: make the show/hide button adapt to dock being closed
+
+  // Make it docked in case it was floating
+  previewDock_->setFloating(false);
+
+  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
+  resizeDocks(QList<QDockWidget*>{previewDock_}, QList<int>{size().width() / 3},
+              Qt::Orientation::Horizontal);
 }
 
 // TODO: trigger it also on a double click on the splitter bar
@@ -205,17 +203,6 @@ void MainWindow::resetSplitterLayout() {
     desiredSizes[i] = desiredWidth;
   }
   splitter_->setSizes(desiredSizes);
-}
-
-void MainWindow::resetPreviewDockLayout() {
-  qDebug() << "MainWindow::resetPreviewDockLayout";
-
-  // TODO: make the show/hide button adapt to dock being closed
-
-  // Make it docked in case it was floating
-  previewDock_->setFloating(false);
-
-  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 }
 
 void MainWindow::slotViewTypeChanged() {
