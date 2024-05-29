@@ -1,4 +1,4 @@
-#include "text_preview_widget.h"
+#include "markdown_preview_widget.h"
 
 #include <QFile>
 #include <QFileInfo>
@@ -6,36 +6,34 @@
 
 namespace qt_file_explorer::widgets {
 
-TextPreviewWidget::TextPreviewWidget() {
+MarkdownPreviewWidget::MarkdownPreviewWidget() {
   qDebug() << "+" << this;
 }
 
-TextPreviewWidget::~TextPreviewWidget() {
+MarkdownPreviewWidget::~MarkdownPreviewWidget() {
   qDebug() << "~" << this;
 }
 
-// TODO: enforce it through interface
-void TextPreviewWidget::init() {
+void MarkdownPreviewWidget::init() {
   // Prevent this QLabel from expanding to match longer text lines.
   setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
 
-  // TODO: implement MD rendered and use this:
-//  setTextFormat(Qt::TextFormat::MarkdownText);
+  setTextFormat(Qt::TextFormat::MarkdownText);
 
   setMargin(8);
   setAlignment(Qt::AlignTop | Qt::AlignLeft);
   setWordWrap(true);
 }
 
-bool TextPreviewWidget::canPreview(const QString& path) {
+bool MarkdownPreviewWidget::canPreview(const QString& path) {
   QFileInfo fileInfo(path);
   if (!fileInfo.isReadable()) return false;
 
   const auto& extension = fileInfo.suffix().toLower();
-  return extension == "txt";
+  return extension == "md";
 }
 
-void TextPreviewWidget::preview(QString path) {
+void MarkdownPreviewWidget::preview(QString path) {
   QFile file(path);
   file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
   // TODO: thread?
@@ -45,12 +43,12 @@ void TextPreviewWidget::preview(QString path) {
   setText(array);
 }
 
-void TextPreviewWidget::clear() {
+void MarkdownPreviewWidget::clear() {
   setText("");
 }
 
-QWidget* TextPreviewWidget::asQWidget() {
+QWidget* MarkdownPreviewWidget::asQWidget() {
   return this;
 }
 
-} // namespace qt_file_explorer
+} // namespace qt_file_explorer::widgets

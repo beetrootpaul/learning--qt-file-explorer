@@ -16,8 +16,7 @@ FileNamePreviewWidget::~FileNamePreviewWidget() {
 // TODO: enforce init definition through interface
 void FileNamePreviewWidget::init() {
   // Prevent this QLabel from expanding to match longer file names.
-  setSizePolicy(
-      QSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored));
+  setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
 
   setMargin(8);
   setAlignment(Qt::AlignTop | Qt::AlignLeft);
