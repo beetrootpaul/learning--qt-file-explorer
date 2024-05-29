@@ -93,6 +93,7 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
             settings.remove(persisted_state::PersistedStateKeys::groupLayout);
             resetMainWindowLayout();
             resetSplitterLayout();
+            resetPreviewDockLayout();
           });
   addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
 
@@ -117,6 +118,8 @@ void MainWindow::savePersistedState() {
                     saveState());
   settings.setValue(persisted_state::PersistedStateKeys::splitterState,
                     splitter_->saveState());
+  settings.setValue(persisted_state::PersistedStateKeys::previewDockSize,
+                    previewDock_->size());
 }
 
 void MainWindow::loadPersistedState() {
@@ -159,6 +162,14 @@ void MainWindow::loadPersistedState() {
   } else {
     resetSplitterLayout();
   }
+
+  const auto previewDockSize = settings.value(
+      persisted_state::PersistedStateKeys::previewDockSize).toSize();
+  if (!previewDockSize.isEmpty()) {
+    previewDock_->resize(previewDockSize);
+  } else {
+    resetPreviewDockLayout();
+  }
 }
 
 void MainWindow::resetMainWindowLayout() {
@@ -167,11 +178,6 @@ void MainWindow::resetMainWindowLayout() {
   addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
-
-  // TODO: make the show/hide button adapt to dock being closed
-
-  previewDock_->setFloating(false);
-  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 }
 
 // TODO: trigger it also on a double click on the splitter bar
@@ -199,6 +205,17 @@ void MainWindow::resetSplitterLayout() {
     desiredSizes[i] = desiredWidth;
   }
   splitter_->setSizes(desiredSizes);
+}
+
+void MainWindow::resetPreviewDockLayout() {
+  qDebug() << "MainWindow::resetPreviewDockLayout";
+
+  // TODO: make the show/hide button adapt to dock being closed
+
+  // Make it docked in case it was floating
+  previewDock_->setFloating(false);
+
+  addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 }
 
 void MainWindow::slotViewTypeChanged() {

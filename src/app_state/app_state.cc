@@ -94,6 +94,9 @@ void AppState::savePersistedState() {
                     browsedDir_);
   settings.setValue(persisted_state::PersistedStateKeys::viewType,
                     (uint) currentDirListingViewType_);
+  settings.setValue(persisted_state::PersistedStateKeys::previewVisible,
+                    isPreviewVisible_);
+  // TODO: load it
 }
 
 void AppState::loadPersistedState() {
@@ -112,6 +115,13 @@ void AppState::loadPersistedState() {
         persisted_state::PersistedStateKeys::viewType).toUInt();
   } else {
     currentDirListingViewType_ = DirListingViewType::List;
+  }
+
+  if (settings.contains(persisted_state::PersistedStateKeys::previewVisible)) {
+    isPreviewVisible_ = settings.value(
+        persisted_state::PersistedStateKeys::previewVisible).toBool();
+  } else {
+    isPreviewVisible_ = false;
   }
 }
 
