@@ -13,9 +13,7 @@ DirListingListWidget::~DirListingListWidget() {
   qDebug() << "~" << this;
 }
 
-// TODO: handle double-click of files and dirs
-
-// TODO: persist current dir across runs
+// TODO: sorting by columns
 
 void
 DirListingListWidget::init(
@@ -41,6 +39,7 @@ DirListingListWidget::init(
   });
 }
 
+// TODO: do the same for icons view
 void DirListingListWidget::currentChanged(const QModelIndex& current,
                                           const QModelIndex& previous) {
   appState_->switchSelectedPathTo(model_->filePath(current));
