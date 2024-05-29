@@ -24,6 +24,8 @@ void ImagePreviewWidget::init() {}
 
 bool ImagePreviewWidget::canPreview(const QString& path) {
   QFileInfo fileInfo(path);
+  if (!fileInfo.isReadable()) return false;
+
   const auto& extension = fileInfo.suffix().toLower();
 
   // We are checking against `supportedImageFormats()`, because according

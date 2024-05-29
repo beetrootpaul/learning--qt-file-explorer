@@ -2,8 +2,9 @@
 
 #include <QSharedPointer>
 
-#include "image_preview_widget.h"
 #include "file_name_preview_widget.h"
+#include "image_preview_widget.h"
+#include "text_preview_widget.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -26,6 +27,10 @@ PreviewDockWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   imagePreview->init();
   orderedPreviewWidgets_.push_back(
       QSharedPointer<WithPreviewCapability>(imagePreview));
+  auto* textPreviewWidget = new TextPreviewWidget();
+  textPreviewWidget->init();
+  orderedPreviewWidgets_.push_back(
+      QSharedPointer<WithPreviewCapability>(textPreviewWidget));
   auto* fileNamePreview = new FileNamePreviewWidget();
   fileNamePreview->init();
   orderedPreviewWidgets_.push_back(

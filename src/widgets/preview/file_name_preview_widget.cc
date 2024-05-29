@@ -13,17 +13,14 @@ FileNamePreviewWidget::~FileNamePreviewWidget() {
   qDebug() << "~" << this;
 }
 
-// TODO: enforce it through interface
+// TODO: enforce init definition through interface
 void FileNamePreviewWidget::init() {
-  // Prevent this QLabel from expanding to match longer file names
+  // Prevent this QLabel from expanding to match longer file names.
   setSizePolicy(
       QSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored));
 
-  // TODO: implement MD rendered and use this:
-  //  setTextFormat(Qt::TextFormat::MarkdownText);
-
   setMargin(8);
-  setAlignment(Qt::AlignTop);
+  setAlignment(Qt::AlignTop | Qt::AlignLeft);
   setWordWrap(true);
 }
 
