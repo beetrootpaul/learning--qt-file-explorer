@@ -43,7 +43,8 @@ void TextPreviewWidget::preview(QString path) {
   const QByteArray& array = file.readAll();
   file.close();
 
-  setText(array);
+  // TODO: ? HERE ?
+//  setText(array);
 }
 
 void TextPreviewWidget::clear() {

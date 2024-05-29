@@ -43,8 +43,9 @@ void JsonPreviewWidget::preview(QString path) {
   // TODO: caching?
   const QByteArray& array = file.readAll();
   file.close();
-  
-  setText(array);
+
+  // TODO: ? HERE ?
+//  setText(array);
 }
 
 void JsonPreviewWidget::clear() {
