@@ -6,7 +6,7 @@
 #include <QToolBar>
 
 #include "../persisted_state/persisted_state_keys.h"
-#include "directory_picker_widget.h"
+#include "dir_picker/dir_picker_widget.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -20,11 +20,11 @@ MainWindow::~MainWindow() {
   // We keep only one listing type visible at the time. The other one is not
   // attached to a widget tree managed by Qt. Therefore we have to delete
   // that other one manually.
-  if (splitter_->widget(1) != directoryListingList_) {
-    delete directoryListingList_;
+  if (splitter_->widget(1) != dirListingList__) {
+    delete dirListingList__;
   }
-  if (splitter_->widget(1) != directoryListingIcons_) {
-    delete directoryListingIcons_;
+  if (splitter_->widget(1) != dirListingIcons_) {
+    delete dirListingIcons_;
   }
 }
 
@@ -38,24 +38,24 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   splitter_ = new QSplitter();
   setCentralWidget(splitter_);
 
-  auto* directoryPicker = new DirectoryPickerWidget();
-  directoryPicker->init(appState);
+  auto* dirPicker = new DirPickerWidget();
+  dirPicker->init(appState);
 
   // TODO: keep selection between view types
 
-  directoryListingSharedModel_ = QSharedPointer<DirectoryListingSharedModel>(
-      new DirectoryListingSharedModel());
-  directoryListingList_ = new DirectoryListingListWidget();
-  directoryListingList_->init(directoryListingSharedModel_, appState);
-  directoryListingIcons_ = new DirectoryListingIconsWidget();
-  directoryListingIcons_->init(directoryListingSharedModel_, appState);
+  dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
+      new DirListingSharedModel());
+  dirListingList__ = new DirListingListWidget();
+  dirListingList__->init(dirListingSharedModel_, appState);
+  dirListingIcons_ = new DirListingIconsWidget();
+  dirListingIcons_->init(dirListingSharedModel_, appState);
   connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
   splitter_->setOrientation(Qt::Orientation::Horizontal);
-  splitter_->addWidget(directoryPicker);
+  splitter_->addWidget(dirPicker);
   splitter_->setStretchFactor(0, 1);
-  splitter_->addWidget(directoryListingList_);
+  splitter_->addWidget(dirListingList__);
   splitter_->setStretchFactor(1, 2);
 
   historyToolbar_ = new HistoryToolbarWidget();
@@ -67,7 +67,7 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   connect(navigationToolbar_,
           &NavigationToolbarWidget::signalCollapseAllLicked,
           [=]() {
-            directoryPicker->collapseAll();
+            dirPicker->collapseAll();
           });
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
 
@@ -180,15 +180,15 @@ void MainWindow::resetSplitterLayout() {
 void MainWindow::slotViewTypeChanged() {
   if (appState_->currentDirListingViewType() ==
       app_state::DirListingViewType::List) {
-    if (splitter_->widget(1) != directoryListingList_) {
-      splitter_->replaceWidget(1, directoryListingList_);
+    if (splitter_->widget(1) != dirListingList__) {
+      splitter_->replaceWidget(1, dirListingList__);
       // Stretch factor is bound to a specific sub-widget, therefore
       // we have to make sure it is applied on this one as well.
       splitter_->setStretchFactor(1, 2);
     }
   } else {
-    if (splitter_->widget(1) != directoryListingIcons_) {
-      splitter_->replaceWidget(1, directoryListingIcons_);
+    if (splitter_->widget(1) != dirListingIcons_) {
+      splitter_->replaceWidget(1, dirListingIcons_);
       // Stretch factor is bound to a specific sub-widget, therefore
       // we have to make sure it is applied on this one as well.
       splitter_->setStretchFactor(1, 2);

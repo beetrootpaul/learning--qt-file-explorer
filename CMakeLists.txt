@@ -23,22 +23,21 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/switch_path_command.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
-        src/widgets/directory_listing_icons_widget.cc
-        src/widgets/directory_listing_icons_widget.h
-        src/widgets/directory_listing_list_widget.cc
-        src/widgets/directory_listing_list_widget.h
-        src/widgets/directory_listing_shared_model.cc
-        src/widgets/directory_listing_shared_model.h
-        src/widgets/directory_picker_widget.cc
-        src/widgets/directory_picker_widget.h
+        src/widgets/dir_listing/dir_listing_icons_widget.cc
+        src/widgets/dir_listing/dir_listing_icons_widget.h
+        src/widgets/dir_listing/dir_listing_list_widget.cc
+        src/widgets/dir_listing/dir_listing_list_widget.h
+        src/widgets/dir_listing/dir_listing_shared_model.h
+        src/widgets/dir_picker/dir_picker_widget.cc
+        src/widgets/dir_picker/dir_picker_widget.h
         src/widgets/main_window.cc
         src/widgets/main_window.h
-        src/widgets/toolbar_commons.cc
-        src/widgets/toolbar_commons.h
         src/widgets/toolbars/history_toolbar_widget.cc
         src/widgets/toolbars/history_toolbar_widget.h
         src/widgets/toolbars/navigation_toolbar_widget.cc
         src/widgets/toolbars/navigation_toolbar_widget.h
+        src/widgets/toolbars/toolbar_commons.cc
+        src/widgets/toolbars/toolbar_commons.h
         src/widgets/toolbars/view_toolbar_widget.cc
         src/widgets/toolbars/view_toolbar_widget.h
 )

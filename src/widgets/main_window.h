@@ -7,8 +7,8 @@
 
 #include "../app_state/app_state.h"
 #include "../persisted_state/with_persisted_state.h"
-#include "directory_listing_icons_widget.h"
-#include "directory_listing_list_widget.h"
+#include "dir_listing/dir_listing_icons_widget.h"
+#include "dir_listing/dir_listing_list_widget.h"
 #include "toolbars/view_toolbar_widget.h"
 #include "toolbars/navigation_toolbar_widget.h"
 #include "toolbars/history_toolbar_widget.h"
@@ -40,9 +40,9 @@ private:
 
   QSplitter* splitter_ = nullptr;
 
-  QSharedPointer<DirectoryListingSharedModel> directoryListingSharedModel_;
-  DirectoryListingListWidget* directoryListingList_;
-  DirectoryListingIconsWidget* directoryListingIcons_;
+  QSharedPointer<DirListingSharedModel> dirListingSharedModel_;
+  DirListingListWidget* dirListingList__;
+  DirListingIconsWidget* dirListingIcons_;
 
   void resetMainWindowLayout();
   void resetSplitterLayout();

@@ -3,7 +3,7 @@
 #include <QPushButton>
 #include <QSettings>
 
-#include "../toolbar_commons.h"
+#include "toolbar_commons.h"
 
 namespace qt_file_explorer::widgets {
 
