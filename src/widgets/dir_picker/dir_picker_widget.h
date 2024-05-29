@@ -1,20 +1,20 @@
-#ifndef QT_FILE_EXPLORER_DIRECTORY_PICKER_WIDGET_H
-#define QT_FILE_EXPLORER_DIRECTORY_PICKER_WIDGET_H
+#ifndef QT_FILE_EXPLORER_DIR_PICKER_DIR_PICKER_WIDGET_H
+#define QT_FILE_EXPLORER_DIR_PICKER_DIR_PICKER_WIDGET_H
 
 #import <QFileSystemModel>
 #import <QTreeView>
 
-#include "../app_state/app_state.h"
+#include "../../app_state/app_state.h"
 
 namespace qt_file_explorer::widgets {
 
-class DirectoryPickerWidget : public QTreeView {
+class DirPickerWidget : public QTreeView {
 
 Q_OBJECT
 
 public:
-  DirectoryPickerWidget();
-  ~DirectoryPickerWidget();
+  DirPickerWidget();
+  ~DirPickerWidget();
 
   void init(const QSharedPointer<app_state::AppState>& appState);
 
@@ -29,4 +29,4 @@ private slots:
 
 } // namespace qt_file_explorer::widgets
 
-#endif //QT_FILE_EXPLORER_DIRECTORY_PICKER_WIDGET_H
+#endif //QT_FILE_EXPLORER_DIR_PICKER_DIR_PICKER_WIDGET_H

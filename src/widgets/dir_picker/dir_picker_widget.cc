@@ -1,4 +1,4 @@
-#include "directory_picker_widget.h"
+#include "dir_picker_widget.h"
 
 #include <QDir>
 #include <QStandardPaths>
@@ -6,11 +6,11 @@
 
 namespace qt_file_explorer::widgets {
 
-DirectoryPickerWidget::DirectoryPickerWidget() {
+DirPickerWidget::DirPickerWidget() {
   qDebug() << "+" << this;
 }
 
-DirectoryPickerWidget::~DirectoryPickerWidget() {
+DirPickerWidget::~DirPickerWidget() {
   qDebug() << "~" << this;
 
   delete model_;
@@ -18,12 +18,12 @@ DirectoryPickerWidget::~DirectoryPickerWidget() {
 
 // TODO: persist column widths
 
-void DirectoryPickerWidget::init(
+void DirPickerWidget::init(
     const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();
-  model_->setFilter(QDir::Dirs | QDir::NoDotAndDotDot);
+  model_->setFilter(QDir::Filter::Dirs | QDir::Filter::NoDotAndDotDot);
   setModel(model_);
 
   // Hide all columns but the first one ("Name")
@@ -41,7 +41,7 @@ void DirectoryPickerWidget::init(
   setRootIndex(model_->index(rootPath));
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirectoryPickerWidget::slotPathChanged);
+          &DirPickerWidget::slotPathChanged);
   connect(this, &QTreeView::clicked, [=](const QModelIndex& index) {
     const QFileInfo& fileInfo = model_->fileInfo(index);
     if (fileInfo.isDir()) {
@@ -56,7 +56,7 @@ void DirectoryPickerWidget::init(
   //  });
 }
 
-void DirectoryPickerWidget::slotPathChanged(bool originatedFromDirPicker) {
+void DirPickerWidget::slotPathChanged(bool originatedFromDirPicker) {
   // We can either change the dir by clicking it in this QTreeView or with other mean
   // outside the QTreeView. If the change originate from QTreeView, we do not need
   // (nor want) to expand it and select the desired dir, since it is already done,

@@ -1,15 +1,15 @@
-#include "directory_listing_list_widget.h"
+#include "dir_listing_list_widget.h"
 
 #include <QFileSystemModel>
 #include <QStandardPaths>
 
 namespace qt_file_explorer::widgets {
 
-DirectoryListingListWidget::DirectoryListingListWidget() {
+DirListingListWidget::DirListingListWidget() {
   qDebug() << "+" << this;
 }
 
-DirectoryListingListWidget::~DirectoryListingListWidget() {
+DirListingListWidget::~DirListingListWidget() {
   qDebug() << "~" << this;
 }
 
@@ -18,8 +18,8 @@ DirectoryListingListWidget::~DirectoryListingListWidget() {
 // TODO: persist current dir across runs
 
 void
-DirectoryListingListWidget::init(
-    const QSharedPointer<DirectoryListingSharedModel>& model,
+DirListingListWidget::init(
+    const QSharedPointer<DirListingSharedModel>& model,
     const QSharedPointer<app_state::AppState>& appState) {
   model_ = model;
   appState_ = appState;
@@ -31,7 +31,7 @@ DirectoryListingListWidget::init(
   setItemsExpandable(false);
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirectoryListingListWidget::slotPathChanged);
+          &DirListingListWidget::slotPathChanged);
 
   connect(this, &QTreeView::doubleClicked, [=](const QModelIndex& index) {
     const QFileInfo& fileInfo = model_->fileInfo(index);
@@ -41,7 +41,7 @@ DirectoryListingListWidget::init(
   });
 }
 
-void DirectoryListingListWidget::slotPathChanged() {
+void DirListingListWidget::slotPathChanged() {
   auto path = appState_->currentPath();
   // TODO: should I set an entire drive here?
   model_->setRootPath(path);

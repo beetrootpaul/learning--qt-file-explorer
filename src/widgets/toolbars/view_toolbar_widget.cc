@@ -1,4 +1,4 @@
-#include "layout_toolbar.h"
+#include "view_toolbar_widget.h"
 
 #include <QPushButton>
 #include <QSettings>
@@ -7,16 +7,16 @@
 
 namespace qt_file_explorer::widgets {
 
-LayoutToolbar::LayoutToolbar() {
+ViewToolbarWidget::ViewToolbarWidget() {
   qDebug() << "+" << this;
 }
 
-LayoutToolbar::~LayoutToolbar() {
+ViewToolbarWidget::~ViewToolbarWidget() {
   qDebug() << "~" << this;
 }
 
-void LayoutToolbar::init() {
-  applyCommonToolbarConfiguration(this, "layout_toolbar");
+void ViewToolbarWidget::init() {
+  applyCommonToolbarConfiguration(this, "view_toolbar");
 
   // TODO: shortcut. The `&R` does not work, apparently
   auto* resetLayoutButton = new QPushButton("&Reset layout");

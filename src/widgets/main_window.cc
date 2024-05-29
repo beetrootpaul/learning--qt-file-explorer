@@ -6,9 +6,7 @@
 #include <QToolBar>
 
 #include "../persisted_state/persisted_state_keys.h"
-#include "directory_picker_widget.h"
-#include "layout_toolbar.h"
-#include "main_toolbar.h"
+#include "dir_picker/dir_picker_widget.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -22,11 +20,11 @@ MainWindow::~MainWindow() {
   // We keep only one listing type visible at the time. The other one is not
   // attached to a widget tree managed by Qt. Therefore we have to delete
   // that other one manually.
-  if (splitter_->widget(1) != directoryListingList_) {
-    delete directoryListingList_;
+  if (splitter_->widget(1) != dirListingList__) {
+    delete dirListingList__;
   }
-  if (splitter_->widget(1) != directoryListingIcons_) {
-    delete directoryListingIcons_;
+  if (splitter_->widget(1) != dirListingIcons_) {
+    delete dirListingIcons_;
   }
 }
 
@@ -40,42 +38,49 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   splitter_ = new QSplitter();
   setCentralWidget(splitter_);
 
-  auto* directoryPicker = new DirectoryPickerWidget();
-  directoryPicker->init(appState);
+  auto* dirPicker = new DirPickerWidget();
+  dirPicker->init(appState);
 
   // TODO: keep selection between view types
 
-  directoryListingSharedModel_ = QSharedPointer<DirectoryListingSharedModel>(
-      new DirectoryListingSharedModel());
-  directoryListingList_ = new DirectoryListingListWidget();
-  directoryListingList_->init(directoryListingSharedModel_, appState);
-  directoryListingIcons_ = new DirectoryListingIconsWidget();
-  directoryListingIcons_->init(directoryListingSharedModel_, appState);
+  dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
+      new DirListingSharedModel());
+  dirListingList__ = new DirListingListWidget();
+  dirListingList__->init(dirListingSharedModel_, appState);
+  dirListingIcons_ = new DirListingIconsWidget();
+  dirListingIcons_->init(dirListingSharedModel_, appState);
   connect(appState.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
   splitter_->setOrientation(Qt::Orientation::Horizontal);
-  splitter_->addWidget(directoryPicker);
+  splitter_->addWidget(dirPicker);
   splitter_->setStretchFactor(0, 1);
-  splitter_->addWidget(directoryListingList_);
+  splitter_->addWidget(dirListingList__);
   splitter_->setStretchFactor(1, 2);
 
-  mainToolbar_ = new MainToolbar();
-  mainToolbar_->init(appState);
-  connect(mainToolbar_, &MainToolbar::signalCollapseAllLicked, [=]() {
-    directoryPicker->collapseAll();
-  });
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
+  historyToolbar_ = new HistoryToolbarWidget();
+  historyToolbar_->init(appState);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
 
-  layoutToolbar_ = new LayoutToolbar();
-  layoutToolbar_->init();
-  connect(layoutToolbar_, &LayoutToolbar::signalResetLayoutClicked, [=]() {
-    QSettings settings;
-    settings.remove(persisted_state::PersistedStateKeys::groupLayout);
-    resetMainWindowLayout();
-    resetSplitterLayout();
-  });
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
+  navigationToolbar_ = new NavigationToolbarWidget();
+  navigationToolbar_->init(appState);
+  connect(navigationToolbar_,
+          &NavigationToolbarWidget::signalCollapseAllLicked,
+          [=]() {
+            dirPicker->collapseAll();
+          });
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
+
+  viewToolbar_ = new ViewToolbarWidget();
+  viewToolbar_->init();
+  connect(viewToolbar_, &ViewToolbarWidget::signalResetLayoutClicked,
+          [=]() {
+            QSettings settings;
+            settings.remove(persisted_state::PersistedStateKeys::groupLayout);
+            resetMainWindowLayout();
+            resetSplitterLayout();
+          });
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
 
   appState->loadPersistedState();
   loadPersistedState();
@@ -96,7 +101,7 @@ void MainWindow::savePersistedState() {
   settings.setValue(persisted_state::PersistedStateKeys::mainWindowPos, pos());
   settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
                     saveState());
-  settings.setValue(persisted_state::PersistedStateKeys::mainWindowState,
+  settings.setValue(persisted_state::PersistedStateKeys::splitterState,
                     splitter_->saveState());
 }
 
@@ -133,7 +138,7 @@ void MainWindow::loadPersistedState() {
   }
 
   const auto splitterState = settings.value(
-      persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
+      persisted_state::PersistedStateKeys::splitterState).toByteArray();
   if (!splitterState.isEmpty()) {
     splitter_->restoreState(splitterState);
   } else {
@@ -142,8 +147,9 @@ void MainWindow::loadPersistedState() {
 }
 
 void MainWindow::resetMainWindowLayout() {
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, mainToolbar_);
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, layoutToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
 }
 
 // TODO: trigger it also on a double click on the splitter bar
@@ -174,15 +180,15 @@ void MainWindow::resetSplitterLayout() {
 void MainWindow::slotViewTypeChanged() {
   if (appState_->currentDirListingViewType() ==
       app_state::DirListingViewType::List) {
-    if (splitter_->widget(1) != directoryListingList_) {
-      splitter_->replaceWidget(1, directoryListingList_);
+    if (splitter_->widget(1) != dirListingList__) {
+      splitter_->replaceWidget(1, dirListingList__);
       // Stretch factor is bound to a specific sub-widget, therefore
       // we have to make sure it is applied on this one as well.
       splitter_->setStretchFactor(1, 2);
     }
   } else {
-    if (splitter_->widget(1) != directoryListingIcons_) {
-      splitter_->replaceWidget(1, directoryListingIcons_);
+    if (splitter_->widget(1) != dirListingIcons_) {
+      splitter_->replaceWidget(1, dirListingIcons_);
       // Stretch factor is bound to a specific sub-widget, therefore
       // we have to make sure it is applied on this one as well.
       splitter_->setStretchFactor(1, 2);

@@ -1,4 +1,4 @@
-#include "directory_listing_icons_widget.h"
+#include "dir_listing_icons_widget.h"
 
 #include <QFileSystemModel>
 #include <QLayout>
@@ -12,11 +12,11 @@ namespace qt_file_explorer::widgets {
 
 // TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
 
-DirectoryListingIconsWidget::DirectoryListingIconsWidget() {
+DirListingIconsWidget::DirListingIconsWidget() {
   qDebug() << "+" << this;
 }
 
-DirectoryListingIconsWidget::~DirectoryListingIconsWidget() {
+DirListingIconsWidget::~DirListingIconsWidget() {
   qDebug() << "~" << this;
 }
 
@@ -25,8 +25,8 @@ DirectoryListingIconsWidget::~DirectoryListingIconsWidget() {
 // TODO: persist current dir across runs
 
 void
-DirectoryListingIconsWidget::init(
-    const QSharedPointer<DirectoryListingSharedModel>& model,
+DirListingIconsWidget::init(
+    const QSharedPointer<DirListingSharedModel>& model,
     const QSharedPointer<app_state::AppState>& appState) {
   model_ = model;
   appState_ = appState;
@@ -40,9 +40,9 @@ DirectoryListingIconsWidget::init(
   setResizeMode(QListView::Adjust);
 
   connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirectoryListingIconsWidget::slotPathChanged);
+          &DirListingIconsWidget::slotPathChanged);
 
-  connect(this, &DirectoryListingIconsWidget::doubleClicked,
+  connect(this, &DirListingIconsWidget::doubleClicked,
           [=](const QModelIndex& index) {
             const QFileInfo& fileInfo = model_->fileInfo(index);
             if (fileInfo.isDir()) {
@@ -51,7 +51,7 @@ DirectoryListingIconsWidget::init(
           });
 }
 
-void DirectoryListingIconsWidget::slotPathChanged() {
+void DirListingIconsWidget::slotPathChanged() {
   auto path = appState_->currentPath();
   // TODO: should I set an entire drive here?
   model_->setRootPath(path);
