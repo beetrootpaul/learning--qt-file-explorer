@@ -30,17 +30,18 @@ NavigationToolbarWidget::init(
   // TODO: shortcut. The `&H` does not work, apparently
   auto* quickOpenHomeButton = new QPushButton("Quick open: &Home");
   connect(quickOpenHomeButton, &QPushButton::clicked, [=]() {
-    appState->switchPathToHome();
+    appState->switchBrowsedDirToHome();
   });
   addWidget(quickOpenHomeButton);
 
   // TODO: shortcut. The `&D` does not work, apparently
   auto* quickOpenDownloadsButton = new QPushButton("Quick open: &Downloads");
   connect(quickOpenDownloadsButton, &QPushButton::clicked, [=]() {
-    appState->switchPathToDownloads();
+    appState->switchBrowsedDirToDownloads();
   });
   addWidget(quickOpenDownloadsButton);
 
+  // TODO: move this button to view toolbar
   // TODO: shortcut. The `&S` does not work, apparently
   auto* toggleDirListingViewTypeButton = new QPushButton("(placeholder)");
   connect(toggleDirListingViewTypeButton, &QPushButton::clicked, [=]() {

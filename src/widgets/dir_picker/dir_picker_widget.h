@@ -1,8 +1,8 @@
 #ifndef QT_FILE_EXPLORER_DIR_PICKER_DIR_PICKER_WIDGET_H
 #define QT_FILE_EXPLORER_DIR_PICKER_DIR_PICKER_WIDGET_H
 
-#import <QFileSystemModel>
-#import <QTreeView>
+#include <QFileSystemModel>
+#include <QTreeView>
 
 #include "../../app_state/app_state.h"
 
@@ -22,8 +22,10 @@ private:
   QSharedPointer<app_state::AppState> appState_;
   QFileSystemModel* model_ = nullptr;
 
+  // TODO: write down concepts in README, like "browsed dir", "selected path"
+
 private slots:
-  void slotPathChanged(bool originatedFromDirPicker);
+  void slotBrowsedDirChanged(bool originatedFromDirPicker);
 
 };
 

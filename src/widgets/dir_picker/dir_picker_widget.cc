@@ -36,17 +36,18 @@ void DirPickerWidget::init(
   setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 
   // TODO: test it on Windows: what will be shown? C:\ ? All drives?
-  auto rootPath = QDir::rootPath();
-  model_->setRootPath(rootPath);
-  setRootIndex(model_->index(rootPath));
+  auto root = QDir::rootPath();
+  model_->setRootPath(root);
+  setRootIndex(model_->index(root));
 
-  connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirPickerWidget::slotPathChanged);
+  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+          &DirPickerWidget::slotBrowsedDirChanged);
   connect(this, &QTreeView::clicked, [=](const QModelIndex& index) {
     const QFileInfo& fileInfo = model_->fileInfo(index);
     if (fileInfo.isDir()) {
-      appState_->switchPathTo(fileInfo.filePath(), /*originatedFromDirPicker=*/
-                              true);
+      appState_->switchBrowsedDirTo(
+          fileInfo.filePath(), /*originatedFromDirPicker=*/
+          true);
     }
   });
 
@@ -56,7 +57,7 @@ void DirPickerWidget::init(
   //  });
 }
 
-void DirPickerWidget::slotPathChanged(bool originatedFromDirPicker) {
+void DirPickerWidget::slotBrowsedDirChanged(bool originatedFromDirPicker) {
   // We can either change the dir by clicking it in this QTreeView or with other mean
   // outside the QTreeView. If the change originate from QTreeView, we do not need
   // (nor want) to expand it and select the desired dir, since it is already done,
@@ -65,11 +66,11 @@ void DirPickerWidget::slotPathChanged(bool originatedFromDirPicker) {
   // for someone who just clicked somewhere in the tree.
   if (originatedFromDirPicker) return;
 
-  auto path = appState_->currentPath();
+  auto dir = appState_->browsedDir();
 
-  scrollTo(model_->index(path),
+  scrollTo(model_->index(dir),
            QAbstractItemView::ScrollHint::PositionAtCenter);
-  selectionModel()->select(model_->index(path),
+  selectionModel()->select(model_->index(dir),
                            QItemSelectionModel::SelectionFlag::ClearAndSelect);
 }
 

@@ -22,35 +22,47 @@ public:
   AppState();
   ~AppState();
 
-  QString currentPath();
-  void switchPathToHome();
-  void switchPathToDownloads();
-  void switchPathTo(const QString& path, bool originatedFromDirPicker = false);
-  void undoSwitchPath();
-  void redoSwitchPath();
-
-  // "internal" method, meant to be used by QUndoCommand instances to directly change AppState
-  void setPath(const QString& path, bool originatedFromDirPicker = false);
+  QString browsedDir();
+  void switchBrowsedDirToHome();
+  void switchBrowsedDirToDownloads();
+  void
+  switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker = false);
+  void undoSwitchBrowsedDir();
+  void redoSwitchBrowsedDir();
 
   DirListingViewType currentDirListingViewType();
   void toggleDirListingViewType();
 
+  QString selectedPath();
+  void switchSelectedPathTo(const QString& path);
+
+  bool isPreviewVisible();
+  void togglePreviewVisible();
+
   void savePersistedState() override;
   void loadPersistedState() override;
 
+  // This "internal" method is meant to be used by QUndoCommand instances
+  // in order to directly change AppState.
+  void setBrowsedDir(const QString& dir, bool originatedFromDirPicker = false);
+
 signals:
-  void signalPathChanged(bool originatedFromDirPicker);
+  void signalBrowsedDirChanged(bool originatedFromDirPicker);
   void signalViewTypeChanged();
+  void signalSelectedPathChanged();
+  void signalPreviewVisibleChanged();
 
 private:
-  const QString homePath_ = QDir::homePath();
+  const QString homeDir_ = QDir::homePath();
 
-  QString currentPath_ = homePath_;
+  QString browsedDir_ = homeDir_;
   DirListingViewType currentDirListingViewType_ = DirListingViewType::List;
+  QString selectedPath_ = "";
+  bool isPreviewVisible_ = false;
 
   QUndoStack undoStack_ = QUndoStack();
 
-  QString downloadsPath();
+  QString downloadsDir();
 
 };
 

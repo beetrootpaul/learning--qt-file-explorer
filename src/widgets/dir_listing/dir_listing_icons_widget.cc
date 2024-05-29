@@ -20,10 +20,6 @@ DirListingIconsWidget::~DirListingIconsWidget() {
   qDebug() << "~" << this;
 }
 
-// TODO: handle double-click of files and dirs
-
-// TODO: persist current dir across runs
-
 void
 DirListingIconsWidget::init(
     const QSharedPointer<DirListingSharedModel>& model,
@@ -36,26 +32,27 @@ DirListingIconsWidget::init(
   setViewMode(ViewMode::IconMode);
   setWrapping(true);
   setWordWrap(false);
+  // TODO: how does this grid size behave on various DPI/zoom, also across various OSes?
   setGridSize(QSize(72, 56));
   setResizeMode(QListView::Adjust);
 
-  connect(appState.data(), &app_state::AppState::signalPathChanged, this,
-          &DirListingIconsWidget::slotPathChanged);
+  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+          &DirListingIconsWidget::slotBrowsedDirChanged);
 
   connect(this, &DirListingIconsWidget::doubleClicked,
           [=](const QModelIndex& index) {
             const QFileInfo& fileInfo = model_->fileInfo(index);
             if (fileInfo.isDir()) {
-              appState_->switchPathTo(fileInfo.filePath());
+              appState_->switchBrowsedDirTo(fileInfo.filePath());
             }
           });
 }
 
-void DirListingIconsWidget::slotPathChanged() {
-  auto path = appState_->currentPath();
+void DirListingIconsWidget::slotBrowsedDirChanged() {
+  auto dir = appState_->browsedDir();
   // TODO: should I set an entire drive here?
-  model_->setRootPath(path);
-  setRootIndex(model_->index(path));
+  model_->setRootPath(dir);
+  setRootIndex(model_->index(dir));
 }
 
 } // namespace qt_file_explorer::widgets

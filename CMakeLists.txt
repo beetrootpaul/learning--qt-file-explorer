@@ -20,7 +20,7 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/app_state.cc
         src/app_state/app_state.h
         src/app_state/dir_listing_view_type.h
-        src/app_state/switch_path_command.h
+        src/app_state/switch_dir_command.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
         src/widgets/dir_listing/dir_listing_icons_widget.cc
@@ -32,6 +32,19 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/widgets/dir_picker/dir_picker_widget.h
         src/widgets/main_window.cc
         src/widgets/main_window.h
+        src/widgets/preview/file_name_preview_widget.cc
+        src/widgets/preview/file_name_preview_widget.h
+        src/widgets/preview/image_preview_widget.cc
+        src/widgets/preview/image_preview_widget.h
+        src/widgets/preview/json_preview_widget.cc
+        src/widgets/preview/json_preview_widget.h
+        src/widgets/preview/markdown_preview_widget.cc
+        src/widgets/preview/markdown_preview_widget.h
+        src/widgets/preview/preview_dock_widget.cc
+        src/widgets/preview/preview_dock_widget.h
+        src/widgets/preview/text_preview_widget.cc
+        src/widgets/preview/text_preview_widget.h
+        src/widgets/preview/with_preview_capability.h
         src/widgets/toolbars/history_toolbar_widget.cc
         src/widgets/toolbars/history_toolbar_widget.h
         src/widgets/toolbars/navigation_toolbar_widget.cc
