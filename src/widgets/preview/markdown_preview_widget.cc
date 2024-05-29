@@ -39,6 +39,7 @@ void MarkdownPreviewWidget::preview(QString path) {
   // TODO: thread?
   // TODO: caching?
   const QByteArray& array = file.readAll();
+  file.close();
 
   setText(array);
 }
