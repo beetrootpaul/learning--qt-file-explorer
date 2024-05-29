@@ -4,6 +4,8 @@
 #include "app_state/app_state.h"
 #include "widgets/main_window.h"
 
+// TODO: menu item "reset all and restart" which clears all settings and does NOT save on close
+
 // TODO: do pl/en translation switch in menu. QApplication::translate? tr(…)?
 
 // TODO: is it possible to do a custom skin? pixel art skin?
