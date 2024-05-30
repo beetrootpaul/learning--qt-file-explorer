@@ -26,8 +26,6 @@ private:
 
   void openDir(const QModelIndex& index);
 
-  // TODO: write down concepts in README, like "browsed dir", "selected path"
-
 private slots:
   void slotBrowsedDirChanged(bool originatedFromDirPicker);
 

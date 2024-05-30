@@ -65,7 +65,6 @@ void DirListingListWidget::loadPersistedState() {
   }
 }
 
-// TODO: do the same for icons view
 void DirListingListWidget::currentChanged(const QModelIndex& current,
                                           const QModelIndex& previous) {
   appState_->switchSelectedPathTo(model_->filePath(current));

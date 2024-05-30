@@ -2,6 +2,8 @@
 
 ## Development setup
 
+### macOS
+
 - I was developing this project on macOS Sonoma 14.4.1, on a MacBook with Apple M1 Max CPU.
 - I installed Qt6 with an [official installer of the open source version](https://www.qt.io/download-open-source)
     - during an installation process I picked `Qt` > `Qt 6.7.1` > `Desktop` and deselected everything else
@@ -18,6 +20,26 @@ CMAKE_PREFIX_PATH="<path_to_your_qt_cmake>" ./run_debug.sh
 ```
 
 For Release mode please use `./run_release.sh`.
+
+### Windows
+
+I do not have any Windows machine right know which I could use for setting up Qt development env.
+
+To build this project on Windows, please take a look at macOS section above and try to replicate those steps since the steps should be similar (e.g. to have Qt 6 installed, to have `cmake` available, etc.)
+
+## Usage
+
+### Shortcuts
+
+| action               | macOS  | Windows   |
+|----------------------|--------|-----------|
+| Go to: Home          | Ctrl+H | Win+H     |
+| Go to: Downloads     | Ctrl+D | Win+D     |
+| Back                 | Cmd+[  | Alt+Left  |
+| Forward              | Cmd+]  | Alt+Right |
+| Switch to icons/list | Ctrl+V | Win+V     |
+| Show/hide preview    | Ctrl+P | Win+P     |
+| Reset layout         | Ctrl+R | Win+R     |
 
 ## Notes
 

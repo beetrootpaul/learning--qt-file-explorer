@@ -34,7 +34,6 @@ DirPickerWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
   setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 
-  // TODO: test it on Windows: what will be shown? C:\ ? All drives?
   auto root = QDir::rootPath();
   model_->setRootPath(root);
   setRootIndex(model_->index(root));
@@ -70,10 +69,12 @@ void DirPickerWidget::slotBrowsedDirChanged(bool originatedFromDirPicker) {
   if (originatedFromDirPicker) return;
 
   auto dir = appState_->browsedDir();
+  const auto& modelIndex = model_->index(dir);
 
-  scrollTo(model_->index(dir),
+  scrollTo(modelIndex,
            QAbstractItemView::ScrollHint::PositionAtCenter);
-  selectionModel()->select(model_->index(dir),
+  setCurrentIndex(modelIndex);
+  selectionModel()->select(modelIndex,
                            QItemSelectionModel::SelectionFlag::ClearAndSelect);
 }
 
