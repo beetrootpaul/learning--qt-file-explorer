@@ -73,10 +73,13 @@ void MainWindow::initSplitter() {
 
   dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
       new DirListingSharedModel());
+
   dirListingList_ = new DirListingListWidget();
   dirListingList_->init(dirListingSharedModel_, appState_);
+
   dirListingIcons_ = new DirListingIconsWidget();
   dirListingIcons_->init(dirListingSharedModel_, appState_);
+
   connect(appState_.data(), &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
@@ -249,6 +252,13 @@ void MainWindow::slotViewTypeChanged() {
       // we have to make sure it is applied on this one as well,
       // if it was not set on this particular widget yet.
       splitter_->setStretchFactor(1, 2);
+
+      auto selectedIndexes = dirListingIcons_->selectionModel()->selectedIndexes();
+      if (!selectedIndexes.isEmpty()) {
+        dirListingList_->setCurrentIndex(selectedIndexes.first());
+        dirListingList_->selectionModel()->select(selectedIndexes.first(),
+                                                  QItemSelectionModel::SelectionFlag::ClearAndSelect);
+      }
     }
   } else {
     if (splitter_->widget(1) != dirListingIcons_) {
@@ -257,6 +267,13 @@ void MainWindow::slotViewTypeChanged() {
       // we have to make sure it is applied on this one as well,
       // if it was not set on this particular widget yet.
       splitter_->setStretchFactor(1, 2);
+
+      auto selectedIndexes = dirListingList_->selectionModel()->selectedIndexes();
+      if (!selectedIndexes.isEmpty()) {
+        dirListingIcons_->setCurrentIndex(selectedIndexes.first());
+        dirListingIcons_->selectionModel()->select(selectedIndexes.first(),
+                                                   QItemSelectionModel::SelectionFlag::ClearAndSelect);
+      }
     }
   }
 }

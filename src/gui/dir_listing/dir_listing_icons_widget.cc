@@ -7,10 +7,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: bind to preview
-
-// TODO: preserve selection between modes
-
 DirListingIconsWidget::DirListingIconsWidget() {
   qDebug() << "+" << this;
 }
