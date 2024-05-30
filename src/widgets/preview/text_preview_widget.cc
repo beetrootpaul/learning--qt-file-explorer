@@ -19,9 +19,7 @@ TextPreviewWidget::~TextPreviewWidget() {
 // TODO: enforce it through interface
 void TextPreviewWidget::init() {
   setReadOnly(true);
-
   setLineWrapMode(QPlainTextEdit::LineWrapMode::WidgetWidth);
-
   applyMonospaceFontOn(this);
 }
 

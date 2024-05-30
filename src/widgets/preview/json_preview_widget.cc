@@ -17,13 +17,8 @@ JsonPreviewWidget::~JsonPreviewWidget() {
 }
 
 void JsonPreviewWidget::init() {
-  // Prevent this QLabel from expanding to match longer text lines.
-  setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-
-  setMargin(8);
-  setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  setWordWrap(true);
-
+  setReadOnly(true);
+  setLineWrapMode(QPlainTextEdit::LineWrapMode::WidgetWidth);
   applyMonospaceFontOn(this);
 }
 
@@ -42,13 +37,13 @@ void JsonPreviewWidget::preview(QString path) {
 
   QFile file(path);
   if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
-    setText(file.readAll());
+    setPlainText(file.readAll());
     file.close();
   }
 }
 
 void JsonPreviewWidget::clear() {
-  setText("");
+  setPlainText("");
 }
 
 QWidget* JsonPreviewWidget::asQWidget() {
