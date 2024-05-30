@@ -14,6 +14,7 @@ find_package(Qt6 COMPONENTS
         Core
         Gui
         Widgets
+        Concurrent
         REQUIRED)
 
 add_executable(learning__qt_file_explorer src/main.cc
@@ -58,6 +59,7 @@ target_link_libraries(learning__qt_file_explorer
         Qt::Core
         Qt::Gui
         Qt::Widgets
+        Qt6::Concurrent
 )
 
 # Manually added part:
