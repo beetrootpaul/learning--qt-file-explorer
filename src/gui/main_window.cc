@@ -21,8 +21,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: check the whole `tr(…)` stuff and menus from e.g. https://doc.qt.io/qt-6.2/qtwidgets-widgets-imageviewer-example.html
-
 MainWindow::MainWindow() {
   qDebug() << "+" << this;
 }

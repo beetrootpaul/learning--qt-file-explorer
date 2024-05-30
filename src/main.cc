@@ -5,8 +5,6 @@
 #include "app_state/app_state.h"
 #include "gui/main_window.h"
 
-// TODO: do pl/en translation switch in menu. QApplication::translate? tr(…)?
-
 // TODO: remember col widths/sortings in listing
 
 int main(int argc, char* argv[]) {

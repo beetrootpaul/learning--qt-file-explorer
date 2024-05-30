@@ -22,5 +22,6 @@ For Release mode please use `./run_release.sh`.
 ## Notes
 
 - I took a look at [official Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) and applied
-  *some*
-  of those on this codebase here.
+  *some* of those on this codebase here.
+- Code formatting was performed by CLion IDE (with some configuration modifications applied by me to match aforementioned Google's guide a bit). It might result with some strange indentation, especially for long constructor signatures.
+- I was thinking about adding a language switcher between English and Polish. This is why I prepared the GUI labels with wrapping `tr(…)` calls. In the end, I decided setting up the whole Qt Linguist workflow for such simple project would be a big time expense and reward would be non-satisfactory.
