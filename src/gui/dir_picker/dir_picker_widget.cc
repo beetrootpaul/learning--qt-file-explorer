@@ -70,10 +70,12 @@ void DirPickerWidget::slotBrowsedDirChanged(bool originatedFromDirPicker) {
   if (originatedFromDirPicker) return;
 
   auto dir = appState_->browsedDir();
+  const auto& modelIndex = model_->index(dir);
 
-  scrollTo(model_->index(dir),
+  scrollTo(modelIndex,
            QAbstractItemView::ScrollHint::PositionAtCenter);
-  selectionModel()->select(model_->index(dir),
+  setCurrentIndex(modelIndex);
+  selectionModel()->select(modelIndex,
                            QItemSelectionModel::SelectionFlag::ClearAndSelect);
 }
 
