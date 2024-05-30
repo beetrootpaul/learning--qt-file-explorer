@@ -27,6 +27,9 @@ public:
   void switchBrowsedDirToDownloads();
   void
   switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker = false);
+
+  bool canUndoSwitchBrowsedDir();
+  bool canRedoSwitchBrowsedDir();
   void undoSwitchBrowsedDir();
   void redoSwitchBrowsedDir();
 
@@ -48,6 +51,7 @@ public:
 
 signals:
   void signalBrowsedDirChanged(bool originatedFromDirPicker);
+  void signalBrowsedDirHistoryUpdated();
   void signalViewTypeChanged();
   void signalSelectedPathChanged();
   void signalPreviewVisibleChanged();

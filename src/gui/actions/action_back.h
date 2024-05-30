@@ -21,6 +21,7 @@ private:
   QSharedPointer<app_state::AppState> appState_;
 
 private slots:
+  void slotUpdateEnabled();
   void perform();
 
 };

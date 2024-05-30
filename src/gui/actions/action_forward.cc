@@ -4,8 +4,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: enabled only if anything to redo
-
 ActionForward::ActionForward(QObject* parent,
                              const QSharedPointer<app_state::AppState>& appState)
     : QAction(parent), appState_(appState) {
@@ -16,6 +14,10 @@ ActionForward::ActionForward(QObject* parent,
   setText(tr("Forward"));
   setShortcut(Shortcuts::forward());
 
+  connect(appState_.data(),
+          &app_state::AppState::signalBrowsedDirHistoryUpdated, this,
+          &ActionForward::slotUpdateEnabled);
+
   connect(this, &QAction::triggered, this, &ActionForward::perform);
 }
 
@@ -23,6 +25,10 @@ ActionForward::ActionForward(QObject* parent,
 
 ActionForward::~ActionForward() {
   qDebug() << "~" << this;
+}
+
+void ActionForward::slotUpdateEnabled() {
+  setEnabled(appState_->canRedoSwitchBrowsedDir());
 }
 
 void ActionForward::perform() {

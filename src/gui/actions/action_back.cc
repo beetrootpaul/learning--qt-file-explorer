@@ -4,8 +4,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: enabled only if anything to undo
-
 ActionBack::ActionBack(QObject* parent,
                        const QSharedPointer<app_state::AppState>& appState)
     : QAction(parent), appState_(appState) {
@@ -16,11 +14,19 @@ ActionBack::ActionBack(QObject* parent,
   setText(tr("Back"));
   setShortcut(Shortcuts::back());
 
+  connect(appState_.data(),
+          &app_state::AppState::signalBrowsedDirHistoryUpdated, this,
+          &ActionBack::slotUpdateEnabled);
+
   connect(this, &QAction::triggered, this, &ActionBack::perform);
 }
 
 ActionBack::~ActionBack() {
   qDebug() << "~" << this;
+}
+
+void ActionBack::slotUpdateEnabled() {
+  setEnabled(appState_->canUndoSwitchBrowsedDir());
 }
 
 void ActionBack::perform() {

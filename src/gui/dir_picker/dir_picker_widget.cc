@@ -17,8 +17,8 @@ DirPickerWidget::~DirPickerWidget() {
   delete model_;
 }
 
-void DirPickerWidget::init(
-    const QSharedPointer<app_state::AppState>& appState) {
+void
+DirPickerWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();

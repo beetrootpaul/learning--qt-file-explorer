@@ -38,17 +38,38 @@ AppState::switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker) {
 
   undoStack_.push(
       new SwitchDirCommand(this, browsedDir_, dir, originatedFromDirPicker));
-  qDebug() << "[undoStack#count]" << undoStack_.count();
+  qDebug() << "[undoStack#index/count]" << undoStack_.index() << "/"
+           << undoStack_.count();
+
+  // We need a separate signal here, because:
+  // - `signalBrowsedDirChanged` is emitted from within `SwitchDirCommand`,
+  //   which is before `undoStack_` gets updated with an info there is
+  //   1 new command on it.
+  // - `signalBrowsedDirHistoryUpdated` here is emitted after `undoStack_`
+  //   has knowledge about that command being already added.
+  emit signalBrowsedDirHistoryUpdated();
+}
+
+bool AppState::canUndoSwitchBrowsedDir() {
+  return undoStack_.canUndo();
+}
+
+bool AppState::canRedoSwitchBrowsedDir() {
+  return undoStack_.canRedo();
 }
 
 void AppState::undoSwitchBrowsedDir() {
   undoStack_.undo();
-  qDebug() << "[undoStack#count]" << undoStack_.count();
+  qDebug() << "[undoStack#index/count]" << undoStack_.index() << "/"
+           << undoStack_.count();
+  emit signalBrowsedDirHistoryUpdated();
 }
 
 void AppState::redoSwitchBrowsedDir() {
   undoStack_.redo();
-  qDebug() << "[undoStack#count]" << undoStack_.count();
+  qDebug() << "[undoStack#index/count]" << undoStack_.index() << "/"
+           << undoStack_.count();
+  emit signalBrowsedDirHistoryUpdated();
 }
 
 void AppState::setBrowsedDir(const QString& dir, bool originatedFromDirPicker) {

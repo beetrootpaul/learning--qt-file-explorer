@@ -60,6 +60,7 @@ void DirListingListWidget::loadPersistedState() {
         persisted_state::PersistedStateKeys::listingListHeaderState).toByteArray();
     header()->restoreState(headerState);
   } else {
+    // Sort by "Name" column
     sortByColumn(0, Qt::SortOrder::AscendingOrder);
   }
 }
