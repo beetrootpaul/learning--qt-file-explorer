@@ -28,7 +28,6 @@ public:
     originatedFromDirPicker_ = false;
   };
 
-  // TODO: what if the dir name changed or dir no longer exist?
   void undo() override {
     appState_->setBrowsedDir(oldDir_, /*originatedFromDirPicker_=*/false);
   };

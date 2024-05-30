@@ -2,7 +2,11 @@
 
 #include <QFileSystemModel>
 #include <QKeyEvent>
+#include <QHeaderView>
+#include <QSettings>
 #include <QStandardPaths>
+
+#include "../../persisted_state/persisted_state_keys.h"
 
 namespace qt_file_explorer::gui {
 
@@ -29,6 +33,8 @@ DirListingListWidget::init(
   setRootIsDecorated(false);
   setItemsExpandable(false);
 
+  setSortingEnabled(true);
+
   connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingListWidget::slotBrowsedDirChanged);
 
@@ -38,6 +44,26 @@ DirListingListWidget::init(
       appState_->switchBrowsedDirTo(fileInfo.filePath());
     }
   });
+}
+
+void DirListingListWidget::savePersistedState() {
+  QSettings settings;
+
+  settings.setValue(persisted_state::PersistedStateKeys::listingListHeaderState,
+                    header()->saveState());
+}
+
+void DirListingListWidget::loadPersistedState() {
+  QSettings settings;
+
+  if (settings.contains(
+      persisted_state::PersistedStateKeys::listingListHeaderState)) {
+    auto headerState = settings.value(
+        persisted_state::PersistedStateKeys::listingListHeaderState).toByteArray();
+    header()->restoreState(headerState);
+  } else {
+    sortByColumn(0, Qt::SortOrder::AscendingOrder);
+  }
 }
 
 // TODO: do the same for icons view
@@ -56,11 +82,9 @@ void DirListingListWidget::focusInEvent(QFocusEvent* event) {
   bool areItemsAvailable = !model_->rootDirectory().isEmpty(model_->filter());
   if (isNothingSelected && areItemsAvailable) {
     qDebug()
-        << "[DirListingListWidget] nothing was selected -> selecting the first item";
-    // TODO: pass sort flag here, taken from the model?
-    auto firstItemInfo = model_->rootDirectory().entryInfoList(
-        model_->filter()).first();
-    selectionModel()->select(model_->index(firstItemInfo.filePath()),
+        << "[DirListingListWidget] nothing was selected -> select the first item";
+    auto mi = model_->index(0, 0, rootIndex());
+    selectionModel()->select(mi,
                              QItemSelectionModel::SelectionFlag::ClearAndSelect |
                              QItemSelectionModel::SelectionFlag::Rows);
   }

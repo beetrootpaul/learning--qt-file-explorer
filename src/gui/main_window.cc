@@ -60,6 +60,7 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   initMenus();
 
   appState_->loadPersistedState();
+  dirListingList_->loadPersistedState();
   loadPersistedState();
 }
 
@@ -133,6 +134,7 @@ void MainWindow::initMenus() {
 
 void MainWindow::closeEvent(QCloseEvent* event) {
   appState_->savePersistedState();
+  dirListingList_->savePersistedState();
   savePersistedState();
 
   event->accept();
@@ -191,7 +193,7 @@ void MainWindow::loadPersistedState() {
 
 void MainWindow::resetLayout() {
   QSettings settings;
-  settings.remove(persisted_state::PersistedStateKeys::groupLayout);
+  settings.remove(persisted_state::PersistedStateKeys::groupResettableLayout);
   resetMainWindowLayout();
   resetSplitterLayout();
 }

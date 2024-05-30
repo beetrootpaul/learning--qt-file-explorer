@@ -5,11 +5,13 @@
 #include <QTreeView>
 
 #include "../../app_state/app_state.h"
+#include "../../persisted_state/with_persisted_state.h"
 #include "dir_listing_shared_model.h"
 
 namespace qt_file_explorer::gui {
 
-class DirListingListWidget : public QTreeView {
+class DirListingListWidget
+    : public QTreeView, public persisted_state::WithPersistedState {
 
 Q_OBJECT
 
@@ -19,6 +21,9 @@ public:
 
   void init(const QSharedPointer<DirListingSharedModel>& model_,
             const QSharedPointer<app_state::AppState>& appState);
+
+  void savePersistedState() override;
+  void loadPersistedState() override;
 
 private:
   QSharedPointer<app_state::AppState> appState_;
