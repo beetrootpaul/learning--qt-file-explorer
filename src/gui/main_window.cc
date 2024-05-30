@@ -11,12 +11,12 @@
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "actions/action_collapse_all.h"
-#include "actions/action_next_location.h"
-#include "actions/action_prev_location.h"
+#include "actions/action_forward.h"
+#include "actions/action_back.h"
 #include "actions/action_toggle_dir_listing_view_type.h"
 #include "actions/action_toggle_preview.h"
-#include "actions/action_quick_open_downloads.h"
-#include "actions/action_quick_open_home.h"
+#include "actions/action_go_to_downloads.h"
+#include "actions/action_go_to_home.h"
 #include "actions/action_reset_layout.h"
 
 namespace qt_file_explorer::gui {
@@ -51,11 +51,11 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   initSplitter();
   initPreview();
 
-  actionPrevLocation_ = new ActionPrevLocation(this, appState_);
-  actionNextLocation_ = new ActionNextLocation(this, appState_);
+  actionBack_ = new ActionBack(this, appState_);
+  actionForward_ = new ActionForward(this, appState_);
   actionCollapseAll_ = new ActionCollapseAll(this, dirPicker_);
-  actionQuickOpenHome_ = new ActionQuickOpenHome(this, appState_);
-  actionQuickOpenDownloads_ = new ActionQuickOpenDownloads(this, appState_);
+  actionGoToHome_ = new ActionGoToHome(this, appState_);
+  actionGoToDownloads_ = new ActionGoToDownloads(this, appState_);
   actionToggleDirListingViewType_ = new ActionToggleDirListingViewType(this,
                                                                        appState_);
   actionTogglePreview_ = new ActionTogglePreview(this, appState_);
@@ -103,11 +103,11 @@ void MainWindow::initToolbars() {
   toolbarNavigation_ = new Toolbar("navigation_toolbar");
   toolbarNavigation_->addAction(actionCollapseAll_);
   toolbarNavigation_->addSeparator();
-  toolbarNavigation_->addAction(actionQuickOpenHome_);
-  toolbarNavigation_->addAction(actionQuickOpenDownloads_);
+  toolbarNavigation_->addAction(actionGoToHome_);
+  toolbarNavigation_->addAction(actionGoToDownloads_);
   toolbarNavigation_->addSeparator();
-  toolbarNavigation_->addAction(actionPrevLocation_);
-  toolbarNavigation_->addAction(actionNextLocation_);
+  toolbarNavigation_->addAction(actionBack_);
+  toolbarNavigation_->addAction(actionForward_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarNavigation_);
 
   toolbarView_ = new Toolbar("navigation_toolbar");
@@ -120,11 +120,11 @@ void MainWindow::initMenus() {
   auto* menuNavigation = menuBar()->addMenu(tr("Navigation"));
   menuNavigation->addAction(actionCollapseAll_);
   menuNavigation->addSeparator();
-  menuNavigation->addAction(actionQuickOpenHome_);
-  menuNavigation->addAction(actionQuickOpenDownloads_);
+  menuNavigation->addAction(actionGoToHome_);
+  menuNavigation->addAction(actionGoToDownloads_);
   menuNavigation->addSeparator();
-  menuNavigation->addAction(actionPrevLocation_);
-  menuNavigation->addAction(actionNextLocation_);
+  menuNavigation->addAction(actionBack_);
+  menuNavigation->addAction(actionForward_);
 
   // NOTE: Keeping the name "View" makes Qt add "Full screen" action
   // out of the box (observed on macOS Sonoma).

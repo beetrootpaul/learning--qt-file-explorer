@@ -1,4 +1,4 @@
-#include "action_prev_location.h"
+#include "action_back.h"
 
 #include "../../shortcuts.h"
 
@@ -8,25 +8,25 @@ namespace qt_file_explorer::gui {
 
 // TODO: enabled only if anything to undo
 
-ActionPrevLocation::ActionPrevLocation(QObject* parent,
-                                       const QSharedPointer<app_state::AppState>& appState)
+ActionBack::ActionBack(QObject* parent,
+                       const QSharedPointer<app_state::AppState>& appState)
     : QAction(parent), appState_(appState) {
-  setObjectName("ActionPrevLocation");
+  setObjectName("ActionBack");
 
   qDebug() << "+" << this;
 
   setText(tr("Back"));
   setShortcut(Shortcuts::back());
 
-  connect(this, &QAction::triggered, this, &ActionPrevLocation::perform);
+  connect(this, &QAction::triggered, this, &ActionBack::perform);
 }
 
-ActionPrevLocation::~ActionPrevLocation() {
+ActionBack::~ActionBack() {
   qDebug() << "~" << this;
 }
 
-void ActionPrevLocation::perform() {
-  qDebug() << "! ActionPrevLocation";
+void ActionBack::perform() {
+  qDebug() << "! ActionBack";
   appState_->undoSwitchBrowsedDir();
 }
 

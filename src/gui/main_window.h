@@ -47,11 +47,11 @@ private:
   DirListingIconsWidget* dirListingIcons_;
   PreviewDockWidget* previewDock_;
 
-  QAction* actionPrevLocation_;
-  QAction* actionNextLocation_;
+  QAction* actionBack_;
+  QAction* actionForward_;
   QAction* actionCollapseAll_;
-  QAction* actionQuickOpenHome_;
-  QAction* actionQuickOpenDownloads_;
+  QAction* actionGoToHome_;
+  QAction* actionGoToDownloads_;
   QAction* actionToggleDirListingViewType_;
   QAction* actionTogglePreview_;
   QAction* actionResetLayout_;

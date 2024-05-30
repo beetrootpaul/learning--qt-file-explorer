@@ -1,4 +1,4 @@
-#include "action_next_location.h"
+#include "action_forward.h"
 
 #include "../../shortcuts.h"
 
@@ -6,27 +6,27 @@ namespace qt_file_explorer::gui {
 
 // TODO: enabled only if anything to redo
 
-ActionNextLocation::ActionNextLocation(QObject* parent,
-                                       const QSharedPointer<app_state::AppState>& appState)
+ActionForward::ActionForward(QObject* parent,
+                             const QSharedPointer<app_state::AppState>& appState)
     : QAction(parent), appState_(appState) {
-  setObjectName("ActionNextLocation");
+  setObjectName("ActionForward");
 
   qDebug() << "+" << this;
 
   setText(tr("Forward"));
   setShortcut(Shortcuts::forward());
 
-  connect(this, &QAction::triggered, this, &ActionNextLocation::perform);
+  connect(this, &QAction::triggered, this, &ActionForward::perform);
 }
 
 // TODO: README: describe cross-OS shortcuts based on https://doc.qt.io/qt-6/qkeysequence.html#standard-shortcuts
 
-ActionNextLocation::~ActionNextLocation() {
+ActionForward::~ActionForward() {
   qDebug() << "~" << this;
 }
 
-void ActionNextLocation::perform() {
-  qDebug() << "! ActionNextLocation";
+void ActionForward::perform() {
+  qDebug() << "! ActionForward";
   appState_->redoSwitchBrowsedDir();
 }
 
