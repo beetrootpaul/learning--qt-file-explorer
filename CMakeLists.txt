@@ -65,6 +65,7 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/gui/toolbar.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
+        src/shortcuts.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core

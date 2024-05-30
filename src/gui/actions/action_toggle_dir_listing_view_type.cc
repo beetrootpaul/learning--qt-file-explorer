@@ -1,5 +1,7 @@
 #include "action_toggle_dir_listing_view_type.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 ActionToggleDirListingViewType::ActionToggleDirListingViewType(QObject* parent,
@@ -10,8 +12,7 @@ ActionToggleDirListingViewType::ActionToggleDirListingViewType(QObject* parent,
   qDebug() << "+" << this;
 
   setText(tr("(placeholder)"));
-  // TODO: centralize shortcuts
-  setShortcut(Qt::META | Qt::Key_V);
+  setShortcut(Shortcuts::toggleDirListingViewType());
 
   connect(appState_.data(), &app_state::AppState::signalViewTypeChanged, [=]() {
     setText(tr(appState->currentDirListingViewType() ==

@@ -126,7 +126,8 @@ void MainWindow::initMenus() {
   menuNavigation->addAction(actionPrevLocation_);
   menuNavigation->addAction(actionNextLocation_);
 
-  // NOTE: Keeping the name "View" makes Qt add "Full screen" action out of the box.
+  // NOTE: Keeping the name "View" makes Qt add "Full screen" action
+  // out of the box (observed on macOS Sonoma).
   auto* menuView = menuBar()->addMenu(tr("View"));
   menuView->addAction(actionToggleDirListingViewType_);
   menuView->addAction(actionTogglePreview_);

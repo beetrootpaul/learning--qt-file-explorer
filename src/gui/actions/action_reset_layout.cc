@@ -1,5 +1,7 @@
 #include "action_reset_layout.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 ActionResetLayout::ActionResetLayout(QObject* parent, MainWindow* mainWindow)
@@ -9,7 +11,7 @@ ActionResetLayout::ActionResetLayout(QObject* parent, MainWindow* mainWindow)
   qDebug() << "+" << this;
 
   setText(tr("Reset layout"));
-  setShortcut(Qt::META | Qt::Key_R);
+  setShortcut(Shortcuts::resetLayout());
 
   connect(this, &QAction::triggered, this, &ActionResetLayout::perform);
 }

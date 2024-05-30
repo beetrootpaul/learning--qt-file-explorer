@@ -1,5 +1,7 @@
 #include "action_quick_open_home.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 ActionQuickOpenHome::ActionQuickOpenHome(QObject* parent,
@@ -10,8 +12,7 @@ ActionQuickOpenHome::ActionQuickOpenHome(QObject* parent,
   qDebug() << "+" << this;
 
   setText(tr("Go to: Home"));
-  // TODO: centralize shortcuts
-  setShortcut(Qt::META | Qt::Key_H);
+  setShortcut(Shortcuts::goToHome());
 
   connect(this, &QAction::triggered, this, &ActionQuickOpenHome::perform);
 }

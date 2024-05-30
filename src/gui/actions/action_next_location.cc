@@ -1,5 +1,7 @@
 #include "action_next_location.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 // TODO: enabled only if anything to redo
@@ -12,8 +14,7 @@ ActionNextLocation::ActionNextLocation(QObject* parent,
   qDebug() << "+" << this;
 
   setText(tr("Forward"));
-  // TODO: centralize shortcuts
-  setShortcut(QKeySequence::Forward);
+  setShortcut(Shortcuts::forward());
 
   connect(this, &QAction::triggered, this, &ActionNextLocation::perform);
 }

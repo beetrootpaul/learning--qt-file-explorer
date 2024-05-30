@@ -1,5 +1,7 @@
 #include "action_prev_location.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 // TODO: do not add same location switches to history OR do not react to such clicks at all
@@ -14,8 +16,7 @@ ActionPrevLocation::ActionPrevLocation(QObject* parent,
   qDebug() << "+" << this;
 
   setText(tr("Back"));
-  // TODO: centralize shortcuts
-  setShortcut(QKeySequence::Back);
+  setShortcut(Shortcuts::back());
 
   connect(this, &QAction::triggered, this, &ActionPrevLocation::perform);
 }

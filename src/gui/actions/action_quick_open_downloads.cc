@@ -1,5 +1,7 @@
 #include "action_quick_open_downloads.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 ActionQuickOpenDownloads::ActionQuickOpenDownloads(QObject* parent,
@@ -10,8 +12,7 @@ ActionQuickOpenDownloads::ActionQuickOpenDownloads(QObject* parent,
   qDebug() << "+" << this;
 
   setText(tr("Go to: Downloads"));
-  // TODO: centralize shortcuts
-  setShortcut(Qt::META | Qt::Key_D);
+  setShortcut(Shortcuts::goToDownloads());
 
   connect(this, &QAction::triggered, this, &ActionQuickOpenDownloads::perform);
 }
