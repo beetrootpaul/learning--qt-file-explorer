@@ -17,8 +17,6 @@ DirPickerWidget::~DirPickerWidget() {
   delete model_;
 }
 
-// TODO: persist column widths
-
 void DirPickerWidget::init(
     const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;

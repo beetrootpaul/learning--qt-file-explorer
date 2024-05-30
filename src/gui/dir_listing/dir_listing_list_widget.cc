@@ -18,8 +18,6 @@ DirListingListWidget::~DirListingListWidget() {
   qDebug() << "~" << this;
 }
 
-// TODO: sorting by columns
-
 void
 DirListingListWidget::init(
     const QSharedPointer<DirListingSharedModel>& model,
@@ -73,18 +71,28 @@ void DirListingListWidget::currentChanged(const QModelIndex& current,
 }
 
 void DirListingListWidget::focusInEvent(QFocusEvent* event) {
-  // Handling a case of nothing being selected on app start. The situation is:
+  // Handling a case of nothing being selected in the listing view.
+  //
+  // Example 1:
   // - app starts
   // - a dir is selected in the picker component
   // - the user <Tab>s into that dir's listing (this component here)
   // - nothing is selected, while they would rather expect a first time to be selected
+  //
+  // Example 2:
+  // - a file is selected
+  // - the user uses "Go to: Home" action
+  // - listing changes, nothing is selected
+  // - the user <Tab>s into the listing
+  //
   bool isNothingSelected = selectedIndexes().isEmpty();
   bool areItemsAvailable = !model_->rootDirectory().isEmpty(model_->filter());
   if (isNothingSelected && areItemsAvailable) {
     qDebug()
         << "[DirListingListWidget] nothing was selected -> select the first item";
-    auto mi = model_->index(0, 0, rootIndex());
-    selectionModel()->select(mi,
+    auto firstItemModelIndex = model_->index(0, 0, rootIndex());
+    setCurrentIndex(firstItemModelIndex);
+    selectionModel()->select(firstItemModelIndex,
                              QItemSelectionModel::SelectionFlag::ClearAndSelect |
                              QItemSelectionModel::SelectionFlag::Rows);
   }
@@ -96,6 +104,7 @@ void DirListingListWidget::slotBrowsedDirChanged() {
   auto dir = appState_->browsedDir();
   model_->setRootPath(dir);
   setRootIndex(model_->index(dir));
+  clearSelection();
 }
 
 } // namespace qt_file_explorer::gui
