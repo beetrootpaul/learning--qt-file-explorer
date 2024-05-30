@@ -19,9 +19,6 @@ void TextPreviewWidget::init() {
   // Prevent this QLabel from expanding to match longer text lines.
   setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
 
-  // TODO: implement MD rendered and use this:
-//  setTextFormat(Qt::TextFormat::MarkdownText);
-
   setMargin(8);
   setAlignment(Qt::AlignTop | Qt::AlignLeft);
   setWordWrap(true);
@@ -36,15 +33,15 @@ bool TextPreviewWidget::canPreview(const QString& path) {
 }
 
 void TextPreviewWidget::preview(QString path) {
-  QFile file(path);
-  file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-  // TODO: thread?
-  // TODO: caching?
-  const QByteArray& array = file.readAll();
-  file.close();
+  qDebug() << "TEXT preview:" << path;
 
-  // TODO: ? HERE ?
-//  setText(array);
+  clear();
+
+  QFile file(path);
+  if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
+    setText(file.readAll());
+    file.close();
+  }
 }
 
 void TextPreviewWidget::clear() {

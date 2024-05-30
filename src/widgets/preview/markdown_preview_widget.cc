@@ -34,15 +34,15 @@ bool MarkdownPreviewWidget::canPreview(const QString& path) {
 }
 
 void MarkdownPreviewWidget::preview(QString path) {
-  QFile file(path);
-  file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-  // TODO: thread?
-  // TODO: caching?
-  const QByteArray& array = file.readAll();
-  file.close();
+  qDebug() << "MD preview:" << path;
 
-  // TODO: ? HERE ?
-//  setText(array);
+  clear();
+
+  QFile file(path);
+  if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
+    setText(file.readAll());
+    file.close();
+  }
 }
 
 void MarkdownPreviewWidget::clear() {

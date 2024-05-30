@@ -18,6 +18,13 @@ void JsonPreviewWidget::init() {
   // Prevent this QLabel from expanding to match longer text lines.
   setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
 
+  // NOTE: Even if surprising, I managed to get the most consistent nicely looking
+  // results when doing as below: creating first font, setting its hint, then
+  // creating a second one based on `defaultFamily()` from that first one.
+  // Using just one font instance seemed to not work as expected, even with
+  // a `QFont("")` constructor. On the other hand: using `QFont("Monospace")` was
+  // seemingly OK, but with a risk that it worked only due to a given machine
+  // having "Monospace" font family available.
   QFont font;
   font.setStyleHint(QFont::Monospace);
   font = QFont(font.defaultFamily());
@@ -37,15 +44,15 @@ bool JsonPreviewWidget::canPreview(const QString& path) {
 }
 
 void JsonPreviewWidget::preview(QString path) {
-  QFile file(path);
-  file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-  // TODO: thread?
-  // TODO: caching?
-  const QByteArray& array = file.readAll();
-  file.close();
+  qDebug() << "JSON preview:" << path;
 
-  // TODO: ? HERE ?
-//  setText(array);
+  clear();
+
+  QFile file(path);
+  if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
+    setText(file.readAll());
+    file.close();
+  }
 }
 
 void JsonPreviewWidget::clear() {
