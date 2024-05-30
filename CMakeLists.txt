@@ -22,6 +22,22 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/app_state.h
         src/app_state/dir_listing_view_type.h
         src/app_state/switch_dir_command.h
+        src/gui/actions/action_collapse_all.cc
+        src/gui/actions/action_collapse_all.h
+        src/gui/actions/action_next_location.cc
+        src/gui/actions/action_next_location.h
+        src/gui/actions/action_prev_location.cc
+        src/gui/actions/action_prev_location.h
+        src/gui/actions/action_quick_open_downloads.cc
+        src/gui/actions/action_quick_open_downloads.h
+        src/gui/actions/action_quick_open_home.cc
+        src/gui/actions/action_quick_open_home.h
+        src/gui/actions/action_reset_layout.cc
+        src/gui/actions/action_reset_layout.h
+        src/gui/actions/action_toggle_dir_listing_view_type.cc
+        src/gui/actions/action_toggle_dir_listing_view_type.h
+        src/gui/actions/action_toggle_preview.cc
+        src/gui/actions/action_toggle_preview.h
         src/gui/dir_listing/dir_listing_icons_widget.cc
         src/gui/dir_listing/dir_listing_icons_widget.h
         src/gui/dir_listing/dir_listing_list_widget.cc
@@ -45,13 +61,8 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/gui/preview/text_preview_widget.cc
         src/gui/preview/text_preview_widget.h
         src/gui/preview/with_preview_capability.h
-        src/gui/toolbars/history_toolbar_widget.cc
-        src/gui/toolbars/history_toolbar_widget.h
-        src/gui/toolbars/navigation_toolbar_widget.cc
-        src/gui/toolbars/navigation_toolbar_widget.h
-        src/gui/toolbars/toolbar_commons.h
-        src/gui/toolbars/view_toolbar_widget.cc
-        src/gui/toolbars/view_toolbar_widget.h
+        src/gui/toolbar.cc
+        src/gui/toolbar.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
 )

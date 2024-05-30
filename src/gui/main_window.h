@@ -11,9 +11,7 @@
 #include "dir_listing/dir_listing_list_widget.h"
 #include "dir_picker/dir_picker_widget.h"
 #include "preview/preview_dock_widget.h"
-#include "toolbars/view_toolbar_widget.h"
-#include "toolbars/navigation_toolbar_widget.h"
-#include "toolbars/history_toolbar_widget.h"
+#include "toolbar.h"
 
 namespace qt_file_explorer::gui {
 
@@ -30,15 +28,16 @@ public:
 
   void closeEvent(QCloseEvent* event) override;
 
+  void resetLayout();
+
   void savePersistedState() override;
   void loadPersistedState() override;
 
 private:
   QSharedPointer<app_state::AppState> appState_;
 
-  HistoryToolbarWidget* historyToolbar_ = nullptr;
-  NavigationToolbarWidget* navigationToolbar_ = nullptr;
-  ViewToolbarWidget* viewToolbar_ = nullptr;
+  Toolbar* toolbarNavigation_ = nullptr;
+  Toolbar* toolbarView_ = nullptr;
 
   QSplitter* splitter_ = nullptr;
 
@@ -48,9 +47,19 @@ private:
   DirListingIconsWidget* dirListingIcons_;
   PreviewDockWidget* previewDock_;
 
+  QAction* actionPrevLocation_;
+  QAction* actionNextLocation_;
+  QAction* actionCollapseAll_;
+  QAction* actionQuickOpenHome_;
+  QAction* actionQuickOpenDownloads_;
+  QAction* actionToggleDirListingViewType_;
+  QAction* actionTogglePreview_;
+  QAction* actionResetLayout_;
+
   void initSplitter();
   void initPreview();
   void initToolbars();
+  void initMenus();
 
   void resetMainWindowLayout();
   void resetSplitterLayout();

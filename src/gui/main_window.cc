@@ -5,10 +5,19 @@
 #include <QDockWidget>
 #include <QImage>
 #include <QImageReader>
+#include <QMenuBar>
 #include <QPainter>
 #include <QSettings>
 
 #include "../persisted_state/persisted_state_keys.h"
+#include "actions/action_collapse_all.h"
+#include "actions/action_next_location.h"
+#include "actions/action_prev_location.h"
+#include "actions/action_toggle_dir_listing_view_type.h"
+#include "actions/action_toggle_preview.h"
+#include "actions/action_quick_open_downloads.h"
+#include "actions/action_quick_open_home.h"
+#include "actions/action_reset_layout.h"
 
 namespace qt_file_explorer::gui {
 
@@ -41,7 +50,18 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
 
   initSplitter();
   initPreview();
+
+  actionPrevLocation_ = new ActionPrevLocation(this, appState_);
+  actionNextLocation_ = new ActionNextLocation(this, appState_);
+  actionCollapseAll_ = new ActionCollapseAll(this, dirPicker_);
+  actionQuickOpenHome_ = new ActionQuickOpenHome(this, appState_);
+  actionQuickOpenDownloads_ = new ActionQuickOpenDownloads(this, appState_);
+  actionToggleDirListingViewType_ = new ActionToggleDirListingViewType(this,
+                                                                       appState_);
+  actionTogglePreview_ = new ActionTogglePreview(this, appState_);
+  actionResetLayout_ = new ActionResetLayout(this, this);
   initToolbars();
+  initMenus();
 
   appState_->loadPersistedState();
   loadPersistedState();
@@ -80,29 +100,39 @@ void MainWindow::initPreview() {
 }
 
 void MainWindow::initToolbars() {
-  historyToolbar_ = new HistoryToolbarWidget();
-  historyToolbar_->init(appState_);
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
+  toolbarNavigation_ = new Toolbar("navigation_toolbar");
+  toolbarNavigation_->addAction(actionCollapseAll_);
+  toolbarNavigation_->addSeparator();
+  toolbarNavigation_->addAction(actionQuickOpenHome_);
+  toolbarNavigation_->addAction(actionQuickOpenDownloads_);
+  toolbarNavigation_->addSeparator();
+  toolbarNavigation_->addAction(actionPrevLocation_);
+  toolbarNavigation_->addAction(actionNextLocation_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarNavigation_);
 
-  navigationToolbar_ = new NavigationToolbarWidget();
-  navigationToolbar_->init(appState_);
-  connect(navigationToolbar_,
-          &NavigationToolbarWidget::signalCollapseAllLicked,
-          [=]() {
-            dirPicker_->collapseAll();
-          });
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
+  toolbarView_ = new Toolbar("navigation_toolbar");
+  toolbarView_->addAction(actionToggleDirListingViewType_);
+  toolbarView_->addAction(actionTogglePreview_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarView_);
+}
 
-  viewToolbar_ = new ViewToolbarWidget();
-  viewToolbar_->init(appState_);
-  connect(viewToolbar_, &ViewToolbarWidget::signalResetLayoutClicked,
-          [=]() {
-            QSettings settings;
-            settings.remove(persisted_state::PersistedStateKeys::groupLayout);
-            resetMainWindowLayout();
-            resetSplitterLayout();
-          });
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
+void MainWindow::initMenus() {
+  auto* menuNavigation = menuBar()->addMenu(tr("Navigation"));
+  menuNavigation->addAction(actionCollapseAll_);
+  menuNavigation->addSeparator();
+  menuNavigation->addAction(actionQuickOpenHome_);
+  menuNavigation->addAction(actionQuickOpenDownloads_);
+  menuNavigation->addSeparator();
+  menuNavigation->addAction(actionPrevLocation_);
+  menuNavigation->addAction(actionNextLocation_);
+
+  // NOTE: Keeping the name "View" makes Qt add "Full screen" action out of the box.
+  auto* menuView = menuBar()->addMenu(tr("View"));
+  menuView->addAction(actionToggleDirListingViewType_);
+  menuView->addAction(actionTogglePreview_);
+
+  auto* menuLayout = menuBar()->addMenu(tr("Layout"));
+  menuLayout->addAction(actionResetLayout_);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
@@ -158,18 +188,24 @@ void MainWindow::loadPersistedState() {
   const auto splitterState = settings.value(
       persisted_state::PersistedStateKeys::splitterState).toByteArray();
   if (!splitterState.isEmpty()) {
-//    splitter_->restoreState(splitterState);
+    splitter_->restoreState(splitterState);
   } else {
     resetSplitterLayout();
   }
 }
 
+void MainWindow::resetLayout() {
+  QSettings settings;
+  settings.remove(persisted_state::PersistedStateKeys::groupLayout);
+  resetMainWindowLayout();
+  resetSplitterLayout();
+}
+
 void MainWindow::resetMainWindowLayout() {
   qDebug() << "MainWindow::resetMainWindowLayout";
 
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
-  addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarNavigation_);
+  addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarView_);
 
   // TODO: make the show/hide button adapt to dock being closed
 
@@ -226,7 +262,7 @@ void MainWindow::slotViewTypeChanged() {
       // if it was not set on this particular widget yet.
       splitter_->setStretchFactor(1, 2);
     }
-  };
+  }
 }
 
 void MainWindow::slotPreviewVisibleChanged() {
