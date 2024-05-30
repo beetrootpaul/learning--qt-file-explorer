@@ -1,14 +1,14 @@
 #ifndef QT_FILE_EXPLORER_WIDGETS_PREVIEW_TEXT_PREVIEW_WIDGET_H
 #define QT_FILE_EXPLORER_WIDGETS_PREVIEW_TEXT_PREVIEW_WIDGET_H
 
-#include <QLabel>
 #include <QObject>
+#include <QPlainTextEdit>
 
 #include "with_preview_capability.h"
 
 namespace qt_file_explorer::widgets {
 
-class TextPreviewWidget : public QLabel, public WithPreviewCapability {
+class TextPreviewWidget : public QPlainTextEdit, public WithPreviewCapability {
 
 Q_OBJECT
 
