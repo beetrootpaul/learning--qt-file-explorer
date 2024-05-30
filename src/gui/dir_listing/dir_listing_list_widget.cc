@@ -70,7 +70,6 @@ void DirListingListWidget::focusInEvent(QFocusEvent* event) {
 
 void DirListingListWidget::slotBrowsedDirChanged() {
   auto dir = appState_->browsedDir();
-  // TODO: should I set an entire drive here?
   model_->setRootPath(dir);
   setRootIndex(model_->index(dir));
 }

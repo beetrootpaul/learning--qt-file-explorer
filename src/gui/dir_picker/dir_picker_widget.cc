@@ -44,11 +44,6 @@ void DirPickerWidget::init(
   connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
           &DirPickerWidget::slotBrowsedDirChanged);
   connect(this, &DirPickerWidget::clicked, this, &DirPickerWidget::openDir);
-
-  // TODO: do I need to do anything about this signal?
-  //  connect(model_, &QFileSystemModel::directoryLoaded, [=]() {
-  //    qDebug() << "... loaded!";
-  //  });
 }
 
 void DirPickerWidget::keyPressEvent(QKeyEvent* event) {

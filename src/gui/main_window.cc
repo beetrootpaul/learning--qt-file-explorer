@@ -41,8 +41,6 @@ MainWindow::~MainWindow() {
   }
 }
 
-// TODO: tabbing order
-
 void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
@@ -74,7 +72,6 @@ void MainWindow::initSplitter() {
   dirPicker_ = new DirPickerWidget();
   dirPicker_->init(appState_);
 
-  // TODO: keep selection between view types
   dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
       new DirListingSharedModel());
   dirListingList_ = new DirListingListWidget();
@@ -177,7 +174,6 @@ void MainWindow::loadPersistedState() {
          (screen()->availableGeometry().height() - height()) / 2);
   }
 
-  // TODO: how to make rearrangement of toolbars kept across app runs?
   const auto mainWindowState = settings.value(
       persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
   if (!mainWindowState.isEmpty()) {
@@ -218,7 +214,6 @@ void MainWindow::resetMainWindowLayout() {
               Qt::Orientation::Horizontal);
 }
 
-// TODO: trigger it also on a double click on the splitter bar
 void MainWindow::resetSplitterLayout() {
   qDebug() << "MainWindow::resetSplitterLayout";
 

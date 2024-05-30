@@ -7,11 +7,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: set it for IconMode only?
-//    QListView::setWrapping(true);
-
-// TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
-
 // TODO: bind to preview
 
 // TODO: preserve selection between modes
@@ -54,7 +49,6 @@ DirListingIconsWidget::init(
 
 void DirListingIconsWidget::slotBrowsedDirChanged() {
   auto dir = appState_->browsedDir();
-  // TODO: should I set an entire drive here?
   model_->setRootPath(dir);
   setRootIndex(model_->index(dir));
 }

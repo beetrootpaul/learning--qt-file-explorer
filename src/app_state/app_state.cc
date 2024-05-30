@@ -17,7 +17,6 @@ AppState::~AppState() {
   qDebug() << "~" << this;
 }
 
-// TODO: persist this between app runs
 QString AppState::browsedDir() {
   return browsedDir_;
 }
@@ -32,8 +31,8 @@ void AppState::switchBrowsedDirToDownloads() {
 
 void
 AppState::switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker) {
-  // TODO: Are we sure about this early return?
   if (dir.trimmed().isEmpty()) return;
+
   undoStack_.push(
       new SwitchDirCommand(this, browsedDir_, dir, originatedFromDirPicker));
   qDebug() << "[undoStack#count]" << undoStack_.count();
@@ -71,8 +70,8 @@ QString AppState::selectedPath() {
 }
 
 void AppState::switchSelectedPathTo(const QString& path) {
-  // TODO: Are we sure about this early return? Especially with no selection being represented by ""…
   if (path.trimmed().isEmpty()) return;
+
   qDebug() << "Switching selected path to:" << path;
   selectedPath_ = path;
   emit signalSelectedPathChanged();
@@ -96,7 +95,6 @@ void AppState::savePersistedState() {
                     (uint) currentDirListingViewType_);
   settings.setValue(persisted_state::PersistedStateKeys::previewVisible,
                     isPreviewVisible_);
-  // TODO: load it
 }
 
 void AppState::loadPersistedState() {

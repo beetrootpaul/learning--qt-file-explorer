@@ -9,7 +9,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: share the model with the icons variant, so the selection keeps unchanged? or other benefits?
 class DirListingListWidget : public QTreeView {
 
 Q_OBJECT
