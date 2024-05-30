@@ -27,6 +27,7 @@ private:
 
   void currentChanged(const QModelIndex& current,
                       const QModelIndex& previous) override;
+  void focusInEvent(QFocusEvent* event) override;
 
 private slots:
   void slotBrowsedDirChanged();
