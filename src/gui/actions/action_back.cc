@@ -4,8 +4,6 @@
 
 namespace qt_file_explorer::gui {
 
-// TODO: do not add same location switches to history OR do not react to such clicks at all
-
 // TODO: enabled only if anything to undo
 
 ActionBack::ActionBack(QObject* parent,

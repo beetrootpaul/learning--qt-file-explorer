@@ -33,6 +33,9 @@ void
 AppState::switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker) {
   if (dir.trimmed().isEmpty()) return;
 
+  // Do nothing if the to-be browsed dir is the current one.
+  if (browsedDir_ == dir) return;
+
   undoStack_.push(
       new SwitchDirCommand(this, browsedDir_, dir, originatedFromDirPicker));
   qDebug() << "[undoStack#count]" << undoStack_.count();
