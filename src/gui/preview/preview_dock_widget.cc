@@ -23,7 +23,7 @@ void
 PreviewDockWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
-  setWindowTitle("Preview");
+  setWindowTitle(tr("Preview"));
 
   auto* imagePreview = new ImagePreviewWidget();
   imagePreview->init();

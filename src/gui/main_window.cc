@@ -11,17 +11,15 @@
 
 #include "../persisted_state/persisted_state_keys.h"
 #include "actions/action_collapse_all.h"
-#include "actions/action_next_location.h"
-#include "actions/action_prev_location.h"
+#include "actions/action_forward.h"
+#include "actions/action_back.h"
 #include "actions/action_toggle_dir_listing_view_type.h"
 #include "actions/action_toggle_preview.h"
-#include "actions/action_quick_open_downloads.h"
-#include "actions/action_quick_open_home.h"
+#include "actions/action_go_to_downloads.h"
+#include "actions/action_go_to_home.h"
 #include "actions/action_reset_layout.h"
 
 namespace qt_file_explorer::gui {
-
-// TODO: check the whole `tr(…)` stuff and menus from e.g. https://doc.qt.io/qt-6.2/qtwidgets-widgets-imageviewer-example.html
 
 MainWindow::MainWindow() {
   qDebug() << "+" << this;
@@ -41,21 +39,19 @@ MainWindow::~MainWindow() {
   }
 }
 
-// TODO: tabbing order
-
 void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
-  setWindowTitle("Qt File Explorer");
+  setWindowTitle(tr("Qt File Explorer"));
 
   initSplitter();
   initPreview();
 
-  actionPrevLocation_ = new ActionPrevLocation(this, appState_);
-  actionNextLocation_ = new ActionNextLocation(this, appState_);
+  actionBack_ = new ActionBack(this, appState_);
+  actionForward_ = new ActionForward(this, appState_);
   actionCollapseAll_ = new ActionCollapseAll(this, dirPicker_);
-  actionQuickOpenHome_ = new ActionQuickOpenHome(this, appState_);
-  actionQuickOpenDownloads_ = new ActionQuickOpenDownloads(this, appState_);
+  actionGoToHome_ = new ActionGoToHome(this, appState_);
+  actionGoToDownloads_ = new ActionGoToDownloads(this, appState_);
   actionToggleDirListingViewType_ = new ActionToggleDirListingViewType(this,
                                                                        appState_);
   actionTogglePreview_ = new ActionTogglePreview(this, appState_);
@@ -64,6 +60,7 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   initMenus();
 
   appState_->loadPersistedState();
+  dirListingList_->loadPersistedState();
   loadPersistedState();
 }
 
@@ -74,7 +71,6 @@ void MainWindow::initSplitter() {
   dirPicker_ = new DirPickerWidget();
   dirPicker_->init(appState_);
 
-  // TODO: keep selection between view types
   dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
       new DirListingSharedModel());
   dirListingList_ = new DirListingListWidget();
@@ -103,11 +99,11 @@ void MainWindow::initToolbars() {
   toolbarNavigation_ = new Toolbar("navigation_toolbar");
   toolbarNavigation_->addAction(actionCollapseAll_);
   toolbarNavigation_->addSeparator();
-  toolbarNavigation_->addAction(actionQuickOpenHome_);
-  toolbarNavigation_->addAction(actionQuickOpenDownloads_);
+  toolbarNavigation_->addAction(actionGoToHome_);
+  toolbarNavigation_->addAction(actionGoToDownloads_);
   toolbarNavigation_->addSeparator();
-  toolbarNavigation_->addAction(actionPrevLocation_);
-  toolbarNavigation_->addAction(actionNextLocation_);
+  toolbarNavigation_->addAction(actionBack_);
+  toolbarNavigation_->addAction(actionForward_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarNavigation_);
 
   toolbarView_ = new Toolbar("navigation_toolbar");
@@ -120,13 +116,14 @@ void MainWindow::initMenus() {
   auto* menuNavigation = menuBar()->addMenu(tr("Navigation"));
   menuNavigation->addAction(actionCollapseAll_);
   menuNavigation->addSeparator();
-  menuNavigation->addAction(actionQuickOpenHome_);
-  menuNavigation->addAction(actionQuickOpenDownloads_);
+  menuNavigation->addAction(actionGoToHome_);
+  menuNavigation->addAction(actionGoToDownloads_);
   menuNavigation->addSeparator();
-  menuNavigation->addAction(actionPrevLocation_);
-  menuNavigation->addAction(actionNextLocation_);
+  menuNavigation->addAction(actionBack_);
+  menuNavigation->addAction(actionForward_);
 
-  // NOTE: Keeping the name "View" makes Qt add "Full screen" action out of the box.
+  // NOTE: Keeping the name "View" makes Qt add "Full screen" action
+  // out of the box (observed on macOS Sonoma).
   auto* menuView = menuBar()->addMenu(tr("View"));
   menuView->addAction(actionToggleDirListingViewType_);
   menuView->addAction(actionTogglePreview_);
@@ -137,6 +134,7 @@ void MainWindow::initMenus() {
 
 void MainWindow::closeEvent(QCloseEvent* event) {
   appState_->savePersistedState();
+  dirListingList_->savePersistedState();
   savePersistedState();
 
   event->accept();
@@ -176,7 +174,6 @@ void MainWindow::loadPersistedState() {
          (screen()->availableGeometry().height() - height()) / 2);
   }
 
-  // TODO: how to make rearrangement of toolbars kept across app runs?
   const auto mainWindowState = settings.value(
       persisted_state::PersistedStateKeys::mainWindowState).toByteArray();
   if (!mainWindowState.isEmpty()) {
@@ -196,7 +193,7 @@ void MainWindow::loadPersistedState() {
 
 void MainWindow::resetLayout() {
   QSettings settings;
-  settings.remove(persisted_state::PersistedStateKeys::groupLayout);
+  settings.remove(persisted_state::PersistedStateKeys::groupResettableLayout);
   resetMainWindowLayout();
   resetSplitterLayout();
 }
@@ -217,7 +214,6 @@ void MainWindow::resetMainWindowLayout() {
               Qt::Orientation::Horizontal);
 }
 
-// TODO: trigger it also on a double click on the splitter bar
 void MainWindow::resetSplitterLayout() {
   qDebug() << "MainWindow::resetSplitterLayout";
 

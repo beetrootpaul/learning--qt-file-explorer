@@ -17,7 +17,6 @@ AppState::~AppState() {
   qDebug() << "~" << this;
 }
 
-// TODO: persist this between app runs
 QString AppState::browsedDir() {
   return browsedDir_;
 }
@@ -32,21 +31,45 @@ void AppState::switchBrowsedDirToDownloads() {
 
 void
 AppState::switchBrowsedDirTo(const QString& dir, bool originatedFromDirPicker) {
-  // TODO: Are we sure about this early return?
   if (dir.trimmed().isEmpty()) return;
+
+  // Do nothing if the to-be browsed dir is the current one.
+  if (browsedDir_ == dir) return;
+
   undoStack_.push(
       new SwitchDirCommand(this, browsedDir_, dir, originatedFromDirPicker));
-  qDebug() << "[undoStack#count]" << undoStack_.count();
+  qDebug() << "[undoStack#index/count]" << undoStack_.index() << "/"
+           << undoStack_.count();
+
+  // We need a separate signal here, because:
+  // - `signalBrowsedDirChanged` is emitted from within `SwitchDirCommand`,
+  //   which is before `undoStack_` gets updated with an info there is
+  //   1 new command on it.
+  // - `signalBrowsedDirHistoryUpdated` here is emitted after `undoStack_`
+  //   has knowledge about that command being already added.
+  emit signalBrowsedDirHistoryUpdated();
+}
+
+bool AppState::canUndoSwitchBrowsedDir() {
+  return undoStack_.canUndo();
+}
+
+bool AppState::canRedoSwitchBrowsedDir() {
+  return undoStack_.canRedo();
 }
 
 void AppState::undoSwitchBrowsedDir() {
   undoStack_.undo();
-  qDebug() << "[undoStack#count]" << undoStack_.count();
+  qDebug() << "[undoStack#index/count]" << undoStack_.index() << "/"
+           << undoStack_.count();
+  emit signalBrowsedDirHistoryUpdated();
 }
 
 void AppState::redoSwitchBrowsedDir() {
   undoStack_.redo();
-  qDebug() << "[undoStack#count]" << undoStack_.count();
+  qDebug() << "[undoStack#index/count]" << undoStack_.index() << "/"
+           << undoStack_.count();
+  emit signalBrowsedDirHistoryUpdated();
 }
 
 void AppState::setBrowsedDir(const QString& dir, bool originatedFromDirPicker) {
@@ -71,8 +94,8 @@ QString AppState::selectedPath() {
 }
 
 void AppState::switchSelectedPathTo(const QString& path) {
-  // TODO: Are we sure about this early return? Especially with no selection being represented by ""…
   if (path.trimmed().isEmpty()) return;
+
   qDebug() << "Switching selected path to:" << path;
   selectedPath_ = path;
   emit signalSelectedPathChanged();
@@ -92,11 +115,10 @@ void AppState::savePersistedState() {
 
   settings.setValue(persisted_state::PersistedStateKeys::browsedDir,
                     browsedDir_);
-  settings.setValue(persisted_state::PersistedStateKeys::viewType,
+  settings.setValue(persisted_state::PersistedStateKeys::listingViewType,
                     (uint) currentDirListingViewType_);
   settings.setValue(persisted_state::PersistedStateKeys::previewVisible,
                     isPreviewVisible_);
-  // TODO: load it
 }
 
 void AppState::loadPersistedState() {
@@ -110,9 +132,9 @@ void AppState::loadPersistedState() {
     browsedDir_ = homeDir_;
   }
 
-  if (settings.contains(persisted_state::PersistedStateKeys::viewType)) {
+  if (settings.contains(persisted_state::PersistedStateKeys::listingViewType)) {
     currentDirListingViewType_ = (DirListingViewType) settings.value(
-        persisted_state::PersistedStateKeys::viewType).toUInt();
+        persisted_state::PersistedStateKeys::listingViewType).toUInt();
   } else {
     currentDirListingViewType_ = DirListingViewType::List;
   }

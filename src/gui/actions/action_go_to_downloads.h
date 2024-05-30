@@ -1,5 +1,5 @@
-#ifndef QT_FILE_EXPLORER_GUI_ACTIONS_ACTION_QUICK_OPEN_HOME_H
-#define QT_FILE_EXPLORER_GUI_ACTIONS_ACTION_QUICK_OPEN_HOME_H
+#ifndef QT_FILE_EXPLORER_GUI_ACTIONS_ACTION_GO_TO_DOWNLOADS_H
+#define QT_FILE_EXPLORER_GUI_ACTIONS_ACTION_GO_TO_DOWNLOADS_H
 
 #include <QAction>
 #include <QObject>
@@ -8,16 +8,17 @@
 
 namespace qt_file_explorer::gui {
 
-class ActionQuickOpenHome : public QAction {
+class ActionGoToDownloads : public QAction {
 
 Q_OBJECT
 
 public:
-  ActionQuickOpenHome(QObject* parent,
+  ActionGoToDownloads(QObject* parent,
                       const QSharedPointer<app_state::AppState>& appState);
-  ~ActionQuickOpenHome();
+  ~ActionGoToDownloads();
 
 private:
+
   QSharedPointer<app_state::AppState> appState_;
 
 private slots:
@@ -27,4 +28,4 @@ private slots:
 
 } // namespace qt_file_explorer::gui
 
-#endif //QT_FILE_EXPLORER_GUI_ACTIONS_ACTION_QUICK_OPEN_HOME_H
+#endif //QT_FILE_EXPLORER_GUI_ACTIONS_ACTION_GO_TO_DOWNLOADS_H

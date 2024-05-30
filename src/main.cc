@@ -1,32 +1,9 @@
 #include <QApplication>
-#include <QHBoxLayout>
+#include <QLocale>
+#include <QTranslator>
 
 #include "app_state/app_state.h"
 #include "gui/main_window.h"
-
-// TODO: menu item "reset all and restart" which clears all settings and does NOT save on close
-
-// TODO: do pl/en translation switch in menu. QApplication::translate? tr(…)?
-
-// TODO: is it possible to do a custom skin? pixel art skin?
-
-// TODO: anything testable?
-
-// TODO: any way to show usage of delegates?
-
-// TODO: editable file/dir names in the listing
-
-// TODO: persist preview if visible and its size
-
-// TODO: icons in some buttons?
-
-// TODO: menus with some actions same as in toolbars? QAction?
-
-// TODO: OS-specific shortcuts for rename and undo/redo
-
-// TODO: rename -> change the path across command history to not break undo/redo?
-
-// TODO: remember col widths/sortings in listing
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
@@ -44,6 +21,7 @@ int main(int argc, char* argv[]) {
   // Trigger slots listening to these signals. Thanks to that we do
   // not have to add initialization code and can rely on signals instead.
   appState->signalBrowsedDirChanged(/*originatedFromDirPicker=*/false);
+  appState->signalBrowsedDirHistoryUpdated();
   appState->signalViewTypeChanged();
   appState->signalPreviewVisibleChanged();
 

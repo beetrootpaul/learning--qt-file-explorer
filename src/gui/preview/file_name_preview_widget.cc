@@ -13,7 +13,6 @@ FileNamePreviewWidget::~FileNamePreviewWidget() {
   qDebug() << "~" << this;
 }
 
-// TODO: enforce init definition through interface
 void FileNamePreviewWidget::init() {
   // Prevent this QLabel from expanding to match longer file names.
   setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);

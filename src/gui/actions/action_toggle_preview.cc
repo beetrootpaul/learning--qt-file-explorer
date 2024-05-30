@@ -1,5 +1,7 @@
 #include "action_toggle_preview.h"
 
+#include "../../shortcuts.h"
+
 namespace qt_file_explorer::gui {
 
 ActionTogglePreview::ActionTogglePreview(QObject* parent,
@@ -10,8 +12,7 @@ ActionTogglePreview::ActionTogglePreview(QObject* parent,
   qDebug() << "+" << this;
 
   setText(tr("(placeholder)"));
-  // TODO: centralize shortcuts
-  setShortcut(Qt::META | Qt::Key_P);
+  setShortcut(Shortcuts::togglePreview());
 
   connect(appState_.data(), &app_state::AppState::signalPreviewVisibleChanged,
           [=]() {

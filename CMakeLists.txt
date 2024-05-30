@@ -22,16 +22,16 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/app_state.h
         src/app_state/dir_listing_view_type.h
         src/app_state/switch_dir_command.h
+        src/gui/actions/action_back.cc
+        src/gui/actions/action_back.h
         src/gui/actions/action_collapse_all.cc
         src/gui/actions/action_collapse_all.h
-        src/gui/actions/action_next_location.cc
-        src/gui/actions/action_next_location.h
-        src/gui/actions/action_prev_location.cc
-        src/gui/actions/action_prev_location.h
-        src/gui/actions/action_quick_open_downloads.cc
-        src/gui/actions/action_quick_open_downloads.h
-        src/gui/actions/action_quick_open_home.cc
-        src/gui/actions/action_quick_open_home.h
+        src/gui/actions/action_forward.cc
+        src/gui/actions/action_forward.h
+        src/gui/actions/action_go_to_downloads.cc
+        src/gui/actions/action_go_to_downloads.h
+        src/gui/actions/action_go_to_home.cc
+        src/gui/actions/action_go_to_home.h
         src/gui/actions/action_reset_layout.cc
         src/gui/actions/action_reset_layout.h
         src/gui/actions/action_toggle_dir_listing_view_type.cc
@@ -65,6 +65,7 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/gui/toolbar.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
+        src/shortcuts.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core
