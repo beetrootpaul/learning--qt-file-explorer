@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <QSizePolicy>
 
+#include "../monospace_font.h"
+
 namespace qt_file_explorer::widgets {
 
 MarkdownPreviewWidget::MarkdownPreviewWidget() {
@@ -15,14 +17,9 @@ MarkdownPreviewWidget::~MarkdownPreviewWidget() {
 }
 
 void MarkdownPreviewWidget::init() {
-  // Prevent this QLabel from expanding to match longer text lines.
-  setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-
-  setTextFormat(Qt::TextFormat::MarkdownText);
-
-  setMargin(8);
-  setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  setWordWrap(true);
+  setReadOnly(true);
+  setLineWrapMode(QTextEdit::LineWrapMode::WidgetWidth);
+  applyMonospaceFontOn(this);
 }
 
 bool MarkdownPreviewWidget::canPreview(const QString& path) {
@@ -40,13 +37,13 @@ void MarkdownPreviewWidget::preview(QString path) {
 
   QFile file(path);
   if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
-    setText(file.readAll());
+    setMarkdown(file.readAll());
     file.close();
   }
 }
 
 void MarkdownPreviewWidget::clear() {
-  setText("");
+  setMarkdown("");
 }
 
 QWidget* MarkdownPreviewWidget::asQWidget() {

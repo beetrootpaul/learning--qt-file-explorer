@@ -12,6 +12,10 @@ namespace qt_file_explorer::widgets {
 
 // TODO: how to make icons nicely aligned to grid, without file names occupying a lot of space
 
+// TODO: bind to preview
+
+// TODO: preserve selection between modes
+
 DirListingIconsWidget::DirListingIconsWidget() {
   qDebug() << "+" << this;
 }
