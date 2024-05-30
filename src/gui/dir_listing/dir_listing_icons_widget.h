@@ -24,6 +24,10 @@ private:
   QSharedPointer<app_state::AppState> appState_;
   QSharedPointer<DirListingSharedModel> model_;
 
+  void currentChanged(const QModelIndex& current,
+                      const QModelIndex& previous) override;
+  void focusInEvent(QFocusEvent* event) override;
+
 private slots:
   void slotBrowsedDirChanged();
 
