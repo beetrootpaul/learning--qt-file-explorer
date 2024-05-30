@@ -59,16 +59,18 @@ PreviewDockWidget::init(const QSharedPointer<app_state::AppState>& appState) {
 void PreviewDockWidget::slotUpdatePreview() {
   auto path = appState_->selectedPath();
 
-  bool handled = false;
-  for (auto pw: orderedPreviewWidgets_) {
-    if (!handled && pw->canPreview(path)) {
-      handled = true;
-      setWidget(pw->asQWidget());
-      pw->preview(path);
+  auto chosenPreviewWidget = QSharedPointer<WithPreviewCapability>(nullptr);
+  for (const auto& pw: orderedPreviewWidgets_) {
+    if (!chosenPreviewWidget && pw->canPreview(path)) {
+      chosenPreviewWidget = pw;
     } else {
       pw->clear();
     }
   }
+
+  setWidget(chosenPreviewWidget->asQWidget());
+
+  chosenPreviewWidget->preview(path);
 }
 
 } // namespace qt_file_explorer::widgets

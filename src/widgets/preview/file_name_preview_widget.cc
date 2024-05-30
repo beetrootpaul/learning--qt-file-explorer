@@ -28,9 +28,12 @@ bool FileNamePreviewWidget::canPreview(const QString& path) {
 }
 
 void FileNamePreviewWidget::preview(QString path) {
+  qDebug() << "FILENAME preview:" << path;
+
+  clear();
+  
   QFileInfo fileInfo(path);
   setText(fileInfo.fileName());
-  // TODO: make it e.g. centered
 }
 
 void FileNamePreviewWidget::clear() {

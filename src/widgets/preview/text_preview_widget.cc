@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <QSizePolicy>
 
+#include "../monospace_font.h"
+
 namespace qt_file_explorer::widgets {
 
 TextPreviewWidget::TextPreviewWidget() {
@@ -16,15 +18,9 @@ TextPreviewWidget::~TextPreviewWidget() {
 
 // TODO: enforce it through interface
 void TextPreviewWidget::init() {
-  // Prevent this QLabel from expanding to match longer text lines.
-  setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-
-  // TODO: implement MD rendered and use this:
-//  setTextFormat(Qt::TextFormat::MarkdownText);
-
-  setMargin(8);
-  setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  setWordWrap(true);
+  setReadOnly(true);
+  setLineWrapMode(QPlainTextEdit::LineWrapMode::WidgetWidth);
+  applyMonospaceFontOn(this);
 }
 
 bool TextPreviewWidget::canPreview(const QString& path) {
@@ -36,18 +32,19 @@ bool TextPreviewWidget::canPreview(const QString& path) {
 }
 
 void TextPreviewWidget::preview(QString path) {
-  QFile file(path);
-  file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-  // TODO: thread?
-  // TODO: caching?
-  const QByteArray& array = file.readAll();
-  file.close();
+  qDebug() << "TEXT preview:" << path;
 
-  setText(array);
+  clear();
+
+  QFile file(path);
+  if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
+    setPlainText(file.readAll());
+    file.close();
+  }
 }
 
 void TextPreviewWidget::clear() {
-  setText("");
+  setPlainText("");
 }
 
 QWidget* TextPreviewWidget::asQWidget() {

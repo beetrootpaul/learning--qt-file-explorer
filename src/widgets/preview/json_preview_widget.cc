@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <QSizePolicy>
 
+#include "../monospace_font.h"
+
 namespace qt_file_explorer::widgets {
 
 JsonPreviewWidget::JsonPreviewWidget() {
@@ -15,17 +17,9 @@ JsonPreviewWidget::~JsonPreviewWidget() {
 }
 
 void JsonPreviewWidget::init() {
-  // Prevent this QLabel from expanding to match longer text lines.
-  setSizePolicy(QSizePolicy::Policy::Ignored, QSizePolicy::Policy::Ignored);
-
-  QFont font;
-  font.setStyleHint(QFont::Monospace);
-  font = QFont(font.defaultFamily());
-  setFont(font);
-
-  setMargin(8);
-  setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  setWordWrap(true);
+  setReadOnly(true);
+  setLineWrapMode(QPlainTextEdit::LineWrapMode::WidgetWidth);
+  applyMonospaceFontOn(this);
 }
 
 bool JsonPreviewWidget::canPreview(const QString& path) {
@@ -37,18 +31,19 @@ bool JsonPreviewWidget::canPreview(const QString& path) {
 }
 
 void JsonPreviewWidget::preview(QString path) {
+  qDebug() << "JSON preview:" << path;
+
+  clear();
+
   QFile file(path);
-  file.open(QIODeviceBase::OpenModeFlag::ReadOnly);
-  // TODO: thread?
-  // TODO: caching?
-  const QByteArray& array = file.readAll();
-  file.close();
-  
-  setText(array);
+  if (file.open(QIODeviceBase::OpenModeFlag::ReadOnly)) {
+    setPlainText(file.readAll());
+    file.close();
+  }
 }
 
 void JsonPreviewWidget::clear() {
-  setText("");
+  setPlainText("");
 }
 
 QWidget* JsonPreviewWidget::asQWidget() {

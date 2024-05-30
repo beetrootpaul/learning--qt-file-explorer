@@ -1,6 +1,7 @@
 #ifndef QT_FILE_EXPLORER_WIDGETS_PREVIEW_IMAGE_PREVIEW_WIDGET_H
 #define QT_FILE_EXPLORER_WIDGETS_PREVIEW_IMAGE_PREVIEW_WIDGET_H
 
+#include <QFutureWatcher>
 #include <QLabel>
 #include <QObject>
 
@@ -27,9 +28,13 @@ public:
 private:
   const QList<QString> acceptedImageExtensions_ = QList<QString>{"gif", "jpg",
                                                                  "png"};
+  QFutureWatcher<QPixmap> imageLoadingWatcher_ = QFutureWatcher<QPixmap>();
   QPixmap pixmap_;
 
   void paintEvent(QPaintEvent* event) override;
+
+private slots:
+  void slotImageLoaded();
 
 };
 

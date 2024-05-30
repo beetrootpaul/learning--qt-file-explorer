@@ -2,6 +2,7 @@
 #define QT_FILE_EXPLORER_WIDGETS_DOCKS_PREVIEW_DOCK_WIDGET_H
 
 #include <QDockWidget>
+#include <QObject>
 
 #include "../../app_state/app_state.h"
 #include "file_name_preview_widget.h"
@@ -11,6 +12,8 @@
 namespace qt_file_explorer::widgets {
 
 class PreviewDockWidget : public QDockWidget {
+
+Q_OBJECT
 
 public:
   PreviewDockWidget();

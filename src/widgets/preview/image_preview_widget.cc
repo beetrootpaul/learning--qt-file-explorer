@@ -5,12 +5,9 @@
 #include <QImageReader>
 #include <QMessageBox>
 #include <QPainter>
+#include <QtConcurrent>
 
 namespace qt_file_explorer::widgets {
-
-// TODO: threading for bigger images? Can be checked by experiencing a bit of a freeze when quickly changing selection over a huge file, with arrow keys
-
-// TODO: implement text rendering for txt and md files. For all other do a "null" renderer which just shows the filename
 
 ImagePreviewWidget::ImagePreviewWidget() {
   qDebug() << "+" << this;
@@ -20,7 +17,15 @@ ImagePreviewWidget::~ImagePreviewWidget() {
   qDebug() << "~" << this;
 }
 
-void ImagePreviewWidget::init() {}
+void ImagePreviewWidget::init() {
+  // These adjustments will be used by "loading…" text, which is visible
+  // for a moment when a bigger image is being loaded.
+  setMargin(8);
+  setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+  connect(&imageLoadingWatcher_, &QFutureWatcher<QPixmap>::finished, this,
+          &ImagePreviewWidget::slotImageLoaded);
+}
 
 bool ImagePreviewWidget::canPreview(const QString& path) {
   QFileInfo fileInfo(path);
@@ -34,13 +39,31 @@ bool ImagePreviewWidget::canPreview(const QString& path) {
 }
 
 void ImagePreviewWidget::preview(QString path) {
-  pixmap_ = QPixmap(path);
+  qDebug() << "IMG preview:" << path;
+
+  clear();
+
+  setText("loading…");
+  imageLoadingWatcher_.cancel();
+  imageLoadingWatcher_.setFuture(QtConcurrent::run([=] {
+    return QPixmap(path);
+  }));
+}
+
+void ImagePreviewWidget::slotImageLoaded() {
+  if (imageLoadingWatcher_.isCanceled()) return;
+
+  pixmap_ = imageLoadingWatcher_.result();
+
+  setText("");
   repaint();
 }
 
 void ImagePreviewWidget::clear() {
   pixmap_ = QPixmap();
+  setText("");
   repaint();
+  imageLoadingWatcher_.cancel();
 }
 
 QWidget* ImagePreviewWidget::asQWidget() {
@@ -65,7 +88,6 @@ void ImagePreviewWidget::paintEvent(QPaintEvent* event) {
   ratio = std::min(ratio, 1.0f);
 
   auto adjustedImageSize = imageSize * ratio;
-
   QPixmap adjustedPixmap = pixmap_.scaledToWidth(adjustedImageSize.width(),
                                                  Qt::TransformationMode::SmoothTransformation);
 
