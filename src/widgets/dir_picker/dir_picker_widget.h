@@ -22,6 +22,10 @@ private:
   QSharedPointer<app_state::AppState> appState_;
   QFileSystemModel* model_ = nullptr;
 
+  void keyPressEvent(QKeyEvent* event) override;
+
+  void openDir(const QModelIndex& index);
+
   // TODO: write down concepts in README, like "browsed dir", "selected path"
 
 private slots:

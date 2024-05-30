@@ -1,6 +1,7 @@
 #include "dir_picker_widget.h"
 
 #include <QDir>
+#include <QKeyEvent>
 #include <QStandardPaths>
 #include <QFileSystemModel>
 
@@ -42,19 +43,28 @@ void DirPickerWidget::init(
 
   connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
           &DirPickerWidget::slotBrowsedDirChanged);
-  connect(this, &QTreeView::clicked, [=](const QModelIndex& index) {
-    const QFileInfo& fileInfo = model_->fileInfo(index);
-    if (fileInfo.isDir()) {
-      appState_->switchBrowsedDirTo(
-          fileInfo.filePath(), /*originatedFromDirPicker=*/
-          true);
-    }
-  });
+  connect(this, &DirPickerWidget::clicked, this, &DirPickerWidget::openDir);
 
   // TODO: do I need to do anything about this signal?
   //  connect(model_, &QFileSystemModel::directoryLoaded, [=]() {
   //    qDebug() << "... loaded!";
   //  });
+}
+
+void DirPickerWidget::keyPressEvent(QKeyEvent* event) {
+  if (event->key() == Qt::Key_Return && !selectedIndexes().isEmpty()) {
+    openDir(QTreeView::selectedIndexes().first());
+  } else {
+    QTreeView::keyPressEvent(event);
+  }
+}
+
+void DirPickerWidget::openDir(const QModelIndex& index) {
+  const QFileInfo& fileInfo = model_->fileInfo(index);
+  if (fileInfo.isDir()) {
+    appState_->switchBrowsedDirTo(
+        fileInfo.filePath(), /*originatedFromDirPicker=*/ true);
+  }
 }
 
 void DirPickerWidget::slotBrowsedDirChanged(bool originatedFromDirPicker) {
