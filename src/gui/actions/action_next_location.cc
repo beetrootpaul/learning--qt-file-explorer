@@ -11,12 +11,14 @@ ActionNextLocation::ActionNextLocation(QObject* parent,
 
   qDebug() << "+" << this;
 
-  setText(tr("Next location"));
+  setText(tr("Forward"));
   // TODO: centralize shortcuts
-  setShortcut(QKeySequence::Redo);
+  setShortcut(QKeySequence::Forward);
 
   connect(this, &QAction::triggered, this, &ActionNextLocation::perform);
 }
+
+// TODO: README: describe cross-OS shortcuts based on https://doc.qt.io/qt-6/qkeysequence.html#standard-shortcuts
 
 ActionNextLocation::~ActionNextLocation() {
   qDebug() << "~" << this;

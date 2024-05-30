@@ -2,6 +2,8 @@
 
 namespace qt_file_explorer::gui {
 
+// TODO: do not add same location switches to history OR do not react to such clicks at all
+
 // TODO: enabled only if anything to undo
 
 ActionPrevLocation::ActionPrevLocation(QObject* parent,
@@ -11,9 +13,9 @@ ActionPrevLocation::ActionPrevLocation(QObject* parent,
 
   qDebug() << "+" << this;
 
-  setText(tr("Previous location"));
+  setText(tr("Back"));
   // TODO: centralize shortcuts
-  setShortcut(QKeySequence::Undo);
+  setShortcut(QKeySequence::Back);
 
   connect(this, &QAction::triggered, this, &ActionPrevLocation::perform);
 }
