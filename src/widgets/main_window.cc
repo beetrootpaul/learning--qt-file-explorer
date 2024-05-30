@@ -9,9 +9,6 @@
 #include <QSettings>
 
 #include "../persisted_state/persisted_state_keys.h"
-#include "dir_picker/dir_picker_widget.h"
-#include "preview/image_preview_widget.h"
-#include "preview/preview_dock_widget.h"
 
 namespace qt_file_explorer::widgets {
 
@@ -42,11 +39,20 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
 
   setWindowTitle("Qt File Explorer");
 
+  initSplitter();
+  initPreview();
+  initToolbars();
+
+  appState_->loadPersistedState();
+  loadPersistedState();
+}
+
+void MainWindow::initSplitter() {
   splitter_ = new QSplitter();
   setCentralWidget(splitter_);
 
-  auto* dirPicker = new DirPickerWidget();
-  dirPicker->init(appState_);
+  dirPicker_ = new DirPickerWidget();
+  dirPicker_->init(appState_);
 
   // TODO: keep selection between view types
   dirListingSharedModel_ = QSharedPointer<DirListingSharedModel>(
@@ -59,19 +65,21 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
           &MainWindow::slotViewTypeChanged);
 
   splitter_->setOrientation(Qt::Orientation::Horizontal);
-  splitter_->addWidget(dirPicker);
+  splitter_->addWidget(dirPicker_);
   splitter_->setStretchFactor(0, 1);
   splitter_->addWidget(dirListingList_);
   splitter_->setStretchFactor(1, 2);
+}
 
-  // TODO: initial size of the preview/dock
-
+void MainWindow::initPreview() {
   previewDock_ = new PreviewDockWidget();
   previewDock_->init(appState_);
   connect(appState_.data(), &app_state::AppState::signalPreviewVisibleChanged,
           this, &MainWindow::slotPreviewVisibleChanged);
   addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
+}
 
+void MainWindow::initToolbars() {
   historyToolbar_ = new HistoryToolbarWidget();
   historyToolbar_->init(appState_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, historyToolbar_);
@@ -81,7 +89,7 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   connect(navigationToolbar_,
           &NavigationToolbarWidget::signalCollapseAllLicked,
           [=]() {
-            dirPicker->collapseAll();
+            dirPicker_->collapseAll();
           });
   addToolBar(Qt::ToolBarArea::TopToolBarArea, navigationToolbar_);
 
@@ -95,9 +103,6 @@ void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
             resetSplitterLayout();
           });
   addToolBar(Qt::ToolBarArea::TopToolBarArea, viewToolbar_);
-
-  appState_->loadPersistedState();
-  loadPersistedState();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {
