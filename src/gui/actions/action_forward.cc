@@ -21,8 +21,6 @@ ActionForward::ActionForward(QObject* parent,
   connect(this, &QAction::triggered, this, &ActionForward::perform);
 }
 
-// TODO: README: describe cross-OS shortcuts based on https://doc.qt.io/qt-6/qkeysequence.html#standard-shortcuts
-
 ActionForward::~ActionForward() {
   qDebug() << "~" << this;
 }

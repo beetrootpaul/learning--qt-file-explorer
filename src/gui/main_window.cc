@@ -163,9 +163,7 @@ void MainWindow::loadPersistedState() {
   if (!mainWindowSize.isEmpty()) {
     resize(mainWindowSize);
   } else {
-    // TODO: consider this: QGuiApplication::primaryScreen()->availableSize() * 3 / 5
-    // TODO: also, consider it be like max(screen * 3/5 , hardcoded_max)
-    resize(1200, 800);
+    resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
   }
 
   const auto mainWindowPos = settings.value(

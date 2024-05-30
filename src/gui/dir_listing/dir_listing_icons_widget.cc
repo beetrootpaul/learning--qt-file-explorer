@@ -27,7 +27,6 @@ DirListingIconsWidget::init(
   setViewMode(ViewMode::IconMode);
   setWrapping(true);
   setWordWrap(false);
-  // TODO: how does this grid size behave on various DPI/zoom, also across various OSes?
   setGridSize(QSize(72, 56));
   setResizeMode(QListView::Adjust);
 

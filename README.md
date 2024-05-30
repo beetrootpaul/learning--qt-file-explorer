@@ -27,6 +27,20 @@ I do not have any Windows machine right know which I could use for setting up Qt
 
 To build this project on Windows, please take a look at macOS section above and try to replicate those steps since the steps should be similar (e.g. to have Qt 6 installed, to have `cmake` available, etc.)
 
+## Usage
+
+### Shortcuts
+
+| action               | macOS  | Windows   |
+|----------------------|--------|-----------|
+| Go to: Home          | Ctrl+H | Win+H     |
+| Go to: Downloads     | Ctrl+D | Win+D     |
+| Back                 | Cmd+[  | Alt+Left  |
+| Forward              | Cmd+]  | Alt+Right |
+| Switch to icons/list | Ctrl+V | Win+V     |
+| Show/hide preview    | Ctrl+P | Win+P     |
+| Reset layout         | Ctrl+R | Win+R     |
+
 ## Notes
 
 - I took a look at [official Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) and applied

@@ -10,7 +10,7 @@ public:
   // we get an app in a fresh state, with nothing persisted yet. Alternatively,
   // we can do `settings.remove(PersistedStateKeys.prefix)` and achieve
   // a similar result.
-  inline static const std::string prefix = "v25/";
+  inline static const std::string prefix = "v26/";
 
   // Groups allow us to reset many values at once, e.g. everything
   // that should reset on "Reset layout" action.

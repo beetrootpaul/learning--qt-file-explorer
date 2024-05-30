@@ -34,7 +34,6 @@ DirPickerWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   setSelectionMode(QAbstractItemView::SelectionMode::SingleSelection);
   setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
 
-  // TODO: test it on Windows: what will be shown? C:\ ? All drives?
   auto root = QDir::rootPath();
   model_->setRootPath(root);
   setRootIndex(model_->index(root));
