@@ -1,5 +1,6 @@
 #include <QApplication>
-#include <QHBoxLayout>
+#include <QLocale>
+#include <QTranslator>
 
 #include "app_state/app_state.h"
 #include "gui/main_window.h"

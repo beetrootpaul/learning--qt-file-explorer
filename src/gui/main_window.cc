@@ -44,7 +44,7 @@ MainWindow::~MainWindow() {
 void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
   appState_ = appState;
 
-  setWindowTitle("Qt File Explorer");
+  setWindowTitle(tr("Qt File Explorer"));
 
   initSplitter();
   initPreview();

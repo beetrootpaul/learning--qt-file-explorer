@@ -16,8 +16,8 @@ ActionToggleDirListingViewType::ActionToggleDirListingViewType(QObject* parent,
 
   connect(appState_.data(), &app_state::AppState::signalViewTypeChanged, [=]() {
     setText(tr(appState->currentDirListingViewType() ==
-               app_state::DirListingViewType::List ? "&Switch to icons"
-                                                   : "&Switch to list"));
+               app_state::DirListingViewType::List ? "Switch to icons"
+                                                   : "Switch to list"));
   });
 
   connect(this, &QAction::triggered, this,
