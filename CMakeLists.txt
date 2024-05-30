@@ -22,38 +22,49 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/app_state/app_state.h
         src/app_state/dir_listing_view_type.h
         src/app_state/switch_dir_command.h
+        src/gui/actions/action_collapse_all.cc
+        src/gui/actions/action_collapse_all.h
+        src/gui/actions/action_next_location.cc
+        src/gui/actions/action_next_location.h
+        src/gui/actions/action_prev_location.cc
+        src/gui/actions/action_prev_location.h
+        src/gui/actions/action_quick_open_downloads.cc
+        src/gui/actions/action_quick_open_downloads.h
+        src/gui/actions/action_quick_open_home.cc
+        src/gui/actions/action_quick_open_home.h
+        src/gui/actions/action_reset_layout.cc
+        src/gui/actions/action_reset_layout.h
+        src/gui/actions/action_toggle_dir_listing_view_type.cc
+        src/gui/actions/action_toggle_dir_listing_view_type.h
+        src/gui/actions/action_toggle_preview.cc
+        src/gui/actions/action_toggle_preview.h
+        src/gui/dir_listing/dir_listing_icons_widget.cc
+        src/gui/dir_listing/dir_listing_icons_widget.h
+        src/gui/dir_listing/dir_listing_list_widget.cc
+        src/gui/dir_listing/dir_listing_list_widget.h
+        src/gui/dir_listing/dir_listing_shared_model.h
+        src/gui/dir_picker/dir_picker_widget.cc
+        src/gui/dir_picker/dir_picker_widget.h
+        src/gui/main_window.cc
+        src/gui/main_window.h
+        src/gui/monospace_font.h
+        src/gui/preview/file_name_preview_widget.cc
+        src/gui/preview/file_name_preview_widget.h
+        src/gui/preview/image_preview_widget.cc
+        src/gui/preview/image_preview_widget.h
+        src/gui/preview/json_preview_widget.cc
+        src/gui/preview/json_preview_widget.h
+        src/gui/preview/markdown_preview_widget.cc
+        src/gui/preview/markdown_preview_widget.h
+        src/gui/preview/preview_dock_widget.cc
+        src/gui/preview/preview_dock_widget.h
+        src/gui/preview/text_preview_widget.cc
+        src/gui/preview/text_preview_widget.h
+        src/gui/preview/with_preview_capability.h
+        src/gui/toolbar.cc
+        src/gui/toolbar.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
-        src/widgets/dir_listing/dir_listing_icons_widget.cc
-        src/widgets/dir_listing/dir_listing_icons_widget.h
-        src/widgets/dir_listing/dir_listing_list_widget.cc
-        src/widgets/dir_listing/dir_listing_list_widget.h
-        src/widgets/dir_listing/dir_listing_shared_model.h
-        src/widgets/dir_picker/dir_picker_widget.cc
-        src/widgets/dir_picker/dir_picker_widget.h
-        src/widgets/main_window.cc
-        src/widgets/main_window.h
-        src/widgets/monospace_font.h
-        src/widgets/preview/file_name_preview_widget.cc
-        src/widgets/preview/file_name_preview_widget.h
-        src/widgets/preview/image_preview_widget.cc
-        src/widgets/preview/image_preview_widget.h
-        src/widgets/preview/json_preview_widget.cc
-        src/widgets/preview/json_preview_widget.h
-        src/widgets/preview/markdown_preview_widget.cc
-        src/widgets/preview/markdown_preview_widget.h
-        src/widgets/preview/preview_dock_widget.cc
-        src/widgets/preview/preview_dock_widget.h
-        src/widgets/preview/text_preview_widget.cc
-        src/widgets/preview/text_preview_widget.h
-        src/widgets/preview/with_preview_capability.h
-        src/widgets/toolbars/history_toolbar_widget.cc
-        src/widgets/toolbars/history_toolbar_widget.h
-        src/widgets/toolbars/navigation_toolbar_widget.cc
-        src/widgets/toolbars/navigation_toolbar_widget.h
-        src/widgets/toolbars/toolbar_commons.h
-        src/widgets/toolbars/view_toolbar_widget.cc
-        src/widgets/toolbars/view_toolbar_widget.h
 )
 target_link_libraries(learning__qt_file_explorer
         Qt::Core

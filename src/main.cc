@@ -2,7 +2,7 @@
 #include <QHBoxLayout>
 
 #include "app_state/app_state.h"
-#include "widgets/main_window.h"
+#include "gui/main_window.h"
 
 // TODO: menu item "reset all and restart" which clears all settings and does NOT save on close
 
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
 
   auto* appState = new qt_file_explorer::app_state::AppState();
 
-  auto mainWindow = qt_file_explorer::widgets::MainWindow();
+  auto mainWindow = qt_file_explorer::gui::MainWindow();
   mainWindow.init(
       QSharedPointer<qt_file_explorer::app_state::AppState>(appState));
 
