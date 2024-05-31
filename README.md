@@ -47,9 +47,26 @@ To build this project on Windows, please take a look at macOS section above and 
 | Show/hide preview    | Ctrl+P | Win+P     |
 | Reset layout         | Ctrl+R | Win+R     |
 
+## File preview and performance concerns
+
+At some point I experienced performance issues when quickly changing the currently selected file (with a constantly pressed up/down arrow).
+
+There are basically 3 types of a preview implemented in this file explorer:
+
+- `ImagePreviewWidget` for images in formats supported by Qt (`QImageReader::supportedImageFormats()`), based on `QLabel` and `QPixmap(pathToImage)`
+- `MarkdownPreviewWidget`, `JsonPreviewWidget`, `TextPreviewWidget` – three similar preview widgets based on `QTextEdit`/`QPlainTextEdit`
+- `FileNamePreviewWidget` as a fallback one, which simply prints a file's or dir's name inside a `QLabel`
+
+First, I noticed GUI freezes when navigating over a 3 MB `.txt`/`.json` files. I was trying to put some work into threads, but apparently the performance issue was in `QLabel::setText(hugeText)` itself, which is supposed to be run on the main thread. Luckily, after some googling I learnt there is a dedicated `QPlainTextEdit` widget for such type of content. I tried it an realized the performance issues are gone. Apparently, according to what I google / read in docs, `QPlainTextEdit` loads and renders only as much text as needed for a given visible area (which is a tiny fraction of an entire file).
+
+Second, I tackled another GUI freeze, a less impactful one, but still apparent – for a 76 MB PNG image file. After some debugging I learned that the freeze time is mostly spent on `QPixmap(pathToImage)`. I watched several YouTube videos on how to put work into threads in Qt and tried some of them. In the end I cleaned up the implementation to just a simple combination of `QFutureWatcher<QPixmap>` and setting it to observe a new `QFuture<QPixmap>` every time an image is selected to be previewed. The performance issue was gone.
+
+For images, I also had to deal with a race condition: since my images were loading in a separate thread, it was easy to start preview of a huge image, then switch to preview of a tiny image, then the huge image replaces the tiny one, because if finished loading. I addressed it by both a) setting a new `QFuture` on the `QFutureWatcher` every time a loading is initiated and b) calling `.cancel()` on the `QFutureWatcher` to avoid unnecessary work in a background.
+
 ## Notes
 
 - I took a look at [official Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) and applied
   *some* of those on this codebase here.
 - Code formatting was performed by CLion IDE (with some configuration modifications applied by me to match aforementioned Google's guide a bit). It might result in some strange indentation, especially for long constructor signatures.
 - I was thinking about adding a language switcher between English and Polish. This is why I prepared the GUI labels with wrapping `tr(…)` calls. In the end, I decided setting up the whole Qt Linguist workflow for such simple project would be a big time expense and the reward would be non-satisfactory.
+
