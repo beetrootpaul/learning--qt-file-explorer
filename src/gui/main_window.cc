@@ -205,8 +205,6 @@ void MainWindow::resetMainWindowLayout() {
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarNavigation_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarView_);
 
-  // TODO: make the show/hide button adapt to dock being closed
-
   // Make it docked in case it was floating
   previewDock_->setFloating(false);
 

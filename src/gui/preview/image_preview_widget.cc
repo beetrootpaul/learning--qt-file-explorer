@@ -44,6 +44,10 @@ void ImagePreviewWidget::preview(QString path) {
   clear();
 
   setText("loading…");
+
+  // Apparently, this `QPixmap(path)` is the heaviest operation
+  // for this image preview. We put it in a separate thread
+  // in order to avoid GUI getting temporarily frozen.
   imageLoadingWatcher_.cancel();
   imageLoadingWatcher_.setFuture(QtConcurrent::run([=] {
     return QPixmap(path);

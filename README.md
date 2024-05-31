@@ -1,5 +1,9 @@
 # learning--qt-file-explorer
 
+It is a small project in which I learn C++ and Qt by creating a simple file explorer.
+
+It covers topics like widgets and models, signals and slots, smart pointers, and a bit of concurrency (in `image_preview_widget.cc`).
+
 ## Development setup
 
 ### macOS
@@ -28,6 +32,8 @@ I do not have any Windows machine right know which I could use for setting up Qt
 To build this project on Windows, please take a look at macOS section above and try to replicate those steps since the steps should be similar (e.g. to have Qt 6 installed, to have `cmake` available, etc.)
 
 ## Usage
+
+![app overview with info about what is what](README_assets/overview-with-info.png)
 
 ### Shortcuts
 
