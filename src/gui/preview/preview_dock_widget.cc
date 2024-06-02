@@ -25,6 +25,9 @@ PreviewDockWidget::init(const QSharedPointer<app_state::AppState>& appState) {
 
   setWindowTitle(tr("Preview"));
 
+  // Remove context menu in order to remove the ability to close this dock or other app toolbars.
+  setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
+
   auto* imagePreview = new ImagePreviewWidget();
   imagePreview->init();
   orderedPreviewWidgets_.push_back(
