@@ -20,7 +20,7 @@ PreviewDockWidget::~PreviewDockWidget() {
 }
 
 void
-PreviewDockWidget::init(const QSharedPointer<app_state::AppState>& appState) {
+PreviewDockWidget::init(app_state::AppState* appState) {
   appState_ = appState;
 
   setWindowTitle(tr("Preview"));
@@ -55,8 +55,8 @@ PreviewDockWidget::init(const QSharedPointer<app_state::AppState>& appState) {
 
   setWidget(imagePreview);
 
-  connect(appState_.data(), &app_state::AppState::signalSelectedPathChanged,
-          this, &PreviewDockWidget::slotUpdatePreview);
+  connect(appState_, &app_state::AppState::signalSelectedPathChanged, this,
+          &PreviewDockWidget::slotUpdatePreview);
 }
 
 void PreviewDockWidget::slotUpdatePreview() {

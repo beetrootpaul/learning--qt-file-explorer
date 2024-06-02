@@ -16,10 +16,10 @@ public:
   DirPickerWidget();
   ~DirPickerWidget();
 
-  void init(const QSharedPointer<app_state::AppState>& appState);
+  void init(app_state::AppState* appState);
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
   QFileSystemModel* model_ = nullptr;
 
   void keyPressEvent(QKeyEvent* event) override;

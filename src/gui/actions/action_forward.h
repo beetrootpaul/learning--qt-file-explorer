@@ -13,12 +13,11 @@ class ActionForward : public QAction {
 Q_OBJECT
 
 public:
-  ActionForward(QObject* parent,
-                const QSharedPointer<app_state::AppState>& appState);
+  ActionForward(QObject* parent, app_state::AppState* appState);
   ~ActionForward();
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
 private slots:
   void slotUpdateEnabled();

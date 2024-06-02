@@ -13,12 +13,11 @@ class ActionBack : public QAction {
 Q_OBJECT
 
 public:
-  ActionBack(QObject* parent,
-             const QSharedPointer<app_state::AppState>& appState);
+  ActionBack(QObject* parent, app_state::AppState* appState);
   ~ActionBack();
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
 private slots:
   void slotUpdateEnabled();

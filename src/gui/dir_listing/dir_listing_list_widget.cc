@@ -19,9 +19,8 @@ DirListingListWidget::~DirListingListWidget() {
 }
 
 void
-DirListingListWidget::init(
-    const QSharedPointer<DirListingSharedModel>& model,
-    const QSharedPointer<app_state::AppState>& appState) {
+DirListingListWidget::init(const QSharedPointer<DirListingSharedModel>& model,
+                           app_state::AppState* appState) {
   model_ = model;
   appState_ = appState;
 
@@ -33,7 +32,7 @@ DirListingListWidget::init(
 
   setSortingEnabled(true);
 
-  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+  connect(appState_, &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingListWidget::slotBrowsedDirChanged);
 
   connect(this, &QTreeView::doubleClicked, [=](const QModelIndex& index) {

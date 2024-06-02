@@ -4,8 +4,7 @@
 
 namespace qt_file_explorer::gui {
 
-ActionGoToHome::ActionGoToHome(QObject* parent,
-                               const QSharedPointer<app_state::AppState>& appState)
+ActionGoToHome::ActionGoToHome(QObject* parent, app_state::AppState* appState)
     : QAction(parent), appState_(appState) {
   setObjectName("ActionGoToHome");
 

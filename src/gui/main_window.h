@@ -24,7 +24,7 @@ public:
   MainWindow();
   ~MainWindow();
 
-  void init(const QSharedPointer<app_state::AppState>& appState);
+  void init(app_state::AppState* appState);
 
   void closeEvent(QCloseEvent* event) override;
 
@@ -34,7 +34,7 @@ public:
   void loadPersistedState() override;
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
   Toolbar* toolbarNavigation_ = nullptr;
   Toolbar* toolbarView_ = nullptr;
