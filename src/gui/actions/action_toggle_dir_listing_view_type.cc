@@ -5,7 +5,7 @@
 namespace qt_file_explorer::gui {
 
 ActionToggleDirListingViewType::ActionToggleDirListingViewType(QObject* parent,
-                                                               const QSharedPointer<app_state::AppState>& appState)
+                                                               app_state::AppState* appState)
     : QAction(parent), appState_(appState) {
   setObjectName("ActionToggleDirListingViewType");
 
@@ -14,7 +14,7 @@ ActionToggleDirListingViewType::ActionToggleDirListingViewType(QObject* parent,
   setText(tr("(placeholder)"));
   setShortcut(Shortcuts::toggleDirListingViewType());
 
-  connect(appState_.data(), &app_state::AppState::signalViewTypeChanged, [=]() {
+  connect(appState_, &app_state::AppState::signalViewTypeChanged, [=]() {
     setText(tr(appState->currentDirListingViewType() ==
                app_state::DirListingViewType::List ? "Switch to icons"
                                                    : "Switch to list"));

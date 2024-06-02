@@ -18,7 +18,7 @@ DirPickerWidget::~DirPickerWidget() {
 }
 
 void
-DirPickerWidget::init(const QSharedPointer<app_state::AppState>& appState) {
+DirPickerWidget::init(app_state::AppState* appState) {
   appState_ = appState;
 
   model_ = new QFileSystemModel();
@@ -38,7 +38,7 @@ DirPickerWidget::init(const QSharedPointer<app_state::AppState>& appState) {
   model_->setRootPath(root);
   setRootIndex(model_->index(root));
 
-  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+  connect(appState_, &app_state::AppState::signalBrowsedDirChanged, this,
           &DirPickerWidget::slotBrowsedDirChanged);
   connect(this, &DirPickerWidget::clicked, this, &DirPickerWidget::openDir);
 }

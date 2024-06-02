@@ -16,9 +16,8 @@ DirListingIconsWidget::~DirListingIconsWidget() {
 }
 
 void
-DirListingIconsWidget::init(
-    const QSharedPointer<DirListingSharedModel>& model,
-    const QSharedPointer<app_state::AppState>& appState) {
+DirListingIconsWidget::init(const QSharedPointer<DirListingSharedModel>& model,
+                            app_state::AppState* appState) {
   model_ = model;
   appState_ = appState;
 
@@ -30,7 +29,7 @@ DirListingIconsWidget::init(
   setGridSize(QSize(72, 56));
   setResizeMode(QListView::Adjust);
 
-  connect(appState_.data(), &app_state::AppState::signalBrowsedDirChanged, this,
+  connect(appState_, &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingIconsWidget::slotBrowsedDirChanged);
 
   connect(this, &DirListingIconsWidget::doubleClicked,

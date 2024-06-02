@@ -39,7 +39,7 @@ MainWindow::~MainWindow() {
   }
 }
 
-void MainWindow::init(const QSharedPointer<app_state::AppState>& appState) {
+void MainWindow::init(app_state::AppState* appState) {
   appState_ = appState;
 
   setWindowTitle(tr("Qt File Explorer"));
@@ -80,7 +80,7 @@ void MainWindow::initSplitter() {
   dirListingIcons_ = new DirListingIconsWidget();
   dirListingIcons_->init(dirListingSharedModel_, appState_);
 
-  connect(appState_.data(), &app_state::AppState::signalViewTypeChanged, this,
+  connect(appState_, &app_state::AppState::signalViewTypeChanged, this,
           &MainWindow::slotViewTypeChanged);
 
   splitter_->setOrientation(Qt::Orientation::Horizontal);
@@ -93,8 +93,8 @@ void MainWindow::initSplitter() {
 void MainWindow::initPreview() {
   previewDock_ = new PreviewDockWidget();
   previewDock_->init(appState_);
-  connect(appState_.data(), &app_state::AppState::signalPreviewVisibleChanged,
-          this, &MainWindow::slotPreviewVisibleChanged);
+  connect(appState_, &app_state::AppState::signalPreviewVisibleChanged, this,
+          &MainWindow::slotPreviewVisibleChanged);
   addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, previewDock_);
 }
 

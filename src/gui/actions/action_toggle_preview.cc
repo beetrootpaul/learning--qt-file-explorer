@@ -5,7 +5,7 @@
 namespace qt_file_explorer::gui {
 
 ActionTogglePreview::ActionTogglePreview(QObject* parent,
-                                         const QSharedPointer<app_state::AppState>& appState)
+                                         app_state::AppState* appState)
     : QAction(parent), appState_(appState) {
   setObjectName("ActionTogglePreview");
 
@@ -14,11 +14,10 @@ ActionTogglePreview::ActionTogglePreview(QObject* parent,
   setText(tr("(placeholder)"));
   setShortcut(Shortcuts::togglePreview());
 
-  connect(appState_.data(), &app_state::AppState::signalPreviewVisibleChanged,
-          [=]() {
-            setText(tr(appState->isPreviewVisible() ? "Hide preview"
-                                                    : "Show preview"));
-          });
+  connect(appState_, &app_state::AppState::signalPreviewVisibleChanged, [=]() {
+    setText(tr(appState->isPreviewVisible() ? "Hide preview"
+                                            : "Show preview"));
+  });
 
   connect(this, &QAction::triggered, this, &ActionTogglePreview::perform);
 }

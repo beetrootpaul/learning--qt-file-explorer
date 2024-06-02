@@ -9,7 +9,7 @@
 
 namespace qt_file_explorer::app_state {
 
-AppState::AppState() {
+AppState::AppState(QObject* parent) : QObject(parent) {
   qDebug() << "+" << this;
 }
 

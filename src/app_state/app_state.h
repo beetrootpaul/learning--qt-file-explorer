@@ -19,7 +19,7 @@ class AppState
 Q_OBJECT
 
 public:
-  AppState();
+  AppState(QObject* parent);
   ~AppState();
 
   QString browsedDir();
@@ -64,7 +64,7 @@ private:
   QString selectedPath_ = "";
   bool isPreviewVisible_ = false;
 
-  QUndoStack undoStack_ = QUndoStack();
+  QUndoStack undoStack_ = QUndoStack(this);
 
   QString downloadsDir();
 

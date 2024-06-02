@@ -14,12 +14,12 @@ Q_OBJECT
 
 public:
   ActionToggleDirListingViewType(QObject* parent,
-                                 const QSharedPointer<app_state::AppState>& appState);
+                                 app_state::AppState* appState);
   ~ActionToggleDirListingViewType();
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
-  
+  app_state::AppState* appState_;
+
 private slots:
   void perform();
 

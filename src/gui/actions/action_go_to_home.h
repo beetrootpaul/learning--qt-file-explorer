@@ -13,12 +13,11 @@ class ActionGoToHome : public QAction {
 Q_OBJECT
 
 public:
-  ActionGoToHome(QObject* parent,
-                 const QSharedPointer<app_state::AppState>& appState);
+  ActionGoToHome(QObject* parent, app_state::AppState* appState);
   ~ActionGoToHome();
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
 private slots:
   void perform();

@@ -4,8 +4,7 @@
 
 namespace qt_file_explorer::gui {
 
-ActionForward::ActionForward(QObject* parent,
-                             const QSharedPointer<app_state::AppState>& appState)
+ActionForward::ActionForward(QObject* parent, app_state::AppState* appState)
     : QAction(parent), appState_(appState) {
   setObjectName("ActionForward");
 
@@ -14,8 +13,7 @@ ActionForward::ActionForward(QObject* parent,
   setText(tr("Forward"));
   setShortcut(Shortcuts::forward());
 
-  connect(appState_.data(),
-          &app_state::AppState::signalBrowsedDirHistoryUpdated, this,
+  connect(appState_, &app_state::AppState::signalBrowsedDirHistoryUpdated, this,
           &ActionForward::slotUpdateEnabled);
 
   connect(this, &QAction::triggered, this, &ActionForward::perform);

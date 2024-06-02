@@ -13,13 +13,12 @@ class ActionGoToDownloads : public QAction {
 Q_OBJECT
 
 public:
-  ActionGoToDownloads(QObject* parent,
-                      const QSharedPointer<app_state::AppState>& appState);
+  ActionGoToDownloads(QObject* parent, app_state::AppState* appState);
   ~ActionGoToDownloads();
 
 private:
 
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
 private slots:
   void perform();

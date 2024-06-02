@@ -5,7 +5,7 @@
 namespace qt_file_explorer::gui {
 
 ActionGoToDownloads::ActionGoToDownloads(QObject* parent,
-                                                   const QSharedPointer<app_state::AppState>& appState)
+                                         app_state::AppState* appState)
     : QAction(parent), appState_(appState) {
   setObjectName("ActionGoToDownloads");
 

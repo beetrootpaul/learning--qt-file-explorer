@@ -11,7 +11,7 @@ Toolbar::Toolbar(const QString& objectName) {
   setMovable(true);
   setFloatable(false);
 
-  // Remove context menu in order to remove the ability to close this mainToolbar_
+  // Remove context menu in order to remove the ability to close this toolbar or other app toolbars or the preview dock.
   setContextMenuPolicy(Qt::ContextMenuPolicy::PreventContextMenu);
 }
 

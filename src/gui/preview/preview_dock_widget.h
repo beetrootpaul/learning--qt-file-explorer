@@ -19,10 +19,10 @@ public:
   PreviewDockWidget();
   ~PreviewDockWidget();
 
-  void init(const QSharedPointer<app_state::AppState>& appState);
+  void init(app_state::AppState* appState);
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
   // These gui are ordered from the one specialized the most, to the most generic one.
   // E.g.: image preview goes first, generic file name preview goes second, to be used

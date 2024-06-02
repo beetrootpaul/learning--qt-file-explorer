@@ -13,12 +13,11 @@ class ActionTogglePreview : public QAction {
 Q_OBJECT
 
 public:
-  ActionTogglePreview(QObject* parent,
-                      const QSharedPointer<app_state::AppState>& appState);
+  ActionTogglePreview(QObject* parent, app_state::AppState* appState);
   ~ActionTogglePreview();
 
 private:
-  QSharedPointer<app_state::AppState> appState_;
+  app_state::AppState* appState_;
 
 private slots:
   void perform();
