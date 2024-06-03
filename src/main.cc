@@ -4,8 +4,13 @@
 
 #include "app_state/app_state.h"
 #include "gui/main_window.h"
+#include "logging/message_handler_with_file_output.h"
 
 int main(int argc, char* argv[]) {
+#ifdef QT_DEBUG
+  qt_file_explorer::logging::message_handler_with_file_output::install();
+#endif // QT_DEBUG
+
   QApplication app(argc, argv);
 
   QApplication::setOrganizationName("Beetroot Paul");
