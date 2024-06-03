@@ -99,7 +99,7 @@ void MainWindow::initPreview() {
 }
 
 void MainWindow::initToolbars() {
-  toolbarNavigation_ = new Toolbar("navigation_toolbar");
+  toolbarNavigation_ = new Toolbar(this, "navigation_toolbar");
   toolbarNavigation_->addAction(actionCollapseAll_);
   toolbarNavigation_->addSeparator();
   toolbarNavigation_->addAction(actionGoToHome_);
@@ -109,7 +109,7 @@ void MainWindow::initToolbars() {
   toolbarNavigation_->addAction(actionForward_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarNavigation_);
 
-  toolbarView_ = new Toolbar("navigation_toolbar");
+  toolbarView_ = new Toolbar(this, "view_toolbar");
   toolbarView_->addAction(actionToggleDirListingViewType_);
   toolbarView_->addAction(actionTogglePreview_);
   addToolBar(Qt::ToolBarArea::TopToolBarArea, toolbarView_);
