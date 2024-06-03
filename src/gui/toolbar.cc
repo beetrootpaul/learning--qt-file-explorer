@@ -17,7 +17,7 @@ Toolbar::Toolbar(QWidget* parent, const QString& objectName) : QToolBar(
 }
 
 Toolbar::~Toolbar() {
-  qDebug() << "-" << this;
+  qDebug() << "~" << this;
 }
 
 } // namespace qt_file_explorer::gui
