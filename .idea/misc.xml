@@ -6,6 +6,7 @@
       <file path="$PROJECT_DIR$/build" />
       <file path="$PROJECT_DIR$/build_debug" />
       <file path="$PROJECT_DIR$/build_release" />
+      <file path="$PROJECT_DIR$/logs" />
     </excludeRoots>
   </component>
 </project>
