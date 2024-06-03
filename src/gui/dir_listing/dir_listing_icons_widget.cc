@@ -30,7 +30,7 @@ DirListingIconsWidget::init(const QSharedPointer<DirListingSharedModel>& model,
   setUniformItemSizes(true);
   setGridSize(QSize(72, 56));
   setIconSize(QSize(32, 32));
-  setWordWrap(false);
+  setWordWrap(true);
 
   connect(appState_, &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingIconsWidget::slotBrowsedDirChanged);

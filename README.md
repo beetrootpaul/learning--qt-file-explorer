@@ -37,15 +37,17 @@ To build this project on Windows, please take a look at macOS section above and 
 
 ### Shortcuts
 
-| action               | macOS  | Windows   |
-|----------------------|--------|-----------|
-| Go to: Home          | Ctrl+H | Win+H     |
-| Go to: Downloads     | Ctrl+D | Win+D     |
-| Back                 | Cmd+[  | Alt+Left  |
-| Forward              | Cmd+]  | Alt+Right |
-| Switch to icons/list | Ctrl+V | Win+V     |
-| Show/hide preview    | Ctrl+P | Win+P     |
-| Reset layout         | Ctrl+R | Win+R     |
+| action                                         | macOS                | Windows              |
+|------------------------------------------------|----------------------|----------------------|
+| Go to: Home                                    | Ctrl+H               | Win+H                |
+| Go to: Downloads                               | Ctrl+D               | Win+D                |
+| Back                                           | Cmd+[                | Alt+Left             |
+| Forward                                        | Cmd+]                | Alt+Right            |
+| Switch to icons/list                           | Ctrl+V               | Win+V                |
+| Show/hide preview                              | Ctrl+P               | Win+P                |
+| Reset layout                                   | Ctrl+R               | Win+R                |
+| Select and preview next/prev dir in the picker | up/down, then Return | up/down, then Return |
+| Select next/prev file/dir on the list          | up/down              | up/down              |
 
 ## File preview and performance concerns
 
