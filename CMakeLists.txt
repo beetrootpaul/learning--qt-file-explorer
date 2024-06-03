@@ -63,6 +63,7 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/gui/preview/with_preview_capability.h
         src/gui/toolbar.cc
         src/gui/toolbar.h
+        src/logging/message_handler_with_file_output.h
         src/persisted_state/persisted_state_keys.h
         src/persisted_state/with_persisted_state.h
         src/shortcuts.h
