@@ -65,12 +65,6 @@ Second, I tackled another GUI freeze, a less impactful one, but still apparent â
 
 For images, I also had to deal with a race condition: since my images were loading in a separate thread, it was easy to start preview of a huge image, then switch to preview of a tiny image, then the huge image replaces the tiny one, because if finished loading. I addressed it by both a) setting a new `QFuture` on the `QFutureWatcher` every time a loading is initiated and b) calling `.cancel()` on the `QFutureWatcher` to avoid unnecessary work in a background.
 
-## Known issues
-
-Issues I spotted, but have no time right now to fix them:
-
-- Internal state of whether the preview is shown or not (and the toolbar's/menu's action label as well) is not synchronized with a case where the preview dock gets detached, then closed with its own top bar close button.
-
 ## Utils
 
 Since I do not have a strong know-how about profiles in C++ ecosystem, I wrote a simple JavaScript tool [count_destructors.js](utils/count_destructors.js) which analyzes the app's output and let me know if C++ constructors (indicated by my custom log line) have their corresponding deconstructors called.

@@ -29,6 +29,8 @@ private:
   // if the first one cannot preview, because file is not an image.
   QList<QSharedPointer<WithPreviewCapability>> orderedPreviewWidgets_ = QList<QSharedPointer<WithPreviewCapability>>();
 
+  void closeEvent(QCloseEvent* event) override;
+
 private slots:
   void slotUpdatePreview();
 

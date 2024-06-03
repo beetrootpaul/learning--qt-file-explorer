@@ -59,6 +59,12 @@ PreviewDockWidget::init(app_state::AppState* appState) {
           &PreviewDockWidget::slotUpdatePreview);
 }
 
+void PreviewDockWidget::closeEvent(QCloseEvent* event) {
+  if (appState_->isPreviewVisible()) {
+    appState_->togglePreviewVisible();
+  }
+}
+
 void PreviewDockWidget::slotUpdatePreview() {
   auto path = appState_->selectedPath();
 
