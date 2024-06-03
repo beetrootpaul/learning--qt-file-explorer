@@ -32,6 +32,12 @@ DirListingListWidget::init(const QSharedPointer<DirListingSharedModel>& model,
 
   setSortingEnabled(true);
 
+  // This setting greatly improves performance of this QTreeView-derived widget
+  // in situations where there are e.g. 10k of files in a displayed directory.
+  // Of course, the tradeoff is we are now assuming all the rows need same
+  // amount of vertical space.
+  setUniformRowHeights(true);
+
   connect(appState_, &app_state::AppState::signalBrowsedDirChanged, this,
           &DirListingListWidget::slotBrowsedDirChanged);
 
