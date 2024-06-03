@@ -11,7 +11,7 @@ class Toolbar : public QToolBar {
 Q_OBJECT
 
 public:
-  Toolbar(const QString& objectName);
+  Toolbar(QWidget* parent, const QString& objectName);
   ~Toolbar();
 };
 

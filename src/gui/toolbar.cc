@@ -2,7 +2,8 @@
 
 namespace qt_file_explorer::gui {
 
-Toolbar::Toolbar(const QString& objectName) {
+Toolbar::Toolbar(QWidget* parent, const QString& objectName) : QToolBar(
+    parent) {
   // Object name is required for state serialization.
   setObjectName(objectName);
 
@@ -16,7 +17,7 @@ Toolbar::Toolbar(const QString& objectName) {
 }
 
 Toolbar::~Toolbar() {
-  qDebug() << "-" << this;
+  qDebug() << "~" << this;
 }
 
 } // namespace qt_file_explorer::gui
