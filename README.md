@@ -87,5 +87,6 @@ Where:
 - I took a look at [official Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) and applied
   *some* of those on this codebase here.
 - Code formatting was performed by CLion IDE (with some configuration modifications applied by me to match aforementioned Google's guide a bit). It might result in some strange indentation, especially for long constructor signatures (mostly because the impose line length limit is 80 chars).
-- I was thinking about adding a language switcher between English and Polish. This is why I prepared the GUI labels with wrapping them with `tr(…)` calls. In the end, I decided setting up the whole Qt Linguist workflow for such simple project would be a big time expense and the reward would be non-satisfactory.
+- I was thinking about adding a language switcher between English and Polish. This is why I prepared the GUI labels with wrapping them with `tr(…)` calls. In the end, I decided setting up the whole Qt Linguist workflow would be a low gain for a high cost of adding more dependencies and more tooling to be run in a way I cannot test cross platform (I have no decent Windows machine right now).
+- Personally I am not a fan of inheriting from `QWidget` and its subclasses to create my own classes, because it makes them expose way much broader API than expected to be used in my app. But, while learning Qt I got under an impression that it is idiomatic to create new widgets as subclasses of Qt classes and I decided to not mess up with that.  
 
