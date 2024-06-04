@@ -3,8 +3,8 @@
 
 namespace qt_file_explorer::persisted_state {
 
-class PersistedStateKeys {
-public:
+struct PersistedStateKeys {
+
   // The versioned prefix comes handy when working heavily on the persisted
   // state – thanks to it we can simply increment the prefix and in result
   // we get an app in a fresh state, with nothing persisted yet. Alternatively,
@@ -35,6 +35,7 @@ public:
       groupOther + "listing_view_type";
   inline static const std::string listingListHeaderState =
       groupOther + "listing_list_header_state";
+  
 };
 
 } // namespace qt_file_explorer::persisted_state

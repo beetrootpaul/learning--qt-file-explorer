@@ -5,9 +5,7 @@
 
 namespace qt_file_explorer {
 
-class Shortcuts {
-
-public:
+struct Shortcuts {
 
   // NOTE: The constants below are functions and not fields, because
   // `inline static const QKeySequence back = QKeySequence::Back`
