@@ -11,26 +11,11 @@ class SwitchDirCommand : public QUndoCommand {
 
 public:
   SwitchDirCommand(app_state::AppState* appState, QString oldDir,
-                   QString newDir, bool originatedFromDirPicker)
-      : appState_(appState), oldDir_(oldDir), newDir_(newDir),
-        originatedFromDirPicker_(originatedFromDirPicker) {
-    qDebug() << "+ SwitchDirCommand" << this;
-  };
+                   QString newDir, bool originatedFromDirPicker);
+  ~SwitchDirCommand();
 
-  ~SwitchDirCommand() {
-    qDebug() << "~ SwitchDirCommand" << this;
-  };
-
-  void redo() override {
-    appState_->setBrowsedDir(newDir_, originatedFromDirPicker_);
-    // After the command is run for the first time (which really might be originated
-    // from the picker), the next runs are no longer originated from the picker.
-    originatedFromDirPicker_ = false;
-  };
-
-  void undo() override {
-    appState_->setBrowsedDir(oldDir_, /*originatedFromDirPicker_=*/false);
-  };
+  void redo() override;
+  void undo() override;
 
 private:
   app_state::AppState* appState_;
