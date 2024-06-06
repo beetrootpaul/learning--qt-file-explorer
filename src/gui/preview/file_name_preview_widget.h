@@ -4,11 +4,11 @@
 #include <QLabel>
 #include <QObject>
 
-#include "with_preview_capability.h"
+#include "preview_widget.h"
 
 namespace qt_file_explorer::gui {
 
-class FileNamePreviewWidget : public QLabel, public WithPreviewCapability {
+class FileNamePreviewWidget : public QLabel, public PreviewWidget {
 
 Q_OBJECT
 

@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QLocale>
+#include <QScopedPointer>
 #include <QTranslator>
 
 #include "app_state/app_state.h"

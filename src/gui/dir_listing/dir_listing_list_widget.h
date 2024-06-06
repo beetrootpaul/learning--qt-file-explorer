@@ -19,7 +19,7 @@ public:
   DirListingListWidget();
   ~DirListingListWidget();
 
-  void init(const QSharedPointer<DirListingSharedModel>& model_,
+  void init(QSharedPointer<DirListingSharedModel> model_,
             app_state::AppState* appState);
 
   void savePersistedState() override;

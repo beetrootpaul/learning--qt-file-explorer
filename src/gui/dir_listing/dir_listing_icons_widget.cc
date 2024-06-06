@@ -4,6 +4,7 @@
 #include <QLayout>
 #include <QListView>
 #include <QStandardPaths>
+#include <utility>
 
 namespace qt_file_explorer::gui {
 
@@ -16,9 +17,9 @@ DirListingIconsWidget::~DirListingIconsWidget() {
 }
 
 void
-DirListingIconsWidget::init(const QSharedPointer<DirListingSharedModel>& model,
+DirListingIconsWidget::init(QSharedPointer<DirListingSharedModel> model,
                             app_state::AppState* appState) {
-  model_ = model;
+  model_ = std::move(model);
   appState_ = appState;
 
   setModel(model_.get());

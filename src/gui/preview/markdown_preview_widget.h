@@ -4,12 +4,12 @@
 #include <QObject>
 #include <QTextEdit>
 
-#include "with_preview_capability.h"
+#include "preview_widget.h"
 
 namespace qt_file_explorer::gui {
 
 class MarkdownPreviewWidget
-    : public QTextEdit, public WithPreviewCapability {
+    : public QTextEdit, public PreviewWidget {
 
 Q_OBJECT
 

@@ -5,6 +5,7 @@
 #include <QHeaderView>
 #include <QSettings>
 #include <QStandardPaths>
+#include <utility>
 
 #include "../../persisted_state/persisted_state_keys.h"
 
@@ -19,9 +20,9 @@ DirListingListWidget::~DirListingListWidget() {
 }
 
 void
-DirListingListWidget::init(const QSharedPointer<DirListingSharedModel>& model,
+DirListingListWidget::init(QSharedPointer<DirListingSharedModel> model,
                            app_state::AppState* appState) {
-  model_ = model;
+  model_ = std::move(model);
   appState_ = appState;
 
   setModel(model_.get());
