@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QPlainTextEdit>
 
-#include "with_preview_capability.h"
+#include "preview_widget.h"
 
 namespace qt_file_explorer::gui {
 
-class TextPreviewWidget : public QPlainTextEdit, public WithPreviewCapability {
+class TextPreviewWidget : public QPlainTextEdit, public PreviewWidget {
 
 Q_OBJECT
 

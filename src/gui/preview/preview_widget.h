@@ -5,7 +5,7 @@
 
 namespace qt_file_explorer::gui {
 
-class WithPreviewCapability {
+class PreviewWidget {
 
 public:
   virtual bool canPreview(const QString& path) = 0;
@@ -13,7 +13,7 @@ public:
   virtual void clear() = 0;
 
   // This method serves as a way to avoid unnecessary complex types
-  // based on templates for any class that implements `WithPreviewCapability`.
+  // based on templates for any class that implements `PreviewWidget`.
   // Specifically, `QDockWidget::setWidget` requires `QWidget` as its param.
   virtual QWidget* asQWidget() = 0;
 

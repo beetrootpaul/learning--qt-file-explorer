@@ -31,27 +31,27 @@ PreviewDockWidget::init(app_state::AppState* appState) {
   auto* imagePreview = new ImagePreviewWidget();
   imagePreview->init();
   orderedPreviewWidgets_.push_back(
-      QSharedPointer<WithPreviewCapability>(imagePreview));
+      QSharedPointer<PreviewWidget>(imagePreview));
 
   auto* jsonPreviewWidget = new JsonPreviewWidget();
   jsonPreviewWidget->init();
   orderedPreviewWidgets_.push_back(
-      QSharedPointer<WithPreviewCapability>(jsonPreviewWidget));
+      QSharedPointer<PreviewWidget>(jsonPreviewWidget));
 
   auto* markdownPreviewWidget = new MarkdownPreviewWidget();
   markdownPreviewWidget->init();
   orderedPreviewWidgets_.push_back(
-      QSharedPointer<WithPreviewCapability>(markdownPreviewWidget));
+      QSharedPointer<PreviewWidget>(markdownPreviewWidget));
 
   auto* textPreviewWidget = new TextPreviewWidget();
   textPreviewWidget->init();
   orderedPreviewWidgets_.push_back(
-      QSharedPointer<WithPreviewCapability>(textPreviewWidget));
+      QSharedPointer<PreviewWidget>(textPreviewWidget));
 
   auto* fileNamePreview = new FileNamePreviewWidget();
   fileNamePreview->init();
   orderedPreviewWidgets_.push_back(
-      QSharedPointer<WithPreviewCapability>(fileNamePreview));
+      QSharedPointer<PreviewWidget>(fileNamePreview));
 
   setWidget(imagePreview);
 
@@ -68,7 +68,7 @@ void PreviewDockWidget::closeEvent(QCloseEvent* event) {
 void PreviewDockWidget::slotUpdatePreview() {
   auto path = appState_->selectedPath();
 
-  auto chosenPreviewWidget = QSharedPointer<WithPreviewCapability>(nullptr);
+  auto chosenPreviewWidget = QSharedPointer<PreviewWidget>(nullptr);
   for (const auto& pw: orderedPreviewWidgets_) {
     if (!chosenPreviewWidget && pw->canPreview(path)) {
       chosenPreviewWidget = pw;

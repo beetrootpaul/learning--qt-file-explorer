@@ -58,9 +58,9 @@ add_executable(learning__qt_file_explorer src/main.cc
         src/gui/preview/markdown_preview_widget.h
         src/gui/preview/preview_dock_widget.cc
         src/gui/preview/preview_dock_widget.h
+        src/gui/preview/preview_widget.h
         src/gui/preview/text_preview_widget.cc
         src/gui/preview/text_preview_widget.h
-        src/gui/preview/with_preview_capability.h
         src/gui/toolbar.cc
         src/gui/toolbar.h
         src/logging/message_handler_with_file_output.h

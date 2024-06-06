@@ -7,7 +7,7 @@
 #include "../../app_state/app_state.h"
 #include "file_name_preview_widget.h"
 #include "image_preview_widget.h"
-#include "with_preview_capability.h"
+#include "preview_widget.h"
 
 namespace qt_file_explorer::gui {
 
@@ -27,7 +27,7 @@ private:
   // These gui are ordered from the one specialized the most, to the most generic one.
   // E.g.: image preview goes first, generic file name preview goes second, to be used
   // if the first one cannot preview, because file is not an image.
-  QList<QSharedPointer<WithPreviewCapability>> orderedPreviewWidgets_ = QList<QSharedPointer<WithPreviewCapability>>();
+  QList<QSharedPointer<PreviewWidget>> orderedPreviewWidgets_ = QList<QSharedPointer<PreviewWidget>>();
 
   void closeEvent(QCloseEvent* event) override;
 
